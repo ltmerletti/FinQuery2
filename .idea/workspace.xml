@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: reports added">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="initial commit">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/FinQuery.iml" beforeDir="false" />
@@ -12,6 +12,38 @@
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conversation_agent/conversation_agent.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/conversation_agent/hello_prompt.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/expected_json_format_storage_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/extract_prompt.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/get_json_from_report.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/reports/aapl-20230930.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/reports/nflx-20231231.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/document_ingestion_agent/reports/pltr-20231231.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/eslint.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/public/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/src/App.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/src/assets/react.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/src/main.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/finquery-frontend/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_and_sql_execution_service/expected_json_format_calculations_class.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_and_sql_execution_service/math_executor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_and_sql_execution_service/mathformat.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_and_sql_execution_service/query_executor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_and_sql_execution_service/run.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_interpreter_agent/mathagentqueryprompt.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/math_interpreter_agent/query_math.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql_repair_agent/query_sql.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql_repair_agent/sqlrepairagentprompt.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage_service/generated_json_to_db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage_service/query_output_to_json.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,12 +69,12 @@
     &quot;assignee&quot;: &quot;ltmerletti&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/ltmerletti/FinQuery.git&quot;,
-    &quot;accountId&quot;: &quot;d52006e2-6c73-44ef-8f8b-5610ae3119fe&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/ltmerletti/FinQuery2.git",
+    "accountId": "d52006e2-6c73-44ef-8f8b-5610ae3119fe"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -51,24 +83,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.MAIN.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery/docs&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.MAIN.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery/docs",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/../FinQuery/docs" />
@@ -132,6 +164,7 @@
       <workItem from="1750424393240" duration="263000" />
       <workItem from="1750424657530" duration="8000" />
       <workItem from="1750424672561" duration="93000" />
+      <workItem from="1750424766280" duration="1330000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -221,7 +254,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750424454755</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="initial commit">
+      <option name="closed" value="true" />
+      <created>1750426057013</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1750426057013</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +280,8 @@
     <MESSAGE value="feat: updated documentation for easier understanding" />
     <MESSAGE value="fix: had query_executor.py audited and made corresponding updates" />
     <MESSAGE value="fix: reports added" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: reports added" />
+    <MESSAGE value="initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
