@@ -7,7 +7,7 @@
 
 ![Python 3.13](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white)
 ![React 19.1.0](https://img.shields.io/badge/React-19.1.0-blue?logo=react)
-![ChromaDB 3.0.4](https://img.shields.io/badge/ChromaDB-3.0.4-blue?logo=python)
+![ChromaDB 1.0.13](https://img.shields.io/badge/ChromaDB-1.0.13-blue?logo=python)
 
 **Key Steps:**
 
