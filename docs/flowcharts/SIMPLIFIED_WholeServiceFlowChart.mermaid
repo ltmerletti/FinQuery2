@@ -1,0 +1,21 @@
+flowchart TD
+    subgraph "Part 1: Data Ingestion"
+        A["Start with PDF"] --> B["Agent 1: Ingestor (Parses PDF)"];
+        B --> C{"Format & Store in Secure DB"};
+    end
+
+    subgraph "Part 2: Answering Questions"
+        D["User Asks a Question"] --> D2["Agent 2: Conversational AI (Clarifies Query)"];
+        D2 --> E["Agent 3: Math Planner (Creates Calc. Plan)"];
+        E -- Defines required data --> F{Attempt Data Retrieval};
+        F -- Success --> G["Retrieved Data"];
+        F -- Failure --> H["Agent 4: SQL Repair (Fixes Query)"];
+        H -- Generates corrected query --> F;
+        E -- Sends calculation steps --> I["Secure Calculation Engine"];
+        G -- Sends data --> I;
+        I --> J["Generate Final Answer & Explanation"];
+        J --> K["Formatted Answer for User"];
+    end
+
+%% Link between the two phases
+    C -.-> D;

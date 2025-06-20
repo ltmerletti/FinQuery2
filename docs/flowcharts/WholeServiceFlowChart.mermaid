@@ -1,0 +1,65 @@
+flowchart TD
+    subgraph "Phase 1: Data Ingestion Pipeline"
+        A1["Input: PDF Filename & Path"]
+        B1["Load Base Prompt from 'extract_prompt.txt'"]
+        C1["Upload PDF to Gemini API Client"]
+        D1{"Call Gemini API ('generate_content')"}
+        E1["Handle API Exceptions"]
+        F1["Return Empty JSON '{}'"]
+        G1["Output: Structured Data (JSON)"]
+        H1["Map Data to DB Schema"]
+        I1["Execute INSERT/UPDATE in Encrypted SQL DB"]
+        J1["Database Ready"]
+    end
+
+    subgraph "Phase 2: User Query Lifecycle"
+        K1["User asks a question"]
+        L1{"AI Agent 1: Calculation Planner"}
+        M1["Calculation Plan (JSON)"]
+
+        subgraph "Data Retrieval & Repair Loop"
+            N1["Data Execution Engine"]
+            O1{"Data Retrieval Succeeded?"}
+            P1{"AI Agent 2: SQL Repair Agent"}
+            Q1["Generate Corrected SQL Query"]
+        end
+
+        R1["Retrieved Financial Data"]
+        S1["Secure Calculation Engine"]
+        T1["Final Result & Execution Trace"]
+        U1["Format Result, Data Source, and Calculation Trace"]
+        V1["Output: Formatted Answer for User"]
+    end
+
+%% Connections
+    %% Phase 1 Connections
+    A1 --> B1
+    B1 --> C1
+    C1 --> D1
+    D1 -- On Error --> E1
+    E1 --> F1
+    D1 -- On Success --> G1
+    G1 --> H1
+    H1 --> I1
+    I1 --> J1
+
+    %% Connecting Phase 1 to Phase 2
+    J1 -.-> K1
+
+    %% Phase 2 Connections
+    K1 --> L1
+    L1 --> M1
+
+    M1 -- "Defines required data" --> N1
+    N1 --> O1
+    O1 -- "No" --> P1
+    P1 --> Q1
+    Q1 --> N1
+    O1 -- "Yes" --> R1
+
+    M1 -- "Sends Calculation Steps" --> S1
+    R1 -- "Sends Data" --> S1
+
+    S1 --> T1
+    T1 --> U1
+    U1 --> V1

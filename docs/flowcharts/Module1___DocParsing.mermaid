@@ -1,0 +1,9 @@
+flowchart TD
+    subgraph "Module 1: Document Ingestion & Parsing"
+        A["Input: PDF Filename & Path"] --> B;
+        B["Load Base Prompt from 'extract_prompt.txt'"] --> C;
+        C["Upload PDF to Gemini API Client"] --> D;
+        D{"Call Gemini API ('generate_content') with Prompt, PDF, and 'JsonCompanyOutputFormat' Schema"} --> E;
+        E["Handle API Exceptions"] -- On Error --> F["Return Empty JSON '{}'"];
+        D -- On Success --> G["Output: Structured Data (JSON)"];
+    end
