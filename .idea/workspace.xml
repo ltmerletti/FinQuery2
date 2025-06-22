@@ -4,17 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added basic chromadb integration">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/1_ingestion/run.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added plan for chunking">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/add_chunks_to_chroma.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/add_chunks_to_chroma.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/find_file_paths.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/split_into_chunks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reports/aapl-20230930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/aapl-20230930.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reports/nflx-20231231.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/nflx-20231231.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/reports/pltr-20231231.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/pltr-20231231.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +136,7 @@
       <workItem from="1750426195050" duration="30000" />
       <workItem from="1750426232062" duration="4583000" />
       <workItem from="1750448929011" duration="8597000" />
-      <workItem from="1750603766535" duration="1455000" />
+      <workItem from="1750603766535" duration="3762000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -275,7 +266,23 @@
       <option name="project" value="LOCAL" />
       <updated>1750451101319</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat: initialized PDF splitting">
+      <option name="closed" value="true" />
+      <created>1750605247858</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1750605247858</updated>
+    </task>
+    <task id="LOCAL-00018" summary="feat: added plan for chunking">
+      <option name="closed" value="true" />
+      <created>1750605260903</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750605260903</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,7 +303,9 @@
     <MESSAGE value="initial commit" />
     <MESSAGE value="fix: updated workspace" />
     <MESSAGE value="feat: added basic chromadb integration" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added basic chromadb integration" />
+    <MESSAGE value="feat: initialized PDF splitting" />
+    <MESSAGE value="feat: added plan for chunking" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added plan for chunking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
