@@ -1,4 +1,3 @@
-from langchain_community.document_loaders import PyPDFLoader
 from unstructured.partition.auto import partition
 
 
