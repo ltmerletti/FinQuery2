@@ -39,7 +39,7 @@
 
 - **AI Control Framework**: [LangChain](https://www.langchain.com/)
 - **PDF Parsing Library**: [Unstructured](https://unstructured.io/)
-- **Embedding Model**: [Qwen3-Embedding-8B](https://huggingface.co/Qwen/Qwen3-Embedding-8B)
+- **Embedding Model**: [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
 
 ---
 

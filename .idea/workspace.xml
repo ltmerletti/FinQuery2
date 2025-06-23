@@ -4,18 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added/updated chroma init script">
-      <change afterPath="$PROJECT_DIR$/1_ingestion/chroma_collection_document.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: completed ingestion script">
+      <change afterPath="$PROJECT_DIR$/ingestion/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ingestion/chromainit/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ingestion/chromainit/delete_collection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ingestion/test_response.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9e9a95c7-e589-4336-a6fd-35b5bd852893.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9e9a95c7-e589-4336-a6fd-35b5bd852893.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/add_chunks_to_chroma.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/add_chunks_to_chroma.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/chroma_collection_metadata.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/chroma_collection_metadata.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/chromainit.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/chromainit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/find_file_paths.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/find_file_paths.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1_ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/1_ingestion/split_into_chunks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chromadb/chroma.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/add_chunks_to_chroma.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/add_chunks_to_chroma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/chroma_collection_document.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/chromainit/chroma_collection_document.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/chroma_collection_metadata.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/chromainit/chroma_collection_metadata.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/chromainit.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/chromainit/chromainit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/find_file_paths.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/find_file_paths.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1_ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/e7b3618b-3897-433a-bff2-7db965d7be31/data_level0.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/e7b3618b-3897-433a-bff2-7db965d7be31/header.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/e7b3618b-3897-433a-bff2-7db965d7be31/index_metadata.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/e7b3618b-3897-433a-bff2-7db965d7be31/length.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/e7b3618b-3897-433a-bff2-7db965d7be31/link_lists.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,48 +65,73 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.MAIN.executor": "Run",
-    "Python.chromaclient.executor": "Run",
-    "Python.chromainit.executor": "Run",
-    "Python.run.executor": "Run",
-    "Python.split_into_chunks.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery/docs",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.MAIN.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromaclient.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromainit.executor&quot;: &quot;Run&quot;,
+    &quot;Python.delete_collection.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_into_chunks.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_response.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery/docs&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/../FinQuery/docs" />
       <recent name="$PROJECT_DIR$/../FinQuery/docs/prompts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/1ingestion" />
+      <recent name="$PROJECT_DIR$/0_chromainit" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/1_ingestion" />
       <recent name="$PROJECT_DIR$/../FinQuery" />
-      <recent name="$PROJECT_DIR$/../FinQuery/sql_fixer_agent" />
-      <recent name="$PROJECT_DIR$/../FinQuery/docs/flowcharts" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.test_response">
+    <configuration name="delete_collection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion/chromainit" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/chromainit/delete_collection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="FinQuery" />
       <option name="ENV_FILES" value="" />
@@ -120,6 +155,59 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/run.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_response" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/test_response.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_response" />
+        <item itemvalue="Python.run" />
+        <item itemvalue="Python.delete_collection" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -151,7 +239,9 @@
       <workItem from="1750426195050" duration="30000" />
       <workItem from="1750426232062" duration="4583000" />
       <workItem from="1750448929011" duration="8597000" />
-      <workItem from="1750603766535" duration="17303000" />
+      <workItem from="1750603766535" duration="19685000" />
+      <workItem from="1750714906630" duration="2365000" />
+      <workItem from="1750717289974" duration="262000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -313,7 +403,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750694513563</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="feat: completed ingestion script">
+      <option name="closed" value="true" />
+      <created>1750712127749</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1750712127749</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,7 +436,8 @@
     <MESSAGE value="feat: added plan for chunking" />
     <MESSAGE value="fix: updated workspace.xml" />
     <MESSAGE value="feat: added/updated chroma init script" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added/updated chroma init script" />
+    <MESSAGE value="feat: completed ingestion script" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: completed ingestion script" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -354,7 +453,9 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FinQuery2$MAIN.coverage" NAME="MAIN Coverage Results" MODIFIED="1750039406860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/run" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1750711430043" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1750716122811" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1750717524194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1750601765147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
   </component>
