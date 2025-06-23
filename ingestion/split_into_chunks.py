@@ -1,8 +1,9 @@
 from typing import List
 from chromainit.chroma_collection_document import DocumentChunk
-
 from unstructured.partition.auto import partition
 
+
+# TODO: change chunking to ensure that it works by paragraph, and that a table is never > 1 chunk
 
 def load_pdf(pdf_file_path) -> List[DocumentChunk]:
     print(f"Partitioning document: {pdf_file_path}")

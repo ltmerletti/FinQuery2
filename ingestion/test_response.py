@@ -41,6 +41,6 @@ def test_simple_query(query_text: str, n_results: int = 5):
 
 
 if __name__ == "__main__":
-    question = "What was the second quarter revenue of 2024 for apple?"
+    question = "What were the total net sales or revenue for the first fiscal quarter of 2024?"
 
     test_simple_query(question)
