@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 def get_current_time_in_iso_8601_format_utc() -> str:
-    # returns the current UTC time in a standard ISO format
+    # returns the current UTC time in ISO format
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
