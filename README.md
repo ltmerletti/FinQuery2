@@ -58,6 +58,18 @@ flowchart TD
 ```
 
 ---
+How Do We Ensure Accurate Retrieval?
+
+The system uses a multi-stage process to ingest, clean, and query documents, ensuring high-quality, relevant context is
+retrieved for every query.
+
+1. Use Unstructured's "hi-res" mode to get higher resolution PDFs for our RAG database.
+2. Process tables into PDF tables rather than other table formats to preserve structure.
+3. Preprocess the PDFs to remove repeat data (ex. headers, footers, links).
+4. Chunking is done by separating text and tables. This way the retrieval is more likely to pull relevant text/tables.
+5. Chunks have small overlap with each other. This way, titles are preserved.
+6. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
+   Operations" may not be found from "net income", so we need an AI to clean up queries).
 
 ### Folder Explanation
 
