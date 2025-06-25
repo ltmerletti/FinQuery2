@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: updated chunking">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: updated readme and added more test questions for better accuracy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chromadb/chroma.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/test_response.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/test_response.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/9799f335-790e-4baa-af65-1af46de5670c/data_level0.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/9799f335-790e-4baa-af65-1af46de5670c/header.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/9799f335-790e-4baa-af65-1af46de5670c/index_metadata.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/9799f335-790e-4baa-af65-1af46de5670c/length.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/9799f335-790e-4baa-af65-1af46de5670c/link_lists.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +96,7 @@
       <recent name="$PROJECT_DIR$/../FinQuery" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_response">
+  <component name="RunManager">
     <configuration name="delete_collection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
@@ -187,8 +191,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test_response" />
         <item itemvalue="Python.run" />
+        <item itemvalue="Python.test_response" />
         <item itemvalue="Python.delete_collection" />
       </list>
     </recent_temporary>
@@ -227,7 +231,7 @@
       <workItem from="1750714906630" duration="2365000" />
       <workItem from="1750717289974" duration="1812000" />
       <workItem from="1750767746959" duration="295000" />
-      <workItem from="1750768049792" duration="10278000" />
+      <workItem from="1750768049792" duration="14316000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -421,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750872579980</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="feat: updated readme and added more test questions for better accuracy">
+      <option name="closed" value="true" />
+      <created>1750874187871</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1750874187871</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,7 +462,8 @@
     <MESSAGE value="fix: fixed db and added simple query test" />
     <MESSAGE value="fix: updated workspace &amp; todo" />
     <MESSAGE value="fix: updated chunking" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: updated chunking" />
+    <MESSAGE value="feat: updated readme and added more test questions for better accuracy" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: updated readme and added more test questions for better accuracy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -467,8 +480,8 @@
     <SUITE FILE_PATH="coverage/FinQuery2$MAIN.coverage" NAME="MAIN Coverage Results" MODIFIED="1750039406860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/run" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1750862825258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1750873308650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1750879057168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1750880359276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1750601765147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
