@@ -20,6 +20,6 @@ def delete_chroma_collection(collection_name: str, db_path: str = "./chromadb"):
 
 
 if __name__ == "__main__":
-    collection_to_delete = "d27b771f-aba3-41ed-a4a3-b06a9b891589"
+    collection_to_delete = "FinQuery"
 
     delete_chroma_collection(collection_to_delete)

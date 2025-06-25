@@ -1,30 +1,44 @@
+import pathlib
 from typing import List
 from chromainit.chroma_collection_document import DocumentChunk
-from unstructured.partition.auto import partition
+from unstructured.partition.pdf import partition_pdf
+
+from unstructured.chunking.title import chunk_by_title
+from unstructured.documents.elements import Table, CompositeElement
 
 
 # TODO: change chunking to ensure that it works by paragraph, and that a table is never > 1 chunk
 
-def load_pdf(pdf_file_path) -> List[DocumentChunk]:
+def load_pdf(pdf_file_path: pathlib.Path) -> List[DocumentChunk]:
     print(f"Partitioning document: {pdf_file_path}")
 
-    elements = list(partition(pdf_file_path, strategy="hi_res"))
+    if not str(pdf_file_path).endswith(".pdf"):
+        return []
+
+    elements = list(partition_pdf(pdf_file_path, strategy="hi_res"))
 
     print("\n--- Found Elements ---")
 
-    print("\n\n".join([str(el) for el in elements[:3]]))
+    chunks_from_unstructured = chunk_by_title(
+        elements,
+        max_characters=1000,
+        new_after_n_chars=800,
+        combine_text_under_n_chars=500,
+    )
 
-    if len(elements) > 3:
-        omitted_count = len(elements) - 3
-        print(f"\n\n... ({omitted_count} more elements omitted for brevity) ...")
-    chunks = []
+    final_chunks = []
+    for chunk in chunks_from_unstructured:
+        if isinstance(chunk, Table):
+            print("--- Found a Table Chunk ---")
 
-    for el in elements:
-        chunk = DocumentChunk(
-            text=el.text,
-            source_document=el.metadata.filename,
-            page_number=el.metadata.page_number
+        if isinstance(chunk, CompositeElement):
+            print(f"--- Found a Text Chunk (Size: {len(chunk.text)}) ---")
+
+        new_chunk = DocumentChunk(
+            text=chunk.text,
+            source_document=chunk.metadata.filename,
+            page_number=chunk.metadata.page_number
         )
-        chunks.append(chunk)
+        final_chunks.append(new_chunk)
 
-    return chunks
+    return final_chunks

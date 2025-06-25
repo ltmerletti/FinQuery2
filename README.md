@@ -61,7 +61,7 @@ flowchart TD
 
 ### Folder Explanation
 
-- `1_ingestion`
+- `ingestion`
     - The directory containing all logic related to data ingestion
 - `reports`
     - The directory containing all reports to use

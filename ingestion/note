@@ -1,0 +1,7 @@
+document
+question I want to ask
+fix it up to be able to ask this
+run until works
+then have multiple questions
+
+Send result of rag query to LLM and have it write it in human readable format
