@@ -1,43 +1,30 @@
-import pprint
-from ingestion.chromainit.chromainit import initialize_chroma
+from pprint import pprint
+
+from langchain_chroma import Chroma
+from chromainit.database_setup import get_embeddings
 
 
 def test_simple_query(query_text: str, n_results: int = 5):
     if not query_text:
         print("Query text cannot be empty.")
-        return
+        return None
 
-    collection = initialize_chroma()
-
-    print(f"\nSearching for: '{query_text}'")
-
-    # query the collection
-    results = collection.query(
-        query_texts=[query_text],
-        n_results=n_results
+    vector_store = Chroma(
+        collection_name="financial_documents",
+        embedding_function=get_embeddings(),
+        persist_directory="../chromadb"
     )
 
-    print(f"\nTop {len(results.get('documents', [[]])[0])} Results:")
-    if not results.get('documents', [[]])[0]:
-        print("No results found.")
-        return
+    target_company = "AAPL"
+    metadata_filter = {"company": target_company}
 
-    for i, doc_text in enumerate(results['documents'][0]):
-        print("-" * 70)
-        print(f"Result #{i + 1}")
+    retriever = vector_store.as_retriever(
+        search_kwargs={'filter': metadata_filter}
+    )
 
-        metadata = results['metadatas'][0][i]
-        print("Source:")
-        pprint.pprint(metadata)
+    results = retriever.invoke(query_text)
 
-        distance = results['distances'][0][i]
-        print(f"Similarity Score: {distance:.4f}")
-
-        print("\nRetrieved Text:")
-        indented_text = "\n".join(["  " + line for line in doc_text.splitlines()])
-        print(indented_text)
-
-    print("-" * 70)
+    return results
 
 
 if __name__ == "__main__":
@@ -72,4 +59,4 @@ if __name__ == "__main__":
     ]
 
     for question in rag_test_questions:
-        print(test_simple_query(question))
+        pprint(test_simple_query(question))

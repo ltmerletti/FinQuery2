@@ -1,11 +1,13 @@
 import chromadb
+import argparse
+import pathlib
 
 
-def delete_chroma_collection(collection_name: str, db_path: str = "./chromadb"):
+def delete_chroma_collection(collection_name: str, db_path: str):
     try:
         client = chromadb.PersistentClient(path=db_path)
 
-        print(f"Attempting to delete collection: '{collection_name}'...")
+        print(f"Attempting to delete collection: '{collection_name}' from database at '{db_path}'...")
 
         client.delete_collection(name=collection_name)
 
@@ -20,6 +22,16 @@ def delete_chroma_collection(collection_name: str, db_path: str = "./chromadb"):
 
 
 if __name__ == "__main__":
-    collection_to_delete = "FinQuery"
+    parser = argparse.ArgumentParser(description="Delete a ChromaDB collection.")
+    parser.add_argument(
+        "--name",
+        type=str,
+        default="financial_documents",
+        help="The name of the collection to delete."
+    )
+    args = parser.parse_args()
 
-    delete_chroma_collection(collection_to_delete)
+    project_root = pathlib.Path(__file__).parent.parent.parent
+    db_directory = str(project_root / "chromadb")
+
+    delete_chroma_collection(args.name, db_directory)

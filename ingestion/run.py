@@ -1,50 +1,63 @@
 import time
-from add_chunks_to_chroma import add_chunks_to_collection
-from chromainit.chromainit import initialize_chroma
 from find_file_paths import get_file_paths
-from split_into_chunks import load_pdf
+from split_into_chunks import CustomPDFLoader
+from chromainit.database_setup import setup_vector_store, setup_record_manager, get_embeddings
+from langchain.indexes import index
 
 
-# this one may take a while as it parses each pdf. indexing will be added in the future.
 def main():
-    # set up the collection, or get it if it exists
-    print("Connecting to and/or initializing ChromaDB...")
-    collection = initialize_chroma()
-
-    # find all the pdfs in the reports folder
+    # --- Step 1: Find all documents to process ---
     file_paths = get_file_paths("../reports")
-    if file_paths:
-        print("Files found")
-        for file in file_paths:
-            print(file)
-    else:
-        print("No files found")
+    if not file_paths:
+        print("No PDF files found in the '../reports' directory. Exiting.")
+        return
 
-    # loop through each pdf, chunk it, and add it to the database
-    for path in file_paths:
+    print("Files to be processed:")
+    for file in file_paths:
+        print(f" - {file.name}")
+
+    # --- Step 2: Initialize database connections ONCE ---
+    print("\nInitializing vector store and record manager...")
+    vector_store = setup_vector_store(
+        collection_name="financial_documents",
+        embeddings=get_embeddings(),
+        persist_directory="../chromadb"
+    )
+
+    record_manager = setup_record_manager(collection_name="financial_documents")
+    print("Initialization complete.")
+
+    for file_path in file_paths:
         print(f"\n========================================")
-        print(f"STARTING PROCESSING FOR: {path.name}")
+        print(f"STARTING PROCESSING FOR: {file_path.name}")
         print(f"========================================")
 
-        # load the pdf and split it into chunks
-        chunks = load_pdf(path)
-        print("Finished loading file")
+        loader = CustomPDFLoader(str(file_path))
 
-        # add the chunks to the chroma database
-        if chunks:
-            add_chunks_to_collection(collection, chunks)
-            print(f"Chunks added to collection from {path.name}")
-        else:
-            print(f"No chunks were generated for {path.name}")
+        docs = loader.load()
 
-    # all done
+        if not docs:
+            print(f"No documents were generated for {file_path.name}. Skipping.")
+            continue
+
+        print(f"Indexing {len(docs)} chunks for {file_path.name}...")
+        index(
+            docs,
+            record_manager,
+            vector_store,
+            cleanup="incremental",
+            source_id_key="source",
+            batch_size=16
+        )
+        print(f"Successfully indexed {file_path.name}.")
+
     print("\n--- Finished processing all files ---")
-    final_count = collection.count()
-    print(f"The collection now has {final_count} total chunks")
+    final_count = vector_store._collection.count()
+    print(f"The collection now has {final_count} total chunks.")
 
 
 if __name__ == "__main__":
     start_time = time.time()
     main()
     end_time = time.time()
-    print(f"Total execution time: {end_time - start_time:.2f} seconds")
+    print(f"\nTotal execution time: {end_time - start_time:.2f} seconds")

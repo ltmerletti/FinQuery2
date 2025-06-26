@@ -38,6 +38,7 @@
 ### AI & Data Processing
 
 - **AI Control Framework**: [LangChain](https://www.langchain.com/)
+- **AI Observability Framework**: [LangSmith](https://www.langchain.com/langsmith)
 - **PDF Parsing Library**: [Unstructured](https://unstructured.io/)
 - **Embedding Model**: [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
 
@@ -70,6 +71,7 @@ retrieved for every query.
 5. Chunks have small overlap with each other. This way, titles are preserved.
 6. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
    Operations" may not be found from "net income", so we need an AI to clean up queries).
+7. Uses a custom component in langchain to parse documents with higher quality using Unstructured directly
 
 ### Folder Explanation
 

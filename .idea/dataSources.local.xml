@@ -7,6 +7,7 @@
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
+      <user-name>lukem</user-name>
       <schema-mapping>
         <introspection-scope>
           <node negative="1">
@@ -23,7 +24,7 @@
         </introspection-scope>
       </schema-mapping>
     </data-source>
-    <data-source name="chroma" uuid="9e9a95c7-e589-4336-a6fd-35b5bd852893">
+    <data-source name="chroma" uuid="2f21c8d6-4980-44e3-a655-40b93313d3f3">
       <database-info product="SQLite" version="3.45.1" jdbc-version="4.2" driver-name="SQLite JDBC" driver-version="3.45.1.0" dbms="SQLITE" exact-version="3.45.1" exact-driver-version="3.45">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
