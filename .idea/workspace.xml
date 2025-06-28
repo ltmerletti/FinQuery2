@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: deleted old file">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added langfuse">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/langfuse/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/langfuse/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,7 +228,7 @@
       <workItem from="1750768049792" duration="35372000" />
       <workItem from="1750971152756" duration="10037000" />
       <workItem from="1751076792882" duration="1000" />
-      <workItem from="1751115226975" duration="3604000" />
+      <workItem from="1751115226975" duration="3982000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -465,14 +462,21 @@
       <option name="project" value="LOCAL" />
       <updated>1751115317432</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="feat: added langfuse">
+      <option name="closed" value="true" />
+      <created>1751119317791</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1751119317791</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: made significant documentation updates and added/created prompts for agents" />
     <MESSAGE value="feat: refactored folders and updated documentation" />
     <MESSAGE value="feat: added conversation agent" />
     <MESSAGE value="feat: updated json structure of document ingestion agent" />
@@ -497,7 +501,8 @@
     <MESSAGE value="feat: migrated entire codebase to use langchain" />
     <MESSAGE value="fix: updated database_setup to include metadata" />
     <MESSAGE value="fix: deleted old file" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: deleted old file" />
+    <MESSAGE value="feat: added langfuse" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added langfuse" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

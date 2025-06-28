@@ -38,7 +38,7 @@
 ### AI & Data Processing
 
 - **AI Control Framework**: [LangChain](https://www.langchain.com/)
-- **AI Observability Framework**: [LangFuse](https://github.com/langfuse/langfuse)
+- **AI Observability Framework**: [LangFuse](https://github.com/langfuse/langfuse) (locally hosted through Docker)
 - **PDF Parsing Library**: [Unstructured](https://unstructured.io/)
 - **Embedding Model**: [Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
 
