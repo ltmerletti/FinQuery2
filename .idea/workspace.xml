@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: updated database_setup to include metadata">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: deleted old file">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chromadb/chroma.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/langfuse/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/langfuse/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +27,7 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/langfuse" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -229,7 +231,7 @@
       <workItem from="1750768049792" duration="35372000" />
       <workItem from="1750971152756" duration="10037000" />
       <workItem from="1751076792882" duration="1000" />
-      <workItem from="1751115226975" duration="45000" />
+      <workItem from="1751115226975" duration="3604000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -455,14 +457,21 @@
       <option name="project" value="LOCAL" />
       <updated>1750973981517</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="fix: deleted old file">
+      <option name="closed" value="true" />
+      <created>1751115317432</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1751115317432</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="re-updated projects following system reset" />
     <MESSAGE value="feat: made significant documentation updates and added/created prompts for agents" />
     <MESSAGE value="feat: refactored folders and updated documentation" />
     <MESSAGE value="feat: added conversation agent" />
@@ -487,7 +496,8 @@
     <MESSAGE value="fix: updated splitting into chunks functionality for improved retrieval" />
     <MESSAGE value="feat: migrated entire codebase to use langchain" />
     <MESSAGE value="fix: updated database_setup to include metadata" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: updated database_setup to include metadata" />
+    <MESSAGE value="fix: deleted old file" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: deleted old file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
