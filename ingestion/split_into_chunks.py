@@ -10,26 +10,50 @@ from langchain_core.documents import Document
 from langchain_core.document_loaders import BaseLoader
 
 
+def _is_high_value_table(table_element, table_text: str) -> bool:
+    title_text = table_element.metadata.title.lower() if hasattr(table_element.metadata,
+                                                                 'title') and table_element.metadata.title else ""
+
+    high_value_keywords = [
+        "consolidated statements of operations",
+        "consolidated balance sheets",
+        "consolidated statements of cash flows",
+        "statement of comprehensive income",
+        "consolidated statements of stockholders' equity",
+        "consolidated statements of shareholders' equity"
+    ]
+
+    if any(keyword in title_text.lower().strip() for keyword in high_value_keywords):
+        return True
+
+    MIN_CHAR_COUNT = 300
+
+    if len(table_text) > MIN_CHAR_COUNT:
+        return True
+
+    return False
+
+
+def _clean_element_text(text: str) -> str:
+    # removes urls (we don't need them for the type of query)
+    text = re.sub(r'https?://\S+', '', text, flags=re.MULTILINE)
+    # remove sec.gov footer information
+    text = re.sub(r'\S*www\.sec\.gov\S*', '', text, flags=re.MULTILINE)
+    # remove page number (which is in format (a number)/(a number)
+    text = re.sub(r'\s*\d+/\d+\s*', '', text)
+    # removes dates and times
+    text = re.sub(r'\d{1,2}/\d{1,2}/\d{2,4}(,\s*\d{1,2}:\d{2}\s*(AM|PM)?)?', '', text)
+    # removes stray page numbers
+    text = re.sub(r'^\s*\d+\s*$', '', text, flags=re.MULTILINE)
+    # removes empty lines
+    text = re.sub(r'\n\s*\n', '\n', text)
+
+    return text.strip()
+
+
 class CustomPDFLoader(BaseLoader):
     def __init__(self, file_path: str):
         self.file_path = pathlib.Path(file_path)
-
-    # regex function to clean element text
-    def _clean_element_text(self, text: str) -> str:
-        # removes urls (we don't need them for the type of query)
-        text = re.sub(r'https?://\S+', '', text, flags=re.MULTILINE)
-        # remove sec.gov footer information
-        text = re.sub(r'\S*www\.sec\.gov\S*', '', text, flags=re.MULTILINE)
-        # remove page number (which is in format (a number)/(a number)
-        text = re.sub(r'\s*\d+/\d+\s*', '', text)
-        # removes dates and times
-        text = re.sub(r'\d{1,2}/\d{1,2}/\d{2,4}(,\s*\d{1,2}:\d{2}\s*(AM|PM)?)?', '', text)
-        # removes stray page numbers
-        text = re.sub(r'^\s*\d+\s*$', '', text, flags=re.MULTILINE)
-        # removes empty lines
-        text = re.sub(r'\n\s*\n', '\n', text)
-
-        return text.strip()
 
     def _load_pdf(self, pdf_file_path: pathlib.Path) -> List[Document]:
         print(f"Partitioning document: {pdf_file_path}")
@@ -63,7 +87,7 @@ class CustomPDFLoader(BaseLoader):
             table_text = table_el.metadata.text_as_html if hasattr(table_el.metadata,
                                                                    'text_as_html') and table_el.metadata.text_as_html else table_el.text
 
-            cleaned_text = self._clean_element_text(table_text)
+            cleaned_text = _clean_element_text(table_text)
 
             new_chunk = Document(
                 page_content=cleaned_text,
@@ -87,7 +111,7 @@ class CustomPDFLoader(BaseLoader):
         )
 
         for chunk in text_chunks:
-            cleaned_text = self._clean_element_text(chunk.text)
+            cleaned_text = _clean_element_text(chunk.text)
 
             if len(cleaned_text) > 50:
                 new_chunk = Document(
