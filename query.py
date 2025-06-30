@@ -5,7 +5,7 @@ from pprint import pprint
 from langchain_chroma import Chroma
 from langchain_core.runnables import RunnableConfig
 
-from chromainit.database_setup import get_embeddings
+from ingestion.chromainit.database_setup import get_embeddings
 
 from langfuse import Langfuse
 from langfuse.langchain import CallbackHandler

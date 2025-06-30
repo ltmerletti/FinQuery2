@@ -1,0 +1,8 @@
+langfuse
+langchain_chroma
+langchain_core
+langchain
+langchain_huggingface
+pydantic
+chromadb
+unstructured

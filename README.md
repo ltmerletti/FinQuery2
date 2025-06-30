@@ -59,19 +59,26 @@ flowchart TD
 ```
 
 ---
-How Do We Ensure Accurate Retrieval?
+
+### How Do We Ensure Accurate Retrieval?
 
 The system uses a multi-stage process to ingest, clean, and query documents, ensuring high-quality, relevant context is
 retrieved for every query.
 
-1. Use Unstructured's "hi-res" mode to get higher resolution PDFs for our RAG database.
-2. Process tables into PDF tables rather than other table formats to preserve structure.
-3. Preprocess the PDFs to remove repeat data (ex. headers, footers, links).
-4. Chunking is done by separating text and tables. This way the retrieval is more likely to pull relevant text/tables.
-5. Chunks have small overlap with each other. This way, titles are preserved.
-6. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
+1. Parsing & Preprocessing
+   1. Created a custom component in LangChain with specialized parsing
+   2. Use Unstructured's "hi-res" mode to get higher resolution PDFs for our RAG database
+   3. Process tables into PDF tables rather than other table formats to preserve structure
+   4. Preprocess the PDFs to remove repeat data (ex. headers, footers, links)
+2. Chunking
+   1. Chunking is done by separating text and tables. This way the retrieval is more likely to pull relevant text/tables.
+   2. Chunks have small overlap with each other. This way, titles are preserved
+3. Multi-Representation Indexing (See: [TowardsDataScience](https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/))
+   1. Use a heuristic to determine which tables need MRI
+   2. Using Multi-Representation Indexing to do this
+4. Query transformation
+   1. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
    Operations" may not be found from "net income", so we need an AI to clean up queries).
-7. Uses a custom component in langchain to parse documents with higher quality using Unstructured directly
 
 ### Folder Explanation
 
@@ -89,3 +96,18 @@ retrieved for every query.
 ---
 
 ## See the `docs` folder for flowcharts, prompts, schemas and more specific information.
+
+--- 
+<details>
+<summary>Creation Ethos</summary>
+
+### Articles Used in the Exploring and Improving RAG Methodology:
+- Multi-Representation: https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/
+- Chunking Considerations: https://towardsdatascience.com/semantic-chunking-for-rag-35b7675ffafd/
+- Custom Pipelines: https://towardsdatascience.com/callbacks-and-pipeline-structures-in-langchain-925aa077227e/
+- Query Transformation: https://towardsdatascience.com/advanced-query-transformations-to-improve-rag-11adca9b19d1/
+
+### Why not use PDF Parsing and Relational Databases (Why Use RAG)?
+The files will not all be in standardized formats; this project utilizes SEC filings, but it is made to be expandable, such that if someone were to upload other types of similar financial documents, they would easily be able to still use the tool.
+
+</details>
