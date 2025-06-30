@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added langfuse">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: updated README.md">
+      <change afterPath="$PROJECT_DIR$/.exampleenv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chromadb/chroma.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ingestion/test_response.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/test_response.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,11 +23,8 @@
       </list>
     </option>
   </component>
-  <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="true" />
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/langfuse" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -228,7 +228,9 @@
       <workItem from="1750768049792" duration="35372000" />
       <workItem from="1750971152756" duration="10037000" />
       <workItem from="1751076792882" duration="1000" />
-      <workItem from="1751115226975" duration="3982000" />
+      <workItem from="1751115226975" duration="5611000" />
+      <workItem from="1751294149519" duration="573000" />
+      <workItem from="1751294730115" duration="5250000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -470,14 +472,21 @@
       <option name="project" value="LOCAL" />
       <updated>1751119317791</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="feat: updated README.md">
+      <option name="closed" value="true" />
+      <created>1751119710826</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1751119710826</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: refactored folders and updated documentation" />
     <MESSAGE value="feat: added conversation agent" />
     <MESSAGE value="feat: updated json structure of document ingestion agent" />
     <MESSAGE value="feat: completed query engine and query agent" />
@@ -502,7 +511,8 @@
     <MESSAGE value="fix: updated database_setup to include metadata" />
     <MESSAGE value="fix: deleted old file" />
     <MESSAGE value="feat: added langfuse" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added langfuse" />
+    <MESSAGE value="feat: updated README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: updated README.md" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -520,7 +530,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1750971191891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751048556841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751299859841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1750601765147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />

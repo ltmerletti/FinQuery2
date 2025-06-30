@@ -1,13 +1,34 @@
+import os
+from pathlib import Path
 from pprint import pprint
 
 from langchain_chroma import Chroma
+from langchain_core.runnables import RunnableConfig
+
 from chromainit.database_setup import get_embeddings
 
+from langfuse import Langfuse
+from langfuse.langchain import CallbackHandler
+
+from dotenv import load_dotenv
 
 def test_simple_query(query_text: str, n_results: int = 5):
     if not query_text:
         print("Query text cannot be empty.")
         return None
+
+    dotenv_path = Path(__file__).parent.parent / ".env"
+    load_dotenv(dotenv_path=dotenv_path)
+
+    langfuse = Langfuse(
+        secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+        public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+        host=os.getenv("LANGFUSE_HOST")
+    )
+
+    langfuse_handler = CallbackHandler()
+
+    run_config = RunnableConfig(callbacks=[langfuse_handler])
 
     vector_store = Chroma(
         collection_name="financial_documents",
@@ -22,7 +43,7 @@ def test_simple_query(query_text: str, n_results: int = 5):
         search_kwargs={'filter': metadata_filter}
     )
 
-    results = retriever.invoke(query_text)
+    results = retriever.invoke(query_text, config=run_config)
 
     return results
 
