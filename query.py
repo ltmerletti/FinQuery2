@@ -12,34 +12,15 @@ from langfuse.langchain import CallbackHandler
 
 from dotenv import load_dotenv
 
-def test_simple_query(query_text: str, n_results: int = 5):
+def test_simple_query(query_text: str, vectorstore):
     if not query_text:
         print("Query text cannot be empty.")
         return None
 
-    dotenv_path = Path(__file__).parent.parent / ".env"
-    load_dotenv(dotenv_path=dotenv_path)
-
-    langfuse = Langfuse(
-        secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
-        public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-        host=os.getenv("LANGFUSE_HOST")
-    )
-
-    langfuse_handler = CallbackHandler()
-
-    run_config = RunnableConfig(callbacks=[langfuse_handler])
-
-    vector_store = Chroma(
-        collection_name="financial_documents",
-        embedding_function=get_embeddings(),
-        persist_directory="../chromadb"
-    )
-
     target_company = "AAPL"
     metadata_filter = {"company": target_company}
 
-    retriever = vector_store.as_retriever(
+    retriever = vectorstore.as_retriever(
         search_kwargs={'filter': metadata_filter}
     )
 
@@ -79,5 +60,24 @@ if __name__ == "__main__":
         "How much cash and cash equivalents did Apple have at the end of the 2023 fiscal year?",
     ]
 
+    file = Path(__file__).parent / ".env"
+    load_dotenv(dotenv_path=file)
+
+    langfuse = Langfuse(
+        secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
+        public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
+        host=os.getenv("LANGFUSE_HOST")
+    )
+
+    langfuse_handler = CallbackHandler()
+
+    run_config = RunnableConfig(callbacks=[langfuse_handler])
+
+    vector_store = Chroma(
+        collection_name="financial_documents",
+        embedding_function=get_embeddings(),
+        persist_directory="../chromadb"
+    )
+
     for question in rag_test_questions:
-        pprint(test_simple_query(question))
+        pprint(test_simple_query(question, vector_store))
