@@ -1,18 +1,10 @@
 import pathlib
 import re
-from typing import List, Callable, Dict, Any, Tuple
+from typing import List, Callable, Dict, Tuple
 
 from unstructured.partition.pdf import partition_pdf
 from unstructured.documents.elements import Table
-from langchain_core.document_loaders import BaseLoader
 
-
-# ==============================================================================
-# HEURISTIC DEFINITIONS
-# ==============================================================================
-# Each heuristic is a function that takes a table element and its text,
-# and returns a tuple: (bool, str). The bool is True if it's a "hit",
-# and the string is the reason for the decision.
 
 def _heuristic_reject_boilerplate(table_element: Table, table_text: str) -> bool:
     negative_keywords = ["exhibit", "item", "risk factors", "forward-looking statements"]
@@ -115,10 +107,6 @@ class HeuristicTestbed:
             print(e)
 
     def run_and_report(self, heuristics: Dict[str, Callable]):
-        """
-        Runs a set of heuristics against the extracted tables and prints a
-        detailed comparative report.
-        """
         self._partition_and_extract_tables()
         if not self.tables_data: return
 
@@ -140,7 +128,6 @@ class HeuristicTestbed:
         self._print_report(results)
 
     def _print_report(self, results: Dict[str, List[Dict]]):
-        """Formats and prints the final report."""
         print("\n" + "=" * 80)
         print("--- HEURISTIC TESTBED SUMMARY ---")
         print("=" * 80)
@@ -162,12 +149,8 @@ class HeuristicTestbed:
                 print(f"   Content: {cleaned_content[:250]}...")
 
 
-# ==============================================================================
-# RUNNABLE BLOCK TO EXECUTE THE TEST
-# ==============================================================================
 if __name__ == "__main__":
 
-    # Define all the heuristics you want to test in this dictionary.
     heuristics_to_test = {
         "NEW Ensemble Model": heuristic_ensemble_model,
     }

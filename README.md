@@ -73,10 +73,12 @@ retrieved for every query.
 2. Chunking
    1. Chunking is done by separating text and tables. This way the retrieval is more likely to pull relevant text/tables.
    2. Chunks have small overlap with each other. This way, titles are preserved
-3. Multi-Representation Indexing (See: [TowardsDataScience](https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/))
+3. Chunk Augmentation
+   1. Chunks are augmented with additional metadata like page number, paper title, section title, relevance keywords, and summary
+4. Multi-Representation Indexing (See: [TowardsDataScience](https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/))
    1. Use a heuristic to determine which tables need MRI
-   2. Using Multi-Representation Indexing to do this
-4. Query transformation
+   2. Use an LLM to generate these "multiple representations" (questions) as additional metadata for the chunks
+5. Query transformation
    1. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
    Operations" may not be found from "net income", so we need an AI to clean up queries).
 
@@ -84,12 +86,16 @@ retrieved for every query.
 
 - `ingestion`
     - The directory containing all logic related to data ingestion
+- `api`
+  - The directory containing the API logic and the API itself
+- `langfuse`
+  - The directory containing the LangFuse GitHub repository (for self hosting purposes)
 - `reports`
     - The directory containing all reports to use
 - `chromadb`
     - The directory containing the ChromaDB instance
 - `testing`
-    - The directory containing all pytest tests
+    - The directory containing all pytest tests & playground for experimental features
 - `docs`
     - The folder containing all documentation
 
@@ -106,6 +112,9 @@ retrieved for every query.
 - Chunking Considerations: https://towardsdatascience.com/semantic-chunking-for-rag-35b7675ffafd/
 - Custom Pipelines: https://towardsdatascience.com/callbacks-and-pipeline-structures-in-langchain-925aa077227e/
 - Query Transformation: https://towardsdatascience.com/advanced-query-transformations-to-improve-rag-11adca9b19d1/
+- Chunk Augmentation: https://x.com/svpino/status/1940006237384712404
+- Embedding Model Choice: https://huggingface.co/spaces/mteb/leaderboard
+- Multi-Representation Model Choice: https://artificialanalysis.ai/
 
 ### Why not use PDF Parsing and Relational Databases (Why Use RAG)?
 The files will not all be in standardized formats; this project utilizes SEC filings, but it is made to be expandable, such that if someone were to upload other types of similar financial documents, they would easily be able to still use the tool.

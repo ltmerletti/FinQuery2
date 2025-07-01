@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added langfuse support">
-      <change afterPath="$PROJECT_DIR$/ingestion/test_heuristic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/testing/playground/test_generation.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added some heuristics [temp]">
+      <change afterPath="$PROJECT_DIR$/ingestion/create_multi_representation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ingestion/heuristic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ingestion/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ingestion/test_heuristic.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing/playground/test_heuristic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +23,17 @@
       <list>
         <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -69,7 +83,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -221,7 +235,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/test_heuristic.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/testing/playground/test_heuristic.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -280,7 +294,7 @@
       <workItem from="1751115226975" duration="5611000" />
       <workItem from="1751294149519" duration="573000" />
       <workItem from="1751294730115" duration="13847000" />
-      <workItem from="1751320588270" duration="5838000" />
+      <workItem from="1751320588270" duration="14858000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -538,7 +552,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751300034120</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="feat: added some heuristics [temp]">
+      <option name="closed" value="true" />
+      <created>1751326717514</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1751326717514</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,7 +578,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: updated json structure of document ingestion agent" />
     <MESSAGE value="feat: completed query engine and query agent" />
     <MESSAGE value="feat: updated conversation agent and documentation to support it" />
     <MESSAGE value="feat: updated documentation for easier understanding" />
@@ -581,7 +602,8 @@
     <MESSAGE value="feat: added langfuse" />
     <MESSAGE value="feat: updated README.md" />
     <MESSAGE value="feat: added langfuse support" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added langfuse support" />
+    <MESSAGE value="feat: added some heuristics [temp]" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added some heuristics [temp]" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
