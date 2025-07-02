@@ -75,12 +75,13 @@ retrieved for every query.
    2. Chunks have small overlap with each other. This way, titles are preserved
 3. Chunk Augmentation
    1. Chunks are augmented with additional metadata like page number, paper title, section title, relevance keywords, and summary
-4. Multi-Representation Indexing (See: [TowardsDataScience](https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/))
-   1. Use a heuristic to determine which tables need MRI
-   2. Use an LLM to generate these "multiple representations" (questions) as additional metadata for the chunks
-5. Query transformation
+4. Query transformation
    1. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
    Operations" may not be found from "net income", so we need an AI to clean up queries).
+
+[//]: # (5. Multi-Representation Indexing &#40;See: [TowardsDataScience]&#40;https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/&#41;&#41;)
+[//]: # (   1. Use a heuristic to determine which tables need MRI)
+[//]: # (   2. Use an LLM to generate these "multiple representations" &#40;questions&#41; as additional metadata for the chunks)
 
 ### Folder Explanation
 
@@ -114,7 +115,7 @@ retrieved for every query.
 - Query Transformation: https://towardsdatascience.com/advanced-query-transformations-to-improve-rag-11adca9b19d1/
 - Chunk Augmentation: https://x.com/svpino/status/1940006237384712404
 - Embedding Model Choice: https://huggingface.co/spaces/mteb/leaderboard
-- Multi-Representation Model Choice: https://artificialanalysis.ai/
+- Model Choice: https://artificialanalysis.ai/
 
 ### Why not use PDF Parsing and Relational Databases (Why Use RAG)?
 The files will not all be in standardized formats; this project utilizes SEC filings, but it is made to be expandable, such that if someone were to upload other types of similar financial documents, they would easily be able to still use the tool.

@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from unstructured.partition.pdf import partition_pdf
 from unstructured.chunking.title import chunk_by_title
@@ -16,11 +16,13 @@ class Context:
         page_number: int = 0,
         section_title: str = "",
         relevant_keywords: list[str] = None,
+        summary: Optional[str] = None
     ):
         self.pdf_title = pdf_title
         self.page_number = page_number
         self.section_title = section_title
         self.relevant_keywords = relevant_keywords or []
+        self.summary = summary or None
 
     def _to_string(self):
         return f"""
@@ -60,47 +62,33 @@ class CustomPDFLoader(BaseLoader):
     def __init__(self, file_path: str):
         self.file_path = pathlib.Path(file_path)
 
-    def _load_pdf(self, pdf_file_path: pathlib.Path) -> List[Document]:
+    def _partition_and_separate_elements(self, pdf_file_path: pathlib.Path) -> Tuple[List, List]:
+        """
+        Partitions the PDF and separates its elements into tables and text.
+        """
         print(f"Partitioning document: {pdf_file_path}")
 
         if not str(pdf_file_path).endswith(".pdf"):
-            return []
+            return [], []
 
         elements = list(partition_pdf(pdf_file_path, strategy="hi_res", infer_table_structure=True))
+        print(f"\n--- Found {len(elements)} raw elements ---")
 
-        print("\n--- Found Elements ---")
-
-        final_chunks = []
-
-        company_ticker = pdf_file_path.stem.split('-')[0].upper()
-
-        table_elements = []
-        text_elements = []
-
-        # split text and table elements
-        # this way we can run targeted postprocessing on the tables and texts for better quality
-        for element in elements:
-            if isinstance(element, Table):
-                table_elements.append(element)
-            else:
-                text_elements.append(element)
+        table_elements = [el for el in elements if isinstance(el, Table)]
+        text_elements = [el for el in elements if not isinstance(el, Table)]
 
         print(f"--- Separated content into {len(table_elements)} tables and {len(text_elements)} text elements. ---")
+        return table_elements, text_elements
 
-        text_chunks = chunk_by_title(
-            text_elements,
-            max_characters=1000,
-            new_after_n_chars=800,
-            combine_text_under_n_chars=500,
-            overlap=200,
-            overlap_all=True
-        )
-
-        # run the clean text on non tables
+    def _process_table_elements(self, table_elements: List, pdf_file_path: pathlib.Path, company_ticker: str) -> List[
+        Document]:
+        """
+        Processes a list of table elements into Document objects.
+        """
+        table_chunks = []
         for table_el in table_elements:
             table_text = getattr(table_el.metadata, 'text_as_html', None) or table_el.text
-
-            cleaned_text = _clean_element_text(table_text)
+            cleaned_text = _clean_element_text(table_text)  # Assumes _clean_element_text exists
 
             context = Context(
                 pdf_title=pdf_file_path.stem,
@@ -118,12 +106,28 @@ class CustomPDFLoader(BaseLoader):
                     "element_type": "table"
                 }
             )
+            table_chunks.append(new_chunk)
+        return table_chunks
 
-            final_chunks.append(new_chunk)
+    def _process_text_elements(self, text_elements: List, pdf_file_path: pathlib.Path, company_ticker: str) -> List[
+        Document]:
+        """
+        Chunks a list of text elements and processes them into Document objects.
+        """
+        text_chunks_raw = chunk_by_title(
+            text_elements,
+            max_characters=1000,
+            new_after_n_chars=800,
+            combine_text_under_n_chars=500,
+            overlap=200,
+            overlap_all=True
+        )
 
-        for chunk in text_chunks:
-            cleaned_text = _clean_element_text(chunk.text)
+        final_text_chunks = []
+        for chunk in text_chunks_raw:
+            cleaned_text = _clean_element_text(chunk.text)  # Assumes _clean_element_text exists
 
+            # Filter out very short, likely irrelevant, text snippets
             if len(cleaned_text) > 50:
                 new_chunk = Document(
                     page_content=cleaned_text,
@@ -134,7 +138,25 @@ class CustomPDFLoader(BaseLoader):
                         "element_type": "text"
                     }
                 )
-                final_chunks.append(new_chunk)
+                final_text_chunks.append(new_chunk)
+        return final_text_chunks
+
+    # !!! Main Function !!!
+    def _load_pdf(self, pdf_file_path: pathlib.Path) -> List[Document]:
+        """
+        Loads, partitions, cleans, and chunks a PDF file into a list of Documents.
+        """
+        table_elements, text_elements = self._partition_and_separate_elements(pdf_file_path)
+
+        if not table_elements and not text_elements:
+            return []
+
+        company_ticker = pdf_file_path.stem.split('-')[0].upper()
+
+        table_chunks = self._process_table_elements(table_elements, pdf_file_path, company_ticker)
+        text_chunks = self._process_text_elements(text_elements, pdf_file_path, company_ticker)
+
+        final_chunks = table_chunks + text_chunks
 
         print(f"--- Finished processing. Generated {len(final_chunks)} total chunks for {pdf_file_path.name}. ---\n")
 
