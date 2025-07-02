@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import List
+from typing import List, Optional
 
 from unstructured.partition.pdf import partition_pdf
 from unstructured.chunking.title import chunk_by_title
@@ -9,6 +9,27 @@ from unstructured.documents.elements import Table
 from langchain_core.documents import Document
 from langchain_core.document_loaders import BaseLoader
 
+class Context:
+    def __init__(
+        self,
+        pdf_title: str = "",
+        page_number: int = 0,
+        section_title: str = "",
+        relevant_keywords: list[str] = None,
+    ):
+        self.pdf_title = pdf_title
+        self.page_number = page_number
+        self.section_title = section_title
+        self.relevant_keywords = relevant_keywords or []
+
+    def _to_string(self):
+        return f"""
+    [CONTEXT]
+    PDF Title: {self.pdf_title}
+    Page Number: {self.page_number}
+    Section Title: {self.section_title}
+    Relevant Keywords: {str(self.relevant_keywords)}
+    """
 
 def _clean_element_text(text: str) -> str:
     # removes urls (we don't need them for the type of query)
@@ -25,6 +46,14 @@ def _clean_element_text(text: str) -> str:
     text = re.sub(r'\n\s*\n', '\n', text)
 
     return text.strip()
+
+
+def getSectionTitle(param):
+    pass
+
+
+def getRelevantKeywords():
+    pass
 
 
 class CustomPDFLoader(BaseLoader):
@@ -58,12 +87,27 @@ class CustomPDFLoader(BaseLoader):
 
         print(f"--- Separated content into {len(table_elements)} tables and {len(text_elements)} text elements. ---")
 
+        text_chunks = chunk_by_title(
+            text_elements,
+            max_characters=1000,
+            new_after_n_chars=800,
+            combine_text_under_n_chars=500,
+            overlap=200,
+            overlap_all=True
+        )
+
         # run the clean text on non tables
         for table_el in table_elements:
-            table_text = table_el.metadata.text_as_html if hasattr(table_el.metadata,
-                                                                   'text_as_html') and table_el.metadata.text_as_html else table_el.text
+            table_text = getattr(table_el.metadata, 'text_as_html', None) or table_el.text
 
             cleaned_text = _clean_element_text(table_text)
+
+            context = Context(
+                pdf_title=pdf_file_path.stem,
+                page_number=1,
+                section_title=getSectionTitle(1),
+                relevant_keywords=getRelevantKeywords()
+            )
 
             new_chunk = Document(
                 page_content=cleaned_text,
@@ -76,15 +120,6 @@ class CustomPDFLoader(BaseLoader):
             )
 
             final_chunks.append(new_chunk)
-
-        text_chunks = chunk_by_title(
-            text_elements,
-            max_characters=1000,
-            new_after_n_chars=800,
-            combine_text_under_n_chars=500,
-            overlap=200,
-            overlap_all=True
-        )
 
         for chunk in text_chunks:
             cleaned_text = _clean_element_text(chunk.text)
