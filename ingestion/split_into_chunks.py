@@ -24,6 +24,7 @@ from ingestion.split_into_chunks_lib.Context import Context
 # - [x] add support for the keywords and other important context
 # - [ ] add support for 1 line summaries of tables.
 # - [x] remove empty tables
+# - [ ] fix table of contents semantic density being too high? (test + see if is issue first)
 
 # this pattern gets rid of the 'Apple Inc. | 2023 Form 10-K | 21' stuff we don't want
 JUNK_FOOTER_PATTERN = re.compile(r'^.*Form 10-K\s*\|\s*\d+\s*$', re.IGNORECASE | re.MULTILINE)
