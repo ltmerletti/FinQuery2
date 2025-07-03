@@ -1,5 +1,4 @@
 import os
-import re
 from typing import Dict
 from dotenv import load_dotenv
 
@@ -66,6 +65,7 @@ Table:
 [ASSISTANT]
 {{"summary": "A consolidated balance sheet comparing total assets and total liabilities between fiscal years 2023 and 2022."}}
 ---
+\\no_think
 """
 
     prompt = ChatPromptTemplate.from_messages([
