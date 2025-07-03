@@ -6,3 +6,4 @@ langchain_huggingface
 pydantic
 chromadb
 unstructured
+bs4

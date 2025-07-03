@@ -5,12 +5,25 @@ import html
 
 from unstructured.partition.pdf import partition_pdf
 from unstructured.chunking.title import chunk_by_title
-from unstructured.documents.elements import Table, Text, Title
+from unstructured.documents.elements import Table, Text, Title, Element
+
+import bs4
+
+import htmltabletomd
 
 from langchain_core.documents import Document
 from langchain_core.document_loaders import BaseLoader
 
 from ingestion.split_into_chunks_lib.Context import Context
+
+# TODO:
+# - [x] Convert HTML tables to markdown
+# - [x] Add the element type as part of context. May help during retrieval.
+# - [x] fix the clean_table_text function so it's more specific to tables.
+# - [ ] fix the messy section title yes || no issue
+# - [x] add support for the keywords and other important context
+# - [ ] add support for 1 line summaries of tables.
+# - [x] remove empty tables
 
 # this pattern gets rid of the 'Apple Inc. | 2023 Form 10-K | 21' stuff we don't want
 JUNK_FOOTER_PATTERN = re.compile(r'^.*Form 10-K\s*\|\s*\d+\s*$', re.IGNORECASE | re.MULTILINE)
@@ -18,6 +31,7 @@ JUNK_FOOTER_PATTERN = re.compile(r'^.*Form 10-K\s*\|\s*\d+\s*$', re.IGNORECASE |
 CHECKBOX_PATTERN = re.compile(r'Yes\s*☒\s*No\s*☐', re.IGNORECASE)
 # this filters out sec links
 SEC_LINK_PATTERN = re.compile(r'https?://www\.sec\.gov/Archives/edgar/data/.*\.htm', re.IGNORECASE)
+
 
 def _clean_element_text(textt: str) -> str:
     # removes urls (we don't need them for the type of query)
@@ -36,36 +50,104 @@ def _clean_element_text(textt: str) -> str:
     return textt.strip()
 
 
-def getSectionTitle(param):
-    pass
+def _clean_table_text(textt: str) -> str:
+    # removes empty lines
+    textt = re.sub(r'\n\s*\n', '\n', textt)
+
+    return textt.strip()
 
 
-def getRelevantKeywords():
-    pass
+def _is_table_functionally_empty(table_htmll: str) -> bool:
+    if not table_htmll:
+        return True
+
+    soup = bs4.BeautifulSoup(table_htmll, 'html.parser')
+
+    data_cells = soup.find_all('td')
+
+    for cell in data_cells:
+        if cell.get_text(strip=True):
+            return False
+
+    return True
+
+
+# These sets are defined once and used by the function.
+# They are deliberately kept short for this example; you can expand them.
+FINANCIAL_TERMS = {
+    'revenue', 'sales', 'income', 'earnings', 'profit', 'margin', 'assets',
+    'liabilities', 'equity', 'debt', 'cash flow', 'expenses', 'costs',
+    'amortization', 'depreciation', 'investment', 'securities', 'shares'
+}
+# A more comprehensive set of stop words, including common financial boilerplate
+STOP_WORDS = {
+    'a', 'an', 'and', 'the', 'is', 'it', 'in', 'on', 'for', 'of', 'as', 'to', 'inc',
+    'was', 'were', 'by', 'with', 'or', 'at', 'from', 'that', 'this', 'llc',
+    'company', 'inc', 'corp', 'ltd', 'about', 'after', 'all', 'also', 'been',
+    'because', 'but', 'can', 'could', 'did', 'do', 'due', 'has', 'had', 'have',
+    'how', 'however', 'into', 'its', 'just', 'may', 'most', 'must', 'not',
+    'other', 'our', 'out', 'over', 'said', 'should', 'so', 'some', 'such',
+    'than', 'then', 'there', 'these', 'they', 'through', 'under', 'upon',
+    'use', 'used', 'using', 'various', 'very', 'was', 'we', 'were', 'what',
+    'when', 'where', 'which', 'while', 'who', 'why', 'will', 'would', 'you',
+    'your', 'notes', 'note', 'see', 'title', 'part', 'item'
+}
+
+
+def get_relevant_keywords(element: Element, max_keywords: int = 15) -> List[str]:
+    if not element or not element.text.strip():
+        return []
+
+    candidates = set()
+
+    # --- Heuristic 1: Specialized Logic for Tables ---
+    if isinstance(element, Table):
+        table_html = getattr(element.metadata, 'text_as_html', '')
+        if table_html:
+            soup = bs4.BeautifulSoup(table_html, 'html.parser')
+            # Extract text from all header cells (<th>)
+            for header in soup.find_all('th'):
+                candidates.add(header.get_text(strip=True))
+            # Extract text from the first cell (<td>) of each row (<tr>)
+            for row in soup.find_all('tr'):
+                first_cell = row.find('td')
+                if first_cell:
+                    candidates.add(first_cell.get_text(strip=True))
+
+    # Add capitalized phrases from the element's main text
+    capitalized_phrases = re.findall(r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b', element.text)
+    candidates.update(capitalized_phrases)
+
+    # Add all-caps acronyms
+    acronyms = re.findall(r'\b[A-Z]{2,5}\b', element.text)
+    candidates.update(acronyms)
+
+    final_keywords = []
+    seen_keywords = set()
+
+    sorted_candidates = sorted(list(candidates), key=len, reverse=True)
+
+    for keyword in sorted_candidates:
+        kw_clean = keyword.strip(" “”)’'.,:()").replace('’', "'")
+        kw_lower = kw_clean.lower()
+
+        if (len(kw_clean) > 2 and
+                kw_lower not in STOP_WORDS and
+                not kw_lower.isdigit()):
+
+            if kw_lower not in seen_keywords:
+                final_keywords.append(kw_clean)
+                seen_keywords.add(kw_lower)
+
+        if len(final_keywords) >= max_keywords:
+            break
+
+    return final_keywords
 
 
 class CustomPDFLoader(BaseLoader):
     def __init__(self, file_path: str):
         self.file_path = pathlib.Path(file_path)
-
-    # def _partition_and_separate_elements(self, pdf_file_path: pathlib.Path) -> Tuple[
-    #     Tuple[List[Table], List[Context]], Tuple[List[Text], List[Context]]]:
-    #     """
-    #     Partitions the PDF and separates its elements into tables and text.
-    #     """
-    #     print(f"Partitioning document: {pdf_file_path}")
-    #
-    #     if not str(pdf_file_path).endswith(".pdf"):
-    #         return [], []
-    #
-    #     elements = list(partition_pdf(pdf_file_path, strategy="hi_res", infer_table_structure=True))
-    #     print(f"\n--- Found {len(elements)} raw elements ---")
-    #
-    #     table_elements = [el for el in elements if isinstance(el, Table)]
-    #     text_elements = [el for el in elements if not isinstance(el, Table)]
-    #
-    #     print(f"--- Separated content into {len(table_elements)} tables and {len(text_elements)} text elements. ---")
-    #     return table_elements, text_elements
 
     def partition_and_separate_elements(self, pdf_file_path: pathlib.Path) -> Tuple[
         Tuple[List[Table], List[Context]], Tuple[List[Text], List[Context]]]:
@@ -105,15 +187,25 @@ class CustomPDFLoader(BaseLoader):
 
                 continue
 
+            eltype = "Table" if isinstance(el, Table) else "Text"
+
             contextt = Context(
                 pdf_title=pdf_file_path.stem,
                 page_number=getattr(el.metadata, 'page_number', None),
-                section_title=current_section_title
+                section_title=current_section_title,
+                element_type="Table" if isinstance(el, Table) else "Text"
             )
 
+            # Step 2: Now, use the element AND the new context to generate keywords.
+            keywords = get_relevant_keywords(el)
+
+            # Step 3: Add the generated keywords back into the context object.
+            contextt.relevant_keywords = keywords
+
             if isinstance(el, Table):
-                table_elements.append(el)
-                table_contexts.append(contextt)
+                if not _is_table_functionally_empty(getattr(el.metadata, 'text_as_html', None)):
+                    table_elements.append(el)
+                    table_contexts.append(contextt)
             else:
                 if len(el.text.strip()) > 25:
                     text_elements.append(el)
@@ -132,13 +224,13 @@ class CustomPDFLoader(BaseLoader):
         table_chunks = []
         for table_el in table_elements:
             table_text = getattr(table_el.metadata, 'text_as_html', None) or table_el.text
-            cleaned_text = _clean_element_text(table_text)  # Assumes _clean_element_text exists
+            cleaned_text = _clean_table_text(table_text)
 
             context = Context(
                 pdf_title=pdf_file_path.stem,
                 page_number=1,
-                section_title=getSectionTitle(1),
-                relevant_keywords=getRelevantKeywords()
+                section_title="abc123",
+                relevant_keywords=get_relevant_keywords()
             )
 
             new_chunk = Document(
@@ -169,7 +261,7 @@ class CustomPDFLoader(BaseLoader):
 
         final_text_chunks = []
         for chunk in text_chunks_raw:
-            cleaned_text = _clean_element_text(chunk.text)  # Assumes _clean_element_text exists
+            cleaned_text = _clean_element_text(chunk.text)
 
             # Filter out very short, likely irrelevant, text snippets
             if len(cleaned_text) > 50:
@@ -190,7 +282,7 @@ class CustomPDFLoader(BaseLoader):
         """
         Loads, partitions, cleans, and chunks a PDF file into a list of Documents.
         """
-        table_elements, text_elements = self.partition_and_separate_elements(pdf_file_path)
+        (table_elements, _), (text_elements, _) = self.partition_and_separate_elements(pdf_file_path)
 
         if not table_elements and not text_elements:
             return []
@@ -241,7 +333,7 @@ if __name__ == "__main__":
 
             # Print the actual content of the table (as HTML)
             print("[CONTENT]")
-            table_html = getattr(table.metadata, 'text_as_html', table.text)
+            table_html = htmltabletomd.convert_table(html.unescape(getattr(table.metadata, 'text_as_html', table.text)))
             print(table_html[:1000] + "..." if len(table_html) > 1000 else table_html)  # Truncate long tables
             print("-" * 50)
 
