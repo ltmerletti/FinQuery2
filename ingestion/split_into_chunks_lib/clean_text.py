@@ -1,5 +1,6 @@
 import re
 
+
 def clean_element_text(textt: str) -> str:
     # removes urls (we don't need them for the type of query)
     textt = re.sub(r'https?://\S+', '', textt, flags=re.MULTILINE)
