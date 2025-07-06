@@ -76,8 +76,13 @@ if __name__ == "__main__":
     vector_store = Chroma(
         collection_name="financial_documents",
         embedding_function=get_embeddings(),
-        persist_directory="../chromadb"
+        persist_directory="./chromadb"
     )
 
     for question in rag_test_questions:
         pprint(test_simple_query(question, vector_store))
+
+    print(vector_store.get())
+
+    data = vector_store.get()
+    print(data)

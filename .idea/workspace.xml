@@ -4,16 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: completed split_into_chunks.py logic for augmentation + higher quality">
-      <change afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/load_pdf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/partition_and_separate_elements.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: completed all chunking/augmentation logic and improved file structure">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/af73acf3-294e-446b-bc28-5f970e093a7a/data_level0.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/af73acf3-294e-446b-bc28-5f970e093a7a/header.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/af73acf3-294e-446b-bc28-5f970e093a7a/index_metadata.pickle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/af73acf3-294e-446b-bc28-5f970e093a7a/length.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/af73acf3-294e-446b-bc28-5f970e093a7a/link_lists.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ingestion/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/Context.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/Context.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/clean_text.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/clean_text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/get_one_line_summary.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/get_one_line_summary.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/is_table_empty.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/is_table_empty.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/load_pdf.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/split_into_chunks_lib/load_pdf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plans.md" beforeDir="false" afterPath="$PROJECT_DIR$/plans.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/query.py" beforeDir="false" afterPath="$PROJECT_DIR$/query.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +75,7 @@
     "Python.delete_collection.executor": "Run",
     "Python.get_one_line_summary.executor": "Run",
     "Python.langchaindef.executor": "Run",
+    "Python.load_pdf.executor": "Run",
     "Python.query.executor": "Run",
     "Python.run.executor": "Run",
     "Python.split_into_chunks.executor": "Run",
@@ -114,7 +118,7 @@
       <recent name="$PROJECT_DIR$/testing/playground" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.split_into_chunks">
+  <component name="RunManager" selected="Python.query">
     <configuration name="get_one_line_summary" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
@@ -193,12 +197,35 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/query.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/run.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -230,36 +257,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="split_into_parts_llamaparse" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="FinQuery2" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/split_into_parts_llamaparse.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.query" />
+        <item itemvalue="Python.run" />
         <item itemvalue="Python.split_into_chunks" />
         <item itemvalue="Python.get_one_line_summary" />
         <item itemvalue="Python.langchaindef" />
-        <item itemvalue="Python.split_into_parts_llamaparse" />
-        <item itemvalue="Python.query" />
       </list>
     </recent_temporary>
   </component>
@@ -304,7 +308,7 @@
       <workItem from="1751294149519" duration="573000" />
       <workItem from="1751294730115" duration="13847000" />
       <workItem from="1751320588270" duration="14858000" />
-      <workItem from="1751463395687" duration="37810000" />
+      <workItem from="1751463395687" duration="48679000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -634,7 +638,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751561520588</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="feat: completed all chunking/augmentation logic and improved file structure">
+      <option name="closed" value="true" />
+      <created>1751598362317</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1751598362317</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -652,7 +664,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: initialized PDF splitting" />
     <MESSAGE value="feat: added plan for chunking" />
     <MESSAGE value="fix: updated workspace.xml" />
     <MESSAGE value="feat: added/updated chroma init script" />
@@ -677,7 +688,8 @@
     <MESSAGE value="feat: added context functions and improved performance of RAG" />
     <MESSAGE value="feat: added one-line summary logic" />
     <MESSAGE value="feat: completed split_into_chunks.py logic for augmentation + higher quality" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: completed split_into_chunks.py logic for augmentation + higher quality" />
+    <MESSAGE value="feat: completed all chunking/augmentation logic and improved file structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: completed all chunking/augmentation logic and improved file structure" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -692,8 +704,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/FinQuery2$langchaindef.coverage" NAME="langchaindef Coverage Results" MODIFIED="1751499851071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$load_pdf.coverage" NAME="load_pdf Coverage Results" MODIFIED="1751640060501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/split_into_chunks_lib" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_heuristic.coverage" NAME="test_heuristic Coverage Results" MODIFIED="1751326336877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$query.coverage" NAME="query Coverage Results" MODIFIED="1751466631338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$query.coverage" NAME="query Coverage Results" MODIFIED="1751835410187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_generation.coverage" NAME="test_generation Coverage Results" MODIFIED="1751321757919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/testing" />
     <SUITE FILE_PATH="coverage/FinQuery2$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1751549479338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
@@ -703,9 +716,9 @@
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_parts_llamaparse.coverage" NAME="split_into_parts_llamaparse Coverage Results" MODIFIED="1751499149663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751406678595" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751835067978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751299859841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1751597319135" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
+    <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1751832929604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
   </component>
 </project>

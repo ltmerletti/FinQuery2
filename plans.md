@@ -1,12 +1,8 @@
-- [ ] Friday, June 27th 2025
-
-Given:
-- Document
-- Question from user
-
-Develop a system such that:
-- Can ask one question from the user and answer properly
-- Can ask multiple questions from user and answer properly
-
-Then: 
-- Send result of rag query to LLM and have it write it in human-readable format
+TODO:
+- Implement a deduplication system somehow
+- Attempt MRI (if time permits)
+- Finish pipeline to LLM (Making sure to remove all context *before* sending it to LLM to preserve tokens)
+- Make 100 total questions with answers and have an AI like gemini evaluate them for a test. 
+- Make this PDF breakdown thing (chunker, etc.) into a library
+- Try to remove <30 character chunks to see why they exist
+- 

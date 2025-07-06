@@ -22,28 +22,7 @@ if __name__ == "__main__":
 
     loader = CustomPDFLoader(file_path=test_file_path)
 
-    try:
-        final_chunks = loader.load()
-
-        print("\n\n" + "=" * 80)
-        print("||" + " VERIFYING FINAL AUGMENTED CHUNKS ".center(76) + "||")
-        print("=" * 80)
-        print(f"\nGenerated a total of {len(final_chunks)} chunks.")
-
-        for i, chunk in enumerate(final_chunks):
-            print(f"\n--- CHUNK {i + 1} ---")
-
-            print("[METADATA]")
-            print(chunk.metadata)
-
-            print("\n[AUGMENTED PAGE_CONTENT]")
-            print(chunk.page_content)
-            print("-" * 80)
-
-    except FileNotFoundError:
-        print(f"ERROR: The file '{test_file_path}' was not found. Please check the path.")
-    except Exception as e:
-        import traceback
-
-        print(f"An unexpected error occurred: {e}")
-        traceback.print_exc()
+    final_chunks: List[Document] = loader.load()
+    for chunk in final_chunks:
+        print(chunk)
+        print("---")
