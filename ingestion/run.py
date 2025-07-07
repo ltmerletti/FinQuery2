@@ -8,7 +8,7 @@ from langchain_core.documents import Document
 
 from chromainit.database_setup import setup_vector_store, setup_record_manager, get_embeddings
 from find_file_paths import get_file_paths
-from split_into_chunks import CustomPDFLoader
+from finquery_parser.loader import CustomPDFLoader
 
 
 def main():
