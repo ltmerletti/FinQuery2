@@ -20,6 +20,18 @@
 
 ---
 
+### How to Run FinQuery
+
+#### Backend
+
+1. Go to the `langfuse` folder and execute `docker compose up` in your terminal
+2. Go to the `api` folder and run `main.py`
+
+#### Frontend
+1. Section in progress
+
+---
+
 ### Backend
 
 - **Primary Language**: [Python](https://www.python.org/)

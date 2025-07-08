@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: finished query.py">
-      <change afterPath="$PROJECT_DIR$/ingestion/pipeline.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: refactored codebase; added API support">
+      <change afterPath="$PROJECT_DIR$/chains/answer_chain.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/prompts/retrieve_answer_prompt.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/chromainit/delete_collection.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/chromainit/delete_collection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ingestion/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/ingestion/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/querying/query.py" beforeDir="false" afterPath="$PROJECT_DIR$/querying/query.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/setup.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,8 +111,8 @@
       <recent name="$PROJECT_DIR$/ingestion/split_into_chunks_lib" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
-    <configuration name="get_one_line_summary" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.answer_chain">
+    <configuration name="answer_chain" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -124,12 +121,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ingestion" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/chains" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ingestion/split_into_chunks_lib/get_one_line_summary.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/chains/answer_chain.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -255,11 +252,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.answer_chain" />
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.query" />
         <item itemvalue="Python.run" />
         <item itemvalue="Python.loader" />
-        <item itemvalue="Python.get_one_line_summary" />
       </list>
     </recent_temporary>
   </component>
@@ -306,7 +303,7 @@
       <workItem from="1751320588270" duration="14858000" />
       <workItem from="1751463395687" duration="50035000" />
       <workItem from="1751838923545" duration="14144000" />
-      <workItem from="1751984835212" duration="12399000" />
+      <workItem from="1751984835212" duration="16397000" />
     </task>
     <task id="LOCAL-00001" summary="new system formatting">
       <option name="closed" value="true" />
@@ -692,7 +689,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752000104807</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="feat: refactored codebase; added API support">
+      <option name="closed" value="true" />
+      <created>1752002937014</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1752002937014</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -710,7 +715,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: updated chunking" />
     <MESSAGE value="feat: updated readme and added more test questions for better accuracy" />
     <MESSAGE value="fix: updated splitting into chunks functionality for improved retrieval" />
     <MESSAGE value="feat: migrated entire codebase to use langchain" />
@@ -735,7 +739,8 @@
     <MESSAGE value="feat: finalized ingestion logic" />
     <MESSAGE value="feat: created query.py" />
     <MESSAGE value="feat: finished query.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: finished query.py" />
+    <MESSAGE value="feat: refactored codebase; added API support" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: refactored codebase; added API support" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
