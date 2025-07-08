@@ -1,17 +1,11 @@
-"""
-This module provides a suite of tools for parsing, cleaning, and structuring
-content from financial PDF documents, specifically focusing on extracting and
-enriching text and table elements for AI-driven analysis.
-"""
-
-# --- Standard Library Imports ---
+# --- Std Lib Imports ---
 import html
 import os
 import pathlib
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
-# --- Third-Party Imports ---
+# --- Special Imports ---
 import bs4
 import htmltabletomd
 from dotenv import load_dotenv
@@ -75,20 +69,39 @@ STOP_WORDS = {
 # ==============================================================================
 
 def partition_and_separate_elements(
-    pdf_file_path: pathlib.Path
+    pdf_file_path: pathlib.Path,
+    junk_filter_patterns: Optional[List[re.Pattern]] = None,
+    title_exclude_patterns: Optional[List[re.Pattern]] = None,
+    custom_stop_words: Optional[Set[str]] = None,
+    max_keywords: int = 5
 ) -> Tuple[Tuple[List[Table], List[Context]], Tuple[List[Text], List[Context]]]:
     """
-    Partitions a PDF document into its constituent elements, enriches them with
-    contextual metadata, and separates them into tables and text.
+    Partitions a PDF, enriches elements with metadata, and separates them.
 
     Args:
-        pdf_file_path: The `pathlib.Path` object pointing to the PDF file.
+        pdf_file_path: The path pointing to the PDF file.
+        junk_filter_patterns: An optional list of compiled regex patterns. Text
+            elements matching any of these patterns will be discarded. Defaults
+            to the standard JUNK_FOOTER_PATTERN and SEC_LINK_PATTERN.
+        title_exclude_patterns: An optional list of compiled regex patterns.
+            Titles matching any of these will not be used as section titles.
+            Defaults to the standard CHECKBOX_PATTERN.
+        custom_stop_words: An optional set of strings to be added to the default
+            stop words list for keyword extraction.
+        max_keywords: The maximum number of keywords to extract for each element's
+            context. Defaults to 5.
 
     Returns:
         A tuple containing two tuples:
         1. A tuple of (list of `Table` elements, list of corresponding `Context` objects).
         2. A tuple of (list of `Text` elements, list of corresponding `Context` objects).
     """
+    # --- Set default patterns if none are provided ---
+    if junk_filter_patterns is None:
+        junk_filter_patterns = [JUNK_FOOTER_PATTERN, SEC_LINK_PATTERN]
+    if title_exclude_patterns is None:
+        title_exclude_patterns = [CHECKBOX_PATTERN]
+
     print(f"Partitioning document: {pdf_file_path}")
     if not str(pdf_file_path).endswith(".pdf"):
         return ([], []), ([], [])
@@ -105,15 +118,17 @@ def partition_and_separate_elements(
 
     for el in elements:
         element_text = el.text.strip()
-        if JUNK_FOOTER_PATTERN.match(element_text) or SEC_LINK_PATTERN.match(element_text):
+        # --- Use the provided junk filter patterns ---
+        if any(pattern.match(element_text) for pattern in junk_filter_patterns):
             continue
 
         if isinstance(el, Title):
             title_text = el.text.strip()
+            # --- Check against both default and custom exclusion patterns ---
             is_good_title = (
                 len(title_text) > 4 and
-                not JUNK_FOOTER_PATTERN.match(title_text) and
-                not CHECKBOX_PATTERN.search(title_text)
+                not any(p.match(title_text) for p in junk_filter_patterns) and
+                not any(p.search(title_text) for p in title_exclude_patterns)
             )
             if is_good_title:
                 current_section_title = title_text
@@ -126,7 +141,10 @@ def partition_and_separate_elements(
             element_type="Table" if isinstance(el, Table) else "Text",
             summary=""
         )
-        context.relevant_keywords = get_relevant_keywords(el, context, 5)
+        # --- Pass custom stop words to the keyword extraction function ---
+        context.relevant_keywords = get_relevant_keywords(
+            el, context, max_keywords=max_keywords, custom_stop_words=custom_stop_words
+        )
 
         if context.element_type == "Table":
             try:
@@ -150,20 +168,30 @@ def partition_and_separate_elements(
     return (table_elements, table_contexts), (text_elements, text_contexts)
 
 
-def load_pdf(pdf_file_path: pathlib.Path) -> List[Document]:
+def load_pdf(
+    pdf_file_path: pathlib.Path,
+    **kwargs
+) -> List[Document]:
     """
-    Loads a PDF file, partitions it, and converts the structured elements
-    into a list of `langchain_core.documents.Document` objects.
+    Loads a PDF, partitions it, and converts elements into Document objects.
+
+    This function acts as a wrapper and passes any additional keyword arguments
+    (e.g., `junk_filter_patterns`, `custom_stop_words`) directly to the
+    `partition_and_separate_elements` function, allowing for flexible processing.
 
     Args:
         pdf_file_path: The `pathlib.Path` object for the PDF to load.
+        **kwargs: Additional keyword arguments to pass to the partitioner, such as:
+            - `junk_filter_patterns`: Optional list of regex patterns to filter junk.
+            - `title_exclude_patterns`: Optional list of regex patterns for titles.
+            - `custom_stop_words`: Optional set of custom stop words.
+            - `max_keywords`: Integer for the max number of keywords.
 
     Returns:
-        A list of `Document` objects, each representing a chunk of text or a
-        table from the PDF, augmented with contextual metadata.
+        A list of `Document` objects for text and tables from the PDF.
     """
     (table_elements, table_contexts), (text_elements, text_contexts) = \
-        partition_and_separate_elements(pdf_file_path)
+        partition_and_separate_elements(pdf_file_path, **kwargs)
 
     if not table_elements and not text_elements:
         return []
@@ -210,22 +238,38 @@ def load_pdf(pdf_file_path: pathlib.Path) -> List[Document]:
 #  Helper and Utility Functions
 # ==============================================================================
 
-def clean_element_text(text: str) -> str:
+def clean_element_text(
+    text: str,
+    cleaning_rules: Optional[List[Tuple[str, str]]] = None
+) -> str:
     """
-    Applies a series of regex substitutions to clean textual content.
+    Applies regex substitutions to clean textual content.
+
+    Allows for custom cleaning rules. If none are provided, it uses a default
+    set of rules to remove URLs, dates, and other common artifacts.
 
     Args:
         text: The raw string content from a text element.
+        cleaning_rules: An optional list of (pattern, replacement) tuples.
+            The pattern is a regex string, and replacement is its substitute.
 
     Returns:
         A cleaned string.
     """
-    text = re.sub(r'https?://\S+', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\S*www\.sec\.gov\S*', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\s*\d+/\d+\s*', '', text)
-    text = re.sub(r'\d{1,2}/\d{1,2}/\d{2,4}(,\s*\d{1,2}:\d{2}\s*(AM|PM)?)?', '', text)
-    text = re.sub(r'^\s*\d+\s*$', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\n\s*\n', '\n', text)
+    if cleaning_rules is None:
+        # Default rules if none are provided, ensuring backward compatibility
+        cleaning_rules = [
+            (r'https?://\S+', ''),
+            (r'\S*www\.sec\.gov\S*', ''),
+            (r'\s*\d+/\d+\s*', ''),
+            (r'\d{1,2}/\d{1,2}/\d{2,4}(,\s*\d{1,2}:\d{2}\s*(AM|PM)?)?', ''),
+            (r'^\s*\d+\s*$', ''),
+        ]
+
+    for pattern, replacement in cleaning_rules:
+        text = re.sub(pattern, replacement, text, flags=re.MULTILINE)
+
+    text = re.sub(r'\n\s*\n', '\n', text) # Consolidate multiple newlines
     return text.strip()
 
 
@@ -280,7 +324,49 @@ def get_one_line_summary(
         api_key=os.getenv("LMSTUDIO_API_KEY")
     )
 
-    master_prompt_template = """You are an ultra-precise API endpoint... (rest of prompt)""" # Kept for brevity
+    master_prompt_template = """You are an ultra-precise API endpoint named 'JsonFinSummarizer'. Your only function is to receive a financial table and return a single, clean JSON object. You do not provide any explanation, preamble, or conversational text.
+
+**JSON OUTPUT SPECIFICATION:**
+Your output MUST be a valid JSON object containing a single key called "summary". The value of the "summary" key MUST be a single, descriptive sentence.
+
+**CONTENT RULES FOR THE SUMMARY SENTENCE:**
+1.  **DO NOT** include any specific numbers, dollar amounts, or percentages from the table's data cells.
+2.  **DO** state the main subject of the table (e.g., Net Sales, Assets and Liabilities).
+3.  **DO** state the primary dimensions or categories (e.g., by Product Category, by Geographic Segment).
+4.  **DO** state the time period if available (e.g., for fiscal years 2021-2023).
+5.  Your entire response must be ONLY the JSON object, with no leading/trailing characters, newlines, or markdown code fences.
+
+**EXAMPLES:**
+
+**Example 1:**
+---
+[USER]
+Section: Products and Services Performance
+Table:
+| Category | 2023 | 2022 |
+| :--- | :--- | :--- |
+| iPhone | $200,583 | $205,489 |
+| Mac | $29,357 | $40,177 |
+| Services | $85,200 | $78,129 |
+
+[ASSISTANT]
+{{"summary": "A breakdown of net sales by product category, including iPhone, Mac, and Services, for fiscal years 2022 and 2023."}}
+---
+
+**Example 2:**
+---
+[USER]
+Section: CONSOLIDATED BALANCE SHEETS
+Table:
+| | 2023 | 2022 |
+| :--- | :--- | :--- |
+| Total assets | 352,583 | 352,755 |
+| Total liabilities | 290,437 | 302,083 |
+
+[ASSISTANT]
+{{"summary": "A consolidated balance sheet comparing total assets and total liabilities between fiscal years 2023 and 2022."}}
+---
+\\no_think"""
     prompt = ChatPromptTemplate.from_messages(
         [("system", master_prompt_template), ("human", "Section: {section_title}\n\nTable:\n{table}")]
     )
@@ -300,22 +386,45 @@ def get_one_line_summary(
 
 
 def get_relevant_keywords(
-    element: Element, context: Context, max_keywords: int = 15
+    element: Element,
+    context: Context,
+    max_keywords: int = 15,
+    custom_stop_words: Optional[Set[str]] = None,
+    keyword_patterns: Optional[Dict[str, str]] = None
 ) -> List[str]:
     """
-    Extracts high-quality, relevant keywords from a document element using
-    a set of refined, zero-dependency heuristics.
+    Extracts relevant keywords from a document element using heuristics.
+
+    This version allows for adding custom stop words and overriding the default
+    regex patterns used to find keyword candidates.
 
     Args:
         element: The `unstructured` `Element` (e.g., `Table` or `Text`).
         context: The `Context` object associated with the element.
         max_keywords: The maximum number of keywords to return.
+        custom_stop_words: An optional set of strings to add to the default
+            stop words list.
+        keyword_patterns: An optional dictionary to override default regex.
+            Expected keys: 'capitalized_phrases', 'acronyms'.
 
     Returns:
         A list of cleaned, relevant keyword strings.
     """
     if not element or not element.text.strip():
         return []
+
+    # --- Define default regex patterns for keyword extraction ---
+    default_patterns = {
+        'capitalized_phrases': r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3}\b',
+        'acronyms': r'\b[A-Z]{2,5}\b'
+    }
+    if keyword_patterns:
+        default_patterns.update(keyword_patterns)
+
+    # --- Combine default and custom stop words ---
+    all_stop_words = STOP_WORDS.copy()
+    if custom_stop_words:
+        all_stop_words.update(s.lower() for s in custom_stop_words)
 
     text_to_process = element.text
     candidates = set()
@@ -336,9 +445,11 @@ def get_relevant_keywords(
 
     if context.section_title:
         candidates.add(context.section_title)
-    capitalized_phrases = re.findall(r'\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3}\b', text_to_process)
+
+    # --- Use configurable regex patterns ---
+    capitalized_phrases = re.findall(default_patterns['capitalized_phrases'], text_to_process)
     candidates.update(capitalized_phrases)
-    acronyms = re.findall(r'\b[A-Z]{2,5}\b', text_to_process)
+    acronyms = re.findall(default_patterns['acronyms'], text_to_process)
     candidates.update(acronyms)
 
     final_keywords = []
@@ -349,7 +460,7 @@ def get_relevant_keywords(
         kw_clean = keyword.strip(" “”)’'.,:()").replace('’', "'")
         kw_lower = kw_clean.lower()
 
-        if not kw_clean or len(kw_clean) <= 3 or len(kw_clean) >= 30 or kw_lower in STOP_WORDS or kw_lower.isdigit():
+        if not kw_clean or len(kw_clean) <= 3 or len(kw_clean) >= 30 or kw_lower in all_stop_words or kw_lower.isdigit():
             continue
 
         is_redundant = any(kw_lower in seen for seen in seen_lower)
