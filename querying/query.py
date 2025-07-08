@@ -1,52 +1,50 @@
 import os
-from pathlib import Path
 from pprint import pprint
 
+from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_core.runnables import RunnableConfig
+from langfuse.langchain import CallbackHandler
 
 from ingestion.chromainit.database_setup import get_embeddings
 
-from langfuse import Langfuse
-from langfuse.langchain import CallbackHandler
 
-from dotenv import load_dotenv
+def setup_langfuse():
+    """Initializes and returns the Langfuse callback handler."""
+    load_dotenv()
+    return CallbackHandler()
 
-def test_simple_query(query_text: str, vectorstore, num_to_fetch):
+
+def initialize_vector_store(persist_directory="./chromadb", collection_name="financial_documents"):
+    return Chroma(collection_name=collection_name, embedding_function=get_embeddings(),
+                  persist_directory=persist_directory)
+
+
+def get_db():
+    vector_store = Chroma(collection_name="financial_documents", embedding_function=get_embeddings(),
+                          persist_directory="../chromadb"  # Note the different path
+                          )
+    return vector_store.get()
+
+
+def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, config: RunnableConfig):
     if not query_text:
         print("Query text cannot be empty.")
         return None
 
-    # target_company = "AAPL"
-    # metadata_filter = {"company": target_company}
+    retriever = vectorstore.as_retriever(search_kwargs={'k': num_to_fetch})
 
-    retriever = vectorstore.as_retriever(
-        search_kwargs={'k': num_to_fetch}
-    )
-
-    results = retriever.invoke(query_text, config=run_config)
-
+    results = retriever.invoke(query_text, config=config)
     return results
 
-def get_db():
-    vector_store = Chroma(
-        collection_name="financial_documents",
-        embedding_function=get_embeddings(),
-        persist_directory="./chromadb"
-    )
-    return vector_store.get()
 
-
-if __name__ == "__main__":
-    # These are AI Generated for testing purposes.
-    rag_test_questions = [
+def get_rag_test_questions():
+    return [
         # Direct Data Retrieval
-        "What were Apple's total net sales in 2023?",
-        "How much did Apple spend on Research and Development in 2023?",
+        "What were Apple's total net sales in 2023?", "How much did Apple spend on Research and Development in 2023?",
         "What was the net income for fiscal year 2022?",
         "Find the total assets listed on the Consolidated Balance Sheets for 2023.",
-        "What were the net sales for the Mac product line in 2023?",
-        # Comparative & Trend Analysis
+        "What were the net sales for the Mac product line in 2023?",  # Comparative & Trend Analysis
         "How did iPhone net sales in 2023 compare to 2022?",
         "Did Services net sales increase or decrease from 2022 to 2023? By how much?",
         "What was the percentage change in Mac net sales between 2023 and 2022?",
@@ -57,11 +55,9 @@ if __name__ == "__main__":
         "What factors contributed to the change in total net sales in 2023 compared to the previous year?",
         "What were some of the significant product announcements in the first quarter of fiscal year 2023?",
         "What does the document say about the impact of foreign currency weakness on net sales?",
-        "Describe the company's historical seasonality in sales.",
-        # Deeper & Component-Based Questions
+        "Describe the company's historical seasonality in sales.",  # Deeper & Component-Based Questions
         "What were the net sales for the 'Rest of Asia Pacific' region in 2023?",
-        "Break down the Services net sales for 2023 if possible.",
-        "What are the main components of 'Cost of Sales'?",
+        "Break down the Services net sales for 2023 if possible.", "What are the main components of 'Cost of Sales'?",
         "What were the total liabilities and shareholders' equity for 2023?",
         "How much cash and cash equivalents did Apple have at the end of the 2023 fiscal year?",
 
@@ -69,11 +65,9 @@ if __name__ == "__main__":
         "What is Apple's I.R.S. Employer Identification No.?",
         "On which stock market is Apple's common stock traded, and what is its ticker symbol?",
         "How many full-time equivalent employees did the company have as of September 30, 2023?",
-        "What was the total operating income in 2023?",
-        "Find the total 'Other income/(expense), net' for 2022.",
+        "What was the total operating income in 2023?", "Find the total 'Other income/(expense), net' for 2022.",
         "How many shares of common stock were issued and outstanding as of October 20, 2023?",
-        "What was the effective tax rate for 2023?",
-        "What were the total liabilities as of September 24, 2022?",
+        "What was the effective tax rate for 2023?", "What were the total liabilities as of September 24, 2022?",
         "Identify the net income for the fiscal year 2021.",
         "How much was spent on repurchases of common stock in the fiscal year 2023, according to the Consolidated Statements of Cash Flows?",
         "What were the net sales in the Greater China region for 2022?",
@@ -148,8 +142,7 @@ if __name__ == "__main__":
         "What was the total share-based compensation expense for 2023?",
         "According to the footnotes, what two vendors represented a significant portion of total vendor non-trade receivables in 2023, and what was their combined percentage?",
         "What are the primary components of 'Other Non-Current Assets' for 2023?",
-        "How does the company manage interest rate risk on its term debt?",
-        # additional stuff
+        "How does the company manage interest rate risk on its term debt?",  # additional stuff
         # --- Direct Data Retrieval (Granular & Varied Phrasing) ---
         "What is the Commission File Number for Apple Inc.?",  # Meta
         "What is Apple's state of incorporation?",  # Meta
@@ -167,16 +160,13 @@ if __name__ == "__main__":
         "How much cash was paid for income taxes, net, in 2022?",
         "What was the value of 'Property, plant and equipment, net' in 2022?",
         "Identify the total gross value of 'Machinery, equipment and internal-use software' in 2023.",
-        "What was the interest and dividend income for 2023?",
-        "Find the total interest expense for 2021.",
+        "What was the interest and dividend income for 2023?", "Find the total interest expense for 2021.",
         "What was the foreign provision for income taxes in 2023?",
-        "How much were the foreign pretax earnings in 2022?",
-        "What was the statutory federal income tax rate in 2021?",
+        "How much were the foreign pretax earnings in 2022?", "What was the statutory federal income tax rate in 2021?",
         "Find the value of 'Deferred tax assets' within 'Other Non-Current Assets' for 2023.",
         "What was the total amount of gross unrecognized tax benefits as of September 24, 2022?",
         "What was the total of 'Net sales' for the Americas segment in 2021?",
-        "Find the 'Operating income' for the Japan segment in 2021.",
-        "What were the net sales for the U.S. in 2022?",
+        "Find the 'Operating income' for the Japan segment in 2021.", "What were the net sales for the U.S. in 2022?",
         "How much was the value of long-lived assets in China as of September 24, 2022?",
         "What was the total 'Share-based compensation expense' recognized in 2021?",
         "How much in 'Total lease liabilities' was recorded for 2022?",
@@ -362,31 +352,19 @@ if __name__ == "__main__":
         "According to the report, on what date did Deirdre O'Brien enter into a trading plan under Rule 10b5-1(c)?",
         "What was the primary reason for the decrease in Europe's net sales in 2023?",
         "What were the total proceeds from maturities of marketable securities in 2023?",
-        "What was the value of the adjustment for net gains/losses on marketable debt securities realized and included in net income for 2023?"
-    ]
+        "What was the value of the adjustment for net gains/losses on marketable debt securities realized and included in net income for 2023?"]
 
-    file = Path(__file__).parent / ".env"
-    load_dotenv(dotenv_path=file)
 
-    langfuse = Langfuse(
-        secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
-        public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
-        host=os.getenv("LANGFUSE_HOST")
-    )
-
-    langfuse_handler = CallbackHandler()
-
+if __name__ == "__main__":
+    langfuse_handler = setup_langfuse()
     run_config = RunnableConfig(callbacks=[langfuse_handler])
+    vector_store = initialize_vector_store()
+    rag_test_questions = get_rag_test_questions()
 
-    vector_store = Chroma(
-        collection_name="financial_documents",
-        embedding_function=get_embeddings(),
-        persist_directory="./chromadb"
-    )
-
-
-    for question in rag_test_questions:
-        i = 0
-        while i < 5:
-            pprint(test_simple_query(question, vector_store, 10))
-            i = i + 1
+    print("Starting query execution...")
+    for i, question in enumerate(rag_test_questions):
+        print(f"\n--- Running Query {i + 1}/{len(rag_test_questions)} ---")
+        print(f"Question: {question}")
+        results = execute_query(question, vector_store, 10, run_config)
+        pprint(results)
+    print("\n--- Query execution complete. ---")

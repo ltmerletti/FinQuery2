@@ -1,7 +1,7 @@
 from langchain_chroma import Chroma
 from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.indexes import SQLRecordManager, index
+from langchain.indexes import SQLRecordManager
 import os
 import dotenv
 from chromadb.api import Settings
