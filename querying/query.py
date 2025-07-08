@@ -37,7 +37,7 @@ def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, confi
 
 
 def get_rag_test_questions():
-    return [# Direct Data Retrieval
+    return [  # Direct Data Retrieval
         "What were Apple's total net sales in 2023?", "How much did Apple spend on Research and Development in 2023?",
         "What was the net income for fiscal year 2022?",
         "Find the total assets listed on the Consolidated Balance Sheets for 2023.",
