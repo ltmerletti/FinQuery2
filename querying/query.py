@@ -1,4 +1,3 @@
-import os
 from pprint import pprint
 
 from dotenv import load_dotenv
@@ -34,13 +33,11 @@ def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, confi
 
     retriever = vectorstore.as_retriever(search_kwargs={'k': num_to_fetch})
 
-    results = retriever.invoke(query_text, config=config)
-    return results
+    return retriever.invoke(query_text, config=config)
 
 
 def get_rag_test_questions():
-    return [
-        # Direct Data Retrieval
+    return [# Direct Data Retrieval
         "What were Apple's total net sales in 2023?", "How much did Apple spend on Research and Development in 2023?",
         "What was the net income for fiscal year 2022?",
         "Find the total assets listed on the Consolidated Balance Sheets for 2023.",
@@ -356,15 +353,15 @@ def get_rag_test_questions():
 
 
 if __name__ == "__main__":
-    langfuse_handler = setup_langfuse()
-    run_config = RunnableConfig(callbacks=[langfuse_handler])
-    vector_store = initialize_vector_store()
-    rag_test_questions = get_rag_test_questions()
+    langfuse__handler = setup_langfuse()
+    run__config = RunnableConfig(callbacks=[langfuse__handler])
+    vector__store = initialize_vector_store()
+    rag__test__questions = get_rag_test_questions()
 
     print("Starting query execution...")
-    for i, question in enumerate(rag_test_questions):
-        print(f"\n--- Running Query {i + 1}/{len(rag_test_questions)} ---")
+    for i, question in enumerate(rag__test__questions):
+        print(f"\n--- Running Query {i + 1}/{len(rag__test__questions)} ---")
         print(f"Question: {question}")
-        results = execute_query(question, vector_store, 10, run_config)
+        results = execute_query(question, vector__store, 10, run__config)
         pprint(results)
     print("\n--- Query execution complete. ---")
