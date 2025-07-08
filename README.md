@@ -9,6 +9,8 @@
 ![React 19.1.0](https://img.shields.io/badge/React-19.1.0-blue?logo=react)
 ![ChromaDB 1.0.13](https://img.shields.io/badge/ChromaDB-1.0.13-blue?logo=python)
 
+### This is a Monorepo With a New Library in it
+
 ### Key Steps:
 
 1. Upload PDF → Parse with AI → Store in encrypted DB

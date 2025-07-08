@@ -1,4 +1,5 @@
 import pathlib
+import shutil
 import time
 from typing import List
 
@@ -12,7 +13,7 @@ from finquery_parser.loader import CustomPDFLoader
 
 
 def main():
-    override = True
+    override = False
 
     # --- Step 1: Find all documents to process ---
     if override:
@@ -56,11 +57,17 @@ def main():
             docs,
             record_manager,
             vector_store,
-            cleanup="full",  # or incremental
+            cleanup="incremental",  # or incremental
             source_id_key="source",
-            batch_size=16
+            batch_size=64
         )
         print(f"Successfully indexed {file_path.name}.")
+
+        print("Moving the file...")
+        destination_dir = file_path.parent / 'added'
+        destination_dir.mkdir(exist_ok=True)
+        shutil.move(file_path, destination_dir)
+        print(f"File {file_path} has been moved to {destination_dir}!")
 
     print("\n--- Finished processing all files ---")
     final_count = vector_store._collection.count()
