@@ -1,15 +1,24 @@
 import os
+import pathlib
+import sys
 
 from dotenv import load_dotenv
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import ChatOpenAI
-from querying.query import initialize_vector_store
 
-def format_docs(docs: list) -> str:
+from querying.query import initialize_vector_store, get_rag_test_questions
+
+project_root = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
+
+def format_docs_with_metadata(docs: list) -> str:
+    if not docs:
+        return "No documents found."
+
     formatted_snippets = []
-
     for doc in docs:
         try:
             content_start_index = doc.page_content.index("[CONTENT]")
@@ -19,16 +28,12 @@ def format_docs(docs: list) -> str:
 
         source = doc.metadata.get("source", "Unknown Source")
         page = doc.metadata.get("page", "N/A")
-
-        snippet = (f"Source: {source}, Page: {page}\n"
-                   f"Content:\n"
-                   f"{content}")
+        snippet = f"Source: {source}, Page: {page}\nContent:\n{content}"
         formatted_snippets.append(snippet)
-
     return "\n\n---\n\n".join(formatted_snippets)
 
 
-def create_answer_chain(vector_store):
+def create_rag_chain(vector_store):
     load_dotenv()
 
     template = """You are an expert financial analyst AI. Your task is to provide a precise answer to the user's question based *only* on the context provided from financial documents.
@@ -52,29 +57,38 @@ USER QUESTION:
 ---
 PRECISE ANSWER:"""
 
-    retriever = vector_store.as_retriever(search_kwargs={'k': 4})
-
-    gather_inputs = {"context": retriever | format_docs, "question": RunnablePassthrough()}
-
     prompt = ChatPromptTemplate.from_template(template)
+    retriever = vector_store.as_retriever(search_kwargs={'k': 4})
+    llm = ChatOpenAI(model=os.getenv("LMSTUDIO_MODEL_NAME"),
+        base_url=os.getenv("LMSTUDIO_BASE_URL"), api_key=os.getenv("LMSTUDIO_API_KEY"))
 
-    llm = ChatOpenAI(temperature=0, model=os.getenv("LMSTUDIO_MODEL_NAME"), base_url=os.getenv("LMSTUDIO_BASE_URL"),
-        api_key=os.getenv("LMSTUDIO_API_KEY"))
-
-    output_parser = StrOutputParser()
-
-    rag_chain = gather_inputs | prompt | llm | output_parser
+    rag_chain = ({"context": retriever | format_docs_with_metadata,
+                     "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
 
     return rag_chain
 
 
-def get_llm_output(rag_chain, question: str) -> str:
-    return rag_chain.invoke(question)
-
-
 if __name__ == "__main__":
-    test_question = "What were Apple's total net sales in 2023?"
-    vector_store = initialize_vector_store()
-    rag_chain = create_answer_chain(vector_store)
-    output = get_llm_output(rag_chain, test_question)
-    print(output)
+    print("--- Initializing Test Run ---")
+
+    db_directory = project_root / "chromadb"
+    vector_store = initialize_vector_store(persist_directory=str(db_directory))
+
+    rag_chain = create_rag_chain(vector_store)
+
+    test_questions = get_rag_test_questions()
+
+    print(f"Found {len(test_questions)} questions to test. Starting...")
+
+    for i, question in enumerate(test_questions):
+        print(f"\n========================================")
+        print(f"--- Running Query {i + 1}/{len(test_questions)} ---")
+        print(f"Question: {question}")
+        print("--- Answer ---")
+
+        answer = rag_chain.invoke(question)
+
+        print(answer)
+        print(f"========================================")
+
+    print("\n--- All test queries complete. ---")
