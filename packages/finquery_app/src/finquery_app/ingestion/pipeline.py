@@ -1,4 +1,3 @@
-import pathlib
 import shutil
 from typing import List
 
@@ -6,21 +5,21 @@ from langchain.indexes import index
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain.indexes import SQLRecordManager
+from langchain_openai import ChatOpenAI
 
+from finquery_app.config import SOURCE_DATA_DIR
 from finquery_app.ingestion.find_file_paths import get_file_paths
 
 from finquery_parser.loader import CustomPDFLoader
 
-def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager):
+def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager, llm: ChatOpenAI):
     """
     Finds, processes, and indexes all new PDF documents from the 'reports'
     directory into the vector store. This is the core, reusable logic.
     """
     # Establish paths relative to this file's location to find the project root
-    project_root = pathlib.Path(__file__).resolve().parent.parent
-    reports_dir = project_root / "reports"
 
-    file_paths = get_file_paths(str(reports_dir))
+    file_paths = get_file_paths(str(SOURCE_DATA_DIR))
     if not file_paths:
         print("No new PDF files found in the 'reports' directory. Exiting.")
         return
@@ -35,7 +34,7 @@ def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager
         print(f"========================================")
 
         try:
-            loader: CustomPDFLoader = CustomPDFLoader(str(file_path))
+            loader: CustomPDFLoader = CustomPDFLoader(str(file_path), llm)
             docs: List[Document] = loader.load()
 
             if not docs:
@@ -47,14 +46,14 @@ def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager
                 docs,
                 record_manager,
                 vector_store,
-                cleanup="incremental",
+                cleanup="incremental", # or incremental or scoped_full
                 source_id_key="source",
                 batch_size=64
             )
             print(f"Successfully indexed {file_path.name}.")
 
             # Move the processed file to the 'added' subdirectory
-            destination_dir = reports_dir / 'added'
+            destination_dir = SOURCE_DATA_DIR / 'added'
             destination_dir.mkdir(exist_ok=True)
             shutil.move(file_path, destination_dir / file_path.name)
             print(f"File {file_path.name} has been moved to '{destination_dir.name}' directory.")

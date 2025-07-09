@@ -170,6 +170,7 @@ def partition_and_separate_elements(
 
 def load_pdf(
     pdf_file_path: pathlib.Path,
+    llm: ChatOpenAI,
     **kwargs
 ) -> List[Document]:
     """
@@ -181,6 +182,7 @@ def load_pdf(
 
     Args:
         pdf_file_path: The `pathlib.Path` object for the PDF to load.
+        llm: The LLM to help with parsing
         **kwargs: Additional keyword arguments to pass to the partitioner, such as:
             - `junk_filter_patterns`: Optional list of regex patterns to filter junk.
             - `title_exclude_patterns`: Optional list of regex patterns for titles.
@@ -191,7 +193,7 @@ def load_pdf(
         A list of `Document` objects for text and tables from the PDF.
     """
     (table_elements, table_contexts), (text_elements, text_contexts) = \
-        partition_and_separate_elements(pdf_file_path, **kwargs)
+        partition_and_separate_elements(pdf_file_path, llm=llm, **kwargs)
 
     if not table_elements and not text_elements:
         return []
@@ -297,6 +299,18 @@ def define_parser() -> JsonOutputParser:
     """
     return JsonOutputParser(pydantic_object=TableSummary)
 
+def strip_thinking_tags(text: str) -> str:
+    """
+    Remove <think>...</think> tags from the response
+
+    Args:
+        text (str): The raw response text that may contain <think>...</think> tags
+
+    Returns:
+        str: The cleaned text with thinking tags removed and whitespace stripped
+    """
+    return re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+
 
 def get_one_line_summary(
     table_text: str,
@@ -366,7 +380,7 @@ Table:
     prompt = ChatPromptTemplate.from_messages(
         [("system", master_prompt_template), ("human", "Section: {section_title}\n\nTable:\n{table}")]
     )
-    chain = prompt | llm | parser
+    chain = prompt | llm | (lambda x: strip_thinking_tags(x.content)) | parser
 
     try:
         result = chain.invoke({"table": table_text, "section_title": section_title})
@@ -484,3 +498,4 @@ def is_table_functionally_empty(table_html: str) -> bool:
         return True
     soup = bs4.BeautifulSoup(table_html, 'html.parser')
     return not any(cell.get_text(strip=True) for cell in soup.find_all('td'))
+

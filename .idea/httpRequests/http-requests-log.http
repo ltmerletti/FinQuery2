@@ -1,0 +1,233 @@
+POST http://localhost:5001/api/question
+Content-Type: application/json
+Content-Length: 51
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "query_text": "What was apple's net revenue?"
+}
+
+<> 2025-07-09T192323.200.json
+
+###
+
+GET http://localhost:5001/api/question
+Content-Type: application/json
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 51
+
+{
+  "query_text": "What was apple's net revenue?"
+}
+
+<> 2025-07-09T192242.405.html
+
+###
+
+POST http://localhost:5001/api/query
+Content-Type: application/json
+Content-Length: 51
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "query_text": "What was apple's net revenue?"
+}
+
+<> 2025-07-09T191801.200.json
+
+###
+
+POST http://localhost:5000/api/query
+Content-Type: application/json
+Content-Length: 51
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "query_text": "What was apple's net revenue?"
+}
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T174508.202.json
+
+###
+
+POST http://localhost:5000/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T174127.202.json
+
+###
+
+POST http://localhost:5001/api/query
+Content-Type: application/json
+Content-Length: 70
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "query_text": "What are Apple's net sales?",
+  "num_to_fetch": 5
+}
+
+<> 2025-07-09T173721.200.json
+
+###
+
+POST http://localhost:5000/api/query
+Content-Type: application/json
+Content-Length: 70
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "query_text": "What are Apple's net sales?",
+  "num_to_fetch": 5
+}
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T173038.202.json
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T171422.202.json
+
+###
+
+POST http://localhost:5000/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T165910.500.json
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T165643.202.json
+
+###
+
+POST http://localhost:5001/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2025-07-09T165047.202.json
+
+###
+
+POST http://localhost:5000/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:5000/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+POST http://localhost:5000/api/ingest
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+###
+
+GET http://localhost:5000/printenvvars
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+GET http://localhost:5000/printenvvars
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+GET http://localhost:5000/printenvvars
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+GET http://localhost:5000/printenvvars
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
+GET http://localhost:5000/print_env_vars
+User-Agent: IntelliJ HTTP Client/PyCharm 2025.1.2
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+###
+
