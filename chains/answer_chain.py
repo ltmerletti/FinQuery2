@@ -3,16 +3,31 @@ import pathlib
 import sys
 
 from dotenv import load_dotenv
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import ChatOpenAI
+from langchain.retrievers.document_compressors.cross_encoder import BaseCrossEncoder
+from sentence_transformers import CrossEncoder
 
 from querying.query import initialize_vector_store, get_rag_test_questions
 
+class QwenReranker(BaseCrossEncoder):
+    def __init__(self, model_name="Qwen/Qwen3-Reranker-0.6B"):
+        print("Loading the Qwen model into memory...")
+        self.model = CrossEncoder(model_name, device="cpu")
+        self.model.tokenizer.pad_token = self.model.tokenizer.eos_token
+        self.model.model.config.pad_token_id = self.model.tokenizer.eos_token_id
+        print("Model loaded and configured.")
+
+    def score(self, text_pairs):
+        return self.model.predict(text_pairs).tolist()
+
+
 project_root = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
-
 
 def format_docs_with_metadata(docs: list) -> str:
     if not docs:
@@ -36,6 +51,17 @@ def format_docs_with_metadata(docs: list) -> str:
 def create_rag_chain(vector_store):
     load_dotenv()
 
+    base_retriever = vector_store.as_retriever(search_kwargs={'k': 10})
+
+    reranker_tool = QwenReranker()
+
+    compressor = CrossEncoderReranker(model=reranker_tool, top_n=4)
+
+    compression_retriever = ContextualCompressionRetriever(
+        base_compressor=compressor,
+        base_retriever=base_retriever
+    )
+
     template = """You are an expert financial analyst AI. Your task is to provide a precise answer to the user's question based *only* on the context provided from financial documents.
 
 Follow these steps rigorously:
@@ -58,12 +84,12 @@ USER QUESTION:
 PRECISE ANSWER:"""
 
     prompt = ChatPromptTemplate.from_template(template)
-    retriever = vector_store.as_retriever(search_kwargs={'k': 4})
-    llm = ChatOpenAI(model=os.getenv("LMSTUDIO_MODEL_NAME"),
-        base_url=os.getenv("LMSTUDIO_BASE_URL"), api_key=os.getenv("LMSTUDIO_API_KEY"))
 
-    rag_chain = ({"context": retriever | format_docs_with_metadata,
-                     "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
+    llm = ChatOpenAI(temperature=0.1, model=os.getenv("LMSTUDIO_MODEL_NAME"), base_url=os.getenv("LMSTUDIO_BASE_URL"),
+                     api_key=os.getenv("LMSTUDIO_API_KEY"))
+
+    rag_chain = ({"context": compression_retriever | format_docs_with_metadata,
+                  "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
 
     return rag_chain
 

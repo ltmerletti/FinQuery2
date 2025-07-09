@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added LLM chain in answer_chain.py">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: made improvements to LLM chain">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chains/answer_chain.py" beforeDir="false" afterPath="$PROJECT_DIR$/chains/answer_chain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chains/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chains/chromadb/chroma.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chains/chromadb/chroma.sqlite3" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/chromadb/chroma.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -304,15 +305,7 @@
       <workItem from="1751320588270" duration="14858000" />
       <workItem from="1751463395687" duration="50035000" />
       <workItem from="1751838923545" duration="14144000" />
-      <workItem from="1751984835212" duration="18031000" />
-    </task>
-    <task id="LOCAL-00002" summary="re-updated projects following system reset">
-      <option name="closed" value="true" />
-      <created>1750040096715</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1750040096715</updated>
+      <workItem from="1751984835212" duration="26497000" />
     </task>
     <task id="LOCAL-00003" summary="feat: made significant documentation updates and added/created prompts for agents">
       <option name="closed" value="true" />
@@ -698,7 +691,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752007221754</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="feat: made improvements to LLM chain">
+      <option name="closed" value="true" />
+      <created>1752016712251</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1752016712252</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,7 +717,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: updated splitting into chunks functionality for improved retrieval" />
     <MESSAGE value="feat: migrated entire codebase to use langchain" />
     <MESSAGE value="fix: updated database_setup to include metadata" />
     <MESSAGE value="fix: deleted old file" />
@@ -741,7 +741,8 @@
     <MESSAGE value="feat: finished query.py" />
     <MESSAGE value="feat: refactored codebase; added API support" />
     <MESSAGE value="feat: added LLM chain in answer_chain.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added LLM chain in answer_chain.py" />
+    <MESSAGE value="feat: made improvements to LLM chain" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: made improvements to LLM chain" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -766,7 +767,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$MAIN.coverage" NAME="MAIN Coverage Results" MODIFIED="1750039406860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/run" />
     <SUITE FILE_PATH="coverage/FinQuery2$quicktest.coverage" NAME="quicktest Coverage Results" MODIFIED="1751406409454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_parts_llamaparse.coverage" NAME="split_into_parts_llamaparse Coverage Results" MODIFIED="1751499149663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$answer_chain.coverage" NAME="answer_chain Coverage Results" MODIFIED="1752016594324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chains" />
+    <SUITE FILE_PATH="coverage/FinQuery2$answer_chain.coverage" NAME="answer_chain Coverage Results" MODIFIED="1752070394901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chains" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751987119801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />

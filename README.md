@@ -92,10 +92,8 @@ retrieved for every query.
 4. Query transformation
    1. Use a LLM "translation layer" to ensure the RAG queries are using proper keywords (ex. "Consolidated Statements of
    Operations" may not be found from "net income", so we need an AI to clean up queries).
-
-[//]: # (5. Multi-Representation Indexing &#40;See: [TowardsDataScience]&#40;https://towardsdatascience.com/multi-rep-colbert-retrieval-models-for-rags-fe05381b8819/&#41;&#41;)
-[//]: # (   1. Use a heuristic to determine which tables need MRI)
-[//]: # (   2. Use an LLM to generate these "multiple representations" &#40;questions&#41; as additional metadata for the chunks)
+5. Reranking
+   1. This uses a reranking model (`Qwen/Qwen3-Reranker-0.6B`) to rerank the top 10 results for better performance.
 
 ### Folder Explanation
 
@@ -130,6 +128,7 @@ retrieved for every query.
 - Chunk Augmentation: https://x.com/svpino/status/1940006237384712404
 - Embedding Model Choice: https://huggingface.co/spaces/mteb/leaderboard
 - Model Choice: https://artificialanalysis.ai/
+- Best of 18 RAG Techniques: https://levelup.gitconnected.com/testing-18-rag-techniques-to-find-the-best-094d166af27f#4630
 
 ### Why not use PDF Parsing and Relational Databases (Why Use RAG)?
 The files will not all be in standardized formats; this project utilizes SEC filings, but it is made to be expandable, such that if someone were to upload other types of similar financial documents, they would easily be able to still use the tool.
