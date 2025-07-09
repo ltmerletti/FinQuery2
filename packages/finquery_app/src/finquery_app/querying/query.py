@@ -1,40 +1,5 @@
-from pprint import pprint
-
-from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_core.runnables import RunnableConfig
-from langfuse.langchain import CallbackHandler
-
-from ingestion.chromainit.database_setup import get_embeddings
-
-
-def setup_langfuse():
-    """Initializes and returns the Langfuse callback handler."""
-    load_dotenv()
-    return CallbackHandler()
-
-
-def initialize_vector_store(persist_directory="./chromadb", collection_name="financial_documents"):
-    return Chroma(collection_name=collection_name, embedding_function=get_embeddings(),
-                  persist_directory=persist_directory)
-
-
-def get_db():
-    vector_store = Chroma(collection_name="financial_documents", embedding_function=get_embeddings(),
-                          persist_directory="../chromadb"  # Note the different path
-                          )
-    return vector_store.get()
-
-
-def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, config: RunnableConfig):
-    if not query_text:
-        print("Query text cannot be empty.")
-        return None
-
-    retriever = vectorstore.as_retriever(search_kwargs={'k': num_to_fetch})
-
-    return retriever.invoke(query_text, config=config)
-
 
 def get_rag_test_questions():
     return [  # Direct Data Retrieval
@@ -351,17 +316,14 @@ def get_rag_test_questions():
         "What were the total proceeds from maturities of marketable securities in 2023?",
         "What was the value of the adjustment for net gains/losses on marketable debt securities realized and included in net income for 2023?"]
 
+def get_db_content(vector_store):
+    return vector_store.get()
 
-if __name__ == "__main__":
-    langfuse__handler = setup_langfuse()
-    run__config = RunnableConfig(callbacks=[langfuse__handler])
-    vector__store = initialize_vector_store()
-    rag__test__questions = get_rag_test_questions()
+def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, config: RunnableConfig):
+    if not query_text:
+        print("Query text cannot be empty.")
+        return None
 
-    print("Starting query execution...")
-    for i, question in enumerate(rag__test__questions):
-        print(f"\n--- Running Query {i + 1}/{len(rag__test__questions)} ---")
-        print(f"Question: {question}")
-        results = execute_query(question, vector__store, 10, run__config)
-        pprint(results)
-    print("\n--- Query execution complete. ---")
+    retriever = vectorstore.as_retriever(search_kwargs={'k': num_to_fetch})
+
+    return retriever.invoke(query_text, config=config)

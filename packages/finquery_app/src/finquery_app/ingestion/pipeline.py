@@ -1,18 +1,17 @@
 import pathlib
 import shutil
-import time
 from typing import List
 
-from langchain.indexes import SQLRecordManager, index
-from langchain_chroma import Chroma
+from langchain.indexes import index
 from langchain_core.documents import Document
+from langchain_chroma import Chroma
+from langchain.indexes import SQLRecordManager
 
-# Using absolute imports from the project root for clarity and reliability
-from ingestion.chromainit.database_setup import setup_vector_store, setup_record_manager, get_embeddings
-from ingestion.find_file_paths import get_file_paths
+from finquery_app.ingestion.find_file_paths import get_file_paths
+
 from finquery_parser.loader import CustomPDFLoader
 
-def run_ingestion_process():
+def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager):
     """
     Finds, processes, and indexes all new PDF documents from the 'reports'
     directory into the vector store. This is the core, reusable logic.
@@ -20,10 +19,7 @@ def run_ingestion_process():
     # Establish paths relative to this file's location to find the project root
     project_root = pathlib.Path(__file__).resolve().parent.parent
     reports_dir = project_root / "reports"
-    chroma_dir = project_root / "chromadb"
-    collection_name = "financial_documents"
 
-    # --- Step 1: Find all documents to process ---
     file_paths = get_file_paths(str(reports_dir))
     if not file_paths:
         print("No new PDF files found in the 'reports' directory. Exiting.")
@@ -32,16 +28,6 @@ def run_ingestion_process():
     print("Files to be processed:")
     for file in file_paths:
         print(f" - {file.name}")
-
-    # --- Step 2: Initialize database connections ONCE ---
-    print("\nInitializing vector store and record manager...")
-    vector_store: Chroma = setup_vector_store(
-        collection_name=collection_name,
-        embeddings=get_embeddings(),
-        persist_directory=str(chroma_dir)
-    )
-    record_manager: SQLRecordManager = setup_record_manager(collection_name=collection_name)
-    print("Initialization complete.")
 
     for file_path in file_paths:
         print(f"\n========================================")

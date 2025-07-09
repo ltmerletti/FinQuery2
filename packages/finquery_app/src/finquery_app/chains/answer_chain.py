@@ -1,8 +1,5 @@
-import os
-import pathlib
 import sys
 
-from dotenv import load_dotenv
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain_core.output_parsers import StrOutputParser
@@ -12,7 +9,7 @@ from langchain_openai import ChatOpenAI
 from langchain.retrievers.document_compressors.cross_encoder import BaseCrossEncoder
 from sentence_transformers import CrossEncoder
 
-from querying.query import initialize_vector_store, get_rag_test_questions
+from finquery_app.config import LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME, LMSTUDIO_BASE_URL, PROJECT_ROOT
 
 class QwenReranker(BaseCrossEncoder):
     def __init__(self, model_name="Qwen/Qwen3-Reranker-0.6B"):
@@ -26,8 +23,7 @@ class QwenReranker(BaseCrossEncoder):
         return self.model.predict(text_pairs).tolist()
 
 
-project_root = pathlib.Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(PROJECT_ROOT))
 
 def format_docs_with_metadata(docs: list) -> str:
     if not docs:
@@ -49,7 +45,6 @@ def format_docs_with_metadata(docs: list) -> str:
 
 
 def create_rag_chain(vector_store):
-    load_dotenv()
 
     base_retriever = vector_store.as_retriever(search_kwargs={'k': 10})
 
@@ -85,36 +80,10 @@ PRECISE ANSWER:"""
 
     prompt = ChatPromptTemplate.from_template(template)
 
-    llm = ChatOpenAI(temperature=0.1, model=os.getenv("LMSTUDIO_MODEL_NAME"), base_url=os.getenv("LMSTUDIO_BASE_URL"),
-                     api_key=os.getenv("LMSTUDIO_API_KEY"))
+    llm = ChatOpenAI(temperature=0.1, model=LMSTUDIO_MODEL_NAME, base_url=LMSTUDIO_BASE_URL,
+                     api_key=LMSTUDIO_API_KEY)
 
     rag_chain = ({"context": compression_retriever | format_docs_with_metadata,
                   "question": RunnablePassthrough()} | prompt | llm | StrOutputParser())
 
     return rag_chain
-
-
-if __name__ == "__main__":
-    print("--- Initializing Test Run ---")
-
-    db_directory = project_root / "chromadb"
-    vector_store = initialize_vector_store(persist_directory=str(db_directory))
-
-    rag_chain = create_rag_chain(vector_store)
-
-    test_questions = get_rag_test_questions()
-
-    print(f"Found {len(test_questions)} questions to test. Starting...")
-
-    for i, question in enumerate(test_questions):
-        print(f"\n========================================")
-        print(f"--- Running Query {i + 1}/{len(test_questions)} ---")
-        print(f"Question: {question}")
-        print("--- Answer ---")
-
-        answer = rag_chain.invoke(question)
-
-        print(answer)
-        print(f"========================================")
-
-    print("\n--- All test queries complete. ---")

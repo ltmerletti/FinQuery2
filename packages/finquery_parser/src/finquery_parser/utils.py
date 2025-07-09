@@ -1,6 +1,5 @@
 # --- Std Lib Imports ---
 import html
-import os
 import pathlib
 import re
 from typing import Dict, List, Optional, Set, Tuple
@@ -8,7 +7,6 @@ from typing import Dict, List, Optional, Set, Tuple
 # --- Special Imports ---
 import bs4
 import htmltabletomd
-from dotenv import load_dotenv
 from langchain_core.documents import Document
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -73,7 +71,8 @@ def partition_and_separate_elements(
     junk_filter_patterns: Optional[List[re.Pattern]] = None,
     title_exclude_patterns: Optional[List[re.Pattern]] = None,
     custom_stop_words: Optional[Set[str]] = None,
-    max_keywords: int = 5
+    max_keywords: int = 5,
+    llm: ChatOpenAI = None
 ) -> Tuple[Tuple[List[Table], List[Context]], Tuple[List[Text], List[Context]]]:
     """
     Partitions a PDF, enriches elements with metadata, and separates them.
@@ -90,6 +89,7 @@ def partition_and_separate_elements(
             stop words list for keyword extraction.
         max_keywords: The maximum number of keywords to extract for each element's
             context. Defaults to 5.
+        llm: The LLM that will summarize the document
 
     Returns:
         A tuple containing two tuples:
@@ -148,7 +148,7 @@ def partition_and_separate_elements(
 
         if context.element_type == "Table":
             try:
-                one_sentence_summary = get_one_line_summary(el.text, context.section_title, parser)
+                one_sentence_summary = get_one_line_summary(el.text, context.section_title, parser, llm)
                 context.summary = one_sentence_summary.get('summary', "Error: Summary key missing.")
             except TableSummarizationError as e:
                 print(e) # Log the specific error
@@ -301,7 +301,8 @@ def define_parser() -> JsonOutputParser:
 def get_one_line_summary(
     table_text: str,
     section_title: str,
-    parser: JsonOutputParser
+    parser: JsonOutputParser,
+    llm: ChatOpenAI
 ) -> Dict:
     """
     Generates a one-sentence summary of a financial table using an LLM.
@@ -310,6 +311,7 @@ def get_one_line_summary(
         table_text: The string representation of the table.
         section_title: The title of the section containing the table.
         parser: The `JsonOutputParser` to process the LLM's response.
+        llm: The LLM that will be processing the table
 
     Returns:
         A dictionary containing the summary, e.g., `{"summary": "..."}`.
@@ -317,12 +319,6 @@ def get_one_line_summary(
     Raises:
         TableSummarizationError: If the LLM call or output parsing fails.
     """
-    load_dotenv()
-    llm = ChatOpenAI(
-        model=os.getenv("LMSTUDIO_MODEL_NAME"),
-        base_url=os.getenv("LMSTUDIO_BASE_URL"),
-        api_key=os.getenv("LMSTUDIO_API_KEY")
-    )
 
     master_prompt_template = """You are an ultra-precise API endpoint named 'JsonFinSummarizer'. Your only function is to receive a financial table and return a single, clean JSON object. You do not provide any explanation, preamble, or conversational text.
 
@@ -372,12 +368,9 @@ Table:
     )
     chain = prompt | llm | parser
 
-    # --- MODIFIED ERROR HANDLING ---
     try:
         result = chain.invoke({"table": table_text, "section_title": section_title})
     except Exception as e:
-        # Raise a specific error that can be caught by the calling function,
-        # preserving the original error for easier debugging.
         raise TableSummarizationError(
             f"LLM call failed for table in section '{section_title}'"
         ) from e

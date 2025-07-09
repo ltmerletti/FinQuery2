@@ -1,37 +1,41 @@
 import pathlib
-import sys
 import threading
 
-from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
-from querying.query import initialize_vector_store, execute_query, get_rag_test_questions
-from ingestion.pipeline import run_ingestion_process
-from ingestion.chromainit.delete_collection import delete_collection_and_folder
 from langchain_core.runnables import RunnableConfig
-from langfuse.langchain import CallbackHandler
+
+from finquery_app.chains.answer_chain import create_rag_chain
+from finquery_app.config import SOURCE_DATA_DIR, SOURCE_PROCESSED_DATA_DIR, CHROMA_DB_PATH
+from finquery_app.database.delete_collection import delete_collection_and_folder
+from finquery_app.database.manager import get_vector_store, get_llm, get_embeddings, get_langfuse_callback, \
+    get_record_manager
+from finquery_app.querying.query import execute_query, get_rag_test_questions
+from finquery_app.ingestion.pipeline import run_ingestion_process
 
 app = Flask(__name__)
-load_dotenv()
 CORS(app)
 
 # --- Configuration ---
-project_root = pathlib.Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(project_root))
-REPORTS_DIR = project_root / "reports"
-PROCESSED_DIR = REPORTS_DIR / "added"
-CHROMA_DB_DIR = project_root / "chromadb"
 COLLECTION_NAME = "financial_documents"
 ALLOWED_EXTENSIONS = {'pdf'}
 
-REPORTS_DIR.mkdir(exist_ok=True)
-PROCESSED_DIR.mkdir(exist_ok=True)
-app.config['UPLOAD_FOLDER'] = str(REPORTS_DIR)
+SOURCE_DATA_DIR.mkdir(exist_ok=True)
+SOURCE_PROCESSED_DATA_DIR.mkdir(exist_ok=True)
+app.config['UPLOAD_FOLDER'] = str(SOURCE_DATA_DIR)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# --- Variables ---
+embeddings = get_embeddings()
+vector_store = get_vector_store(COLLECTION_NAME, embeddings, CHROMA_DB_PATH)
+record_manager = get_record_manager(COLLECTION_NAME)
+llm = get_llm()
+retrieval_chain = create_rag_chain(vector_store)
+handler = get_langfuse_callback()
 
 #  !!!!---------- API Endpoints ----------!!!!
 
@@ -57,7 +61,7 @@ def upload_file():
 @app.route("/api/ingest", methods=['POST'])
 def trigger_ingestion():
     try:
-        ingestion_thread = threading.Thread(target=run_ingestion_process)
+        ingestion_thread = threading.Thread(target=run_ingestion_process, args={vector_store, record_manager})
         ingestion_thread.start()
         return jsonify({"status": "success", "message": "Ingestion process started in the background."}), 202
     except Exception as e:
@@ -73,12 +77,7 @@ def query_documents():
     num_to_fetch = data.get('num_to_fetch', 10)
 
     try:
-        handler = CallbackHandler()
         config = RunnableConfig(callbacks=[handler])
-        vector_store = initialize_vector_store(
-            persist_directory=str(CHROMA_DB_DIR),
-            collection_name=COLLECTION_NAME
-        )
         results = execute_query(query_text, vector_store, num_to_fetch, config)
         formatted_results = [{"content": doc.page_content, "metadata": doc.metadata} for doc in results]
         return jsonify({"query": query_text, "results": formatted_results}), 200
@@ -88,8 +87,8 @@ def query_documents():
 @app.route("/api/documents", methods=['GET'])
 def get_documents_list():
     try:
-        processed_files = [f.name for f in PROCESSED_DIR.iterdir() if f.is_file()]
-        pending_files = [f.name for f in REPORTS_DIR.iterdir() if f.is_file() and f.name not in processed_files]
+        processed_files = [f.name for f in SOURCE_PROCESSED_DATA_DIR.iterdir() if f.is_file()]
+        pending_files = [f.name for f in SOURCE_DATA_DIR.iterdir() if f.is_file() and f.name not in processed_files]
         return jsonify({"processed_documents": processed_files, "pending_ingestion": pending_files}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -97,10 +96,6 @@ def get_documents_list():
 @app.route("/api/status/db", methods=['GET'])
 def get_db_status():
     try:
-        vector_store = initialize_vector_store(
-            persist_directory=str(CHROMA_DB_DIR),
-            collection_name=COLLECTION_NAME
-        )
         count = vector_store._collection.count()
         return jsonify({"collection_name": COLLECTION_NAME, "total_chunks": count}), 200
     except Exception:
@@ -116,11 +111,15 @@ def delete_db_collection():
     try:
         delete_collection_and_folder(
             collection_name=COLLECTION_NAME,
-            persist_directory=str(CHROMA_DB_DIR)
+            persist_directory=str(CHROMA_DB_PATH)
         )
         return jsonify({"status": "success", "message": f"Collection '{COLLECTION_NAME}' and its data have been deleted."}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to delete collection: {str(e)}"}), 500
+
+@app.route("/print_env_vars", methods=['GET'])
+def print_env_vars():
+    return jsonify({SOURCE_DATA_DIR}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
