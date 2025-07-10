@@ -9,10 +9,12 @@ from langchain_openai import ChatOpenAI
 from langchain.retrievers.document_compressors.cross_encoder import BaseCrossEncoder
 from sentence_transformers import CrossEncoder
 
-from finquery_app.config import LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME, LMSTUDIO_BASE_URL, PROJECT_ROOT
+from finquery_app.config import LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME, LMSTUDIO_BASE_URL, PROJECT_ROOT, \
+    RERANKING_MODEL_NAME, LMSTUDIO_SMART_MODEL_NAME
+
 
 class QwenReranker(BaseCrossEncoder):
-    def __init__(self, model_name="Qwen/Qwen3-Reranker-0.6B"):
+    def __init__(self, model_name=RERANKING_MODEL_NAME):
         print("Loading the Qwen model into memory...")
         self.model = CrossEncoder(model_name, device="cpu")
         self.model.tokenizer.pad_token = self.model.tokenizer.eos_token
@@ -80,7 +82,7 @@ PRECISE ANSWER:"""
 
     prompt = ChatPromptTemplate.from_template(template)
 
-    llm = ChatOpenAI(temperature=0.1, model=LMSTUDIO_MODEL_NAME, base_url=LMSTUDIO_BASE_URL,
+    llm = ChatOpenAI(temperature=0.1, model=LMSTUDIO_SMART_MODEL_NAME, base_url=LMSTUDIO_BASE_URL,
                      api_key=LMSTUDIO_API_KEY)
 
     rag_chain = ({"context": compression_retriever | format_docs_with_metadata,

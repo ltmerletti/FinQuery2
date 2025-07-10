@@ -4,25 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: fixed bugs and added support for questions">
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/eslint.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/public/vite.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/App.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/App.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/assets/react.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/main.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/vite-env.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.node.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/vite.config.ts" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added temp frontend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -263,15 +248,7 @@
       <workItem from="1751838923545" duration="14144000" />
       <workItem from="1751984835212" duration="26497000" />
       <workItem from="1752087214853" duration="6195000" />
-      <workItem from="1752093669508" duration="10523000" />
-    </task>
-    <task id="LOCAL-00005" summary="feat: added conversation agent">
-      <option name="closed" value="true" />
-      <created>1750194508751</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1750194508751</updated>
+      <workItem from="1752093669508" duration="12036000" />
     </task>
     <task id="LOCAL-00006" summary="feat: updated json structure of document ingestion agent">
       <option name="closed" value="true" />
@@ -657,7 +634,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752103479373</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="feat: added temp frontend">
+      <option name="closed" value="true" />
+      <created>1752108338671</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1752108338672</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -675,7 +660,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: deleted old file" />
     <MESSAGE value="feat: added langfuse" />
     <MESSAGE value="feat: updated README.md" />
     <MESSAGE value="feat: added langfuse support" />
@@ -700,7 +684,8 @@
     <MESSAGE value="feat: made improvements to LLM chain" />
     <MESSAGE value="feat: refactored codebase and fixed various bugs" />
     <MESSAGE value="fix: fixed bugs and added support for questions" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed bugs and added support for questions" />
+    <MESSAGE value="feat: added temp frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added temp frontend" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
