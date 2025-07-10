@@ -11,7 +11,8 @@ CHROMA_DB_PATH = str(PROJECT_ROOT / "chromadb")
 
 # --- MODELS ---
 EMBEDDING_MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"
-RERANKING_MODEL_NAME = "Qwen/Qwen3-Reranker-0.6B"
+# RERANKING_MODEL_NAME = "Qwen/Qwen3-Reranker-0.6B"
+RERANKING_MODEL_NAME = "Qwen/Qwen3-Reranker-8B"
 LLM_NAME = "qwen3-30b-a3b-mixed-3"
 
 

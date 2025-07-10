@@ -1,0 +1,25 @@
+[project]
+name = "finquery_app"
+version = "0.1.0"
+description = "The main Flask application for the FinQuery RAG system."
+dependencies = [
+    "flask",
+    "flask-cors",
+    "python-dotenv",
+    "langchain",
+    "langchain-core",
+    "langchain-openai",
+    "langchain-huggingface",
+    "langchain_chroma",
+    "langfuse",
+    "pydantic",
+    "chromadb",
+    "unstructured[pdf]",
+    "beautifulsoup4",
+    "sentence-transformers",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]

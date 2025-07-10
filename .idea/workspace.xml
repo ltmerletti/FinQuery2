@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added temp frontend">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added support for more intelligent model for chain">
+      <change afterPath="$PROJECT_DIR$/docs/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.exampleenv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/pyproject.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,57 +64,57 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HTTP Request.All in generated-requests.executor": "Run",
-    "HTTP Request.generated-requests | #1.executor": "Run",
-    "HTTP Request.generated-requests | #2.executor": "Run",
-    "HTTP Request.generated-requests | #3.executor": "Run",
-    "HTTP Request.generated-requests | api_requests.http.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.MAIN.executor": "Run",
-    "Python.__init__.executor": "Run",
-    "Python.answer_chain.executor": "Run",
-    "Python.chromaclient.executor": "Run",
-    "Python.chromainit.executor": "Run",
-    "Python.delete_collection.executor": "Run",
-    "Python.get_one_line_summary.executor": "Run",
-    "Python.langchaindef.executor": "Run",
-    "Python.load_pdf.executor": "Run",
-    "Python.main (1).executor": "Run",
-    "Python.main (2).executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.query.executor": "Run",
-    "Python.run.executor": "Run",
-    "Python.split_into_chunks.executor": "Run",
-    "Python.split_into_parts_llamaparse.executor": "Run",
-    "Python.test_generation.executor": "Run",
-    "Python.test_heuristic.executor": "Run",
-    "Python.test_response.executor": "Run",
-    "Python.visualize_db.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last.edited.regexp": "Apple Inc. | 2023 Form 10-K | 21",
-    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_app/src/finquery_app/testing",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.All in generated-requests.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | api_requests.http.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.MAIN.executor&quot;: &quot;Run&quot;,
+    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.answer_chain.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromaclient.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromainit.executor&quot;: &quot;Run&quot;,
+    &quot;Python.delete_collection.executor&quot;: &quot;Run&quot;,
+    &quot;Python.get_one_line_summary.executor&quot;: &quot;Run&quot;,
+    &quot;Python.langchaindef.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_pdf.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (2).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.query.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_into_chunks.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_into_parts_llamaparse.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_generation.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_heuristic.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_response.executor&quot;: &quot;Run&quot;,
+    &quot;Python.visualize_db.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last.edited.regexp&quot;: &quot;Apple Inc. | 2023 Form 10-K | 21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_app/src/finquery_app/testing&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing" />
@@ -195,8 +199,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.dev" />
         <item itemvalue="Python.main (2)" />
+        <item itemvalue="npm.dev" />
         <item itemvalue="HTTP Request.generated-requests | #3" />
         <item itemvalue="HTTP Request.generated-requests | #2" />
         <item itemvalue="HTTP Request.generated-requests | #1" />
@@ -249,14 +253,8 @@
       <workItem from="1751984835212" duration="26497000" />
       <workItem from="1752087214853" duration="6195000" />
       <workItem from="1752093669508" duration="12036000" />
-    </task>
-    <task id="LOCAL-00006" summary="feat: updated json structure of document ingestion agent">
-      <option name="closed" value="true" />
-      <created>1750281008659</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1750281008659</updated>
+      <workItem from="1752111351984" duration="7337000" />
+      <workItem from="1752168975933" duration="3741000" />
     </task>
     <task id="LOCAL-00007" summary="feat: completed query engine and query agent">
       <option name="closed" value="true" />
@@ -642,7 +640,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752108338672</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="feat: added support for more intelligent model for chain">
+      <option name="closed" value="true" />
+      <created>1752111422293</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1752111422293</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -660,7 +666,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: added langfuse" />
     <MESSAGE value="feat: updated README.md" />
     <MESSAGE value="feat: added langfuse support" />
     <MESSAGE value="feat: added some heuristics [temp]" />
@@ -685,7 +690,8 @@
     <MESSAGE value="feat: refactored codebase and fixed various bugs" />
     <MESSAGE value="fix: fixed bugs and added support for questions" />
     <MESSAGE value="feat: added temp frontend" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added temp frontend" />
+    <MESSAGE value="feat: added support for more intelligent model for chain" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added support for more intelligent model for chain" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -715,7 +721,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751987119801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752105589787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
+    <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752171454294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751299859841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1752083221589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
