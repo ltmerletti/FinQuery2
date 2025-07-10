@@ -4,27 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: refactored codebase and fixed various bugs">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: fixed bugs and added support for questions">
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/public/vite.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/App.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/App.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/assets/react.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/main.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/src/vite-env.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.app.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/tsconfig.node.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/packages/finquery_frontend/vite.config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/56ccfa6f-7aaf-4213-b77f-d7a5e2adbb38/data_level0.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/56ccfa6f-7aaf-4213-b77f-d7a5e2adbb38/header.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/56ccfa6f-7aaf-4213-b77f-d7a5e2adbb38/index_metadata.pickle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/56ccfa6f-7aaf-4213-b77f-d7a5e2adbb38/length.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/56ccfa6f-7aaf-4213-b77f-d7a5e2adbb38/link_lists.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromadb/chroma.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/ingestion/pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/ingestion/pipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/aapl-20230930.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/nflx-20231231.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/pltr-20231231.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/tsla-20230930.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +115,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
     "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -142,10 +142,7 @@
       <recent name="$PROJECT_DIR$/packages/finquery_parser" />
     </key>
   </component>
-  <component name="RunManager" selected="HTTP Request.generated-requests | #3">
-    <configuration name="All in generated-requests" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="npm.dev">
     <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -201,13 +198,23 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/packages/finquery_frontend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.dev" />
+        <item itemvalue="Python.main (2)" />
         <item itemvalue="HTTP Request.generated-requests | #3" />
         <item itemvalue="HTTP Request.generated-requests | #2" />
         <item itemvalue="HTTP Request.generated-requests | #1" />
-        <item itemvalue="HTTP Request.All in generated-requests" />
-        <item itemvalue="Python.main (2)" />
       </list>
     </recent_temporary>
   </component>
@@ -256,15 +263,7 @@
       <workItem from="1751838923545" duration="14144000" />
       <workItem from="1751984835212" duration="26497000" />
       <workItem from="1752087214853" duration="6195000" />
-      <workItem from="1752093669508" duration="6523000" />
-    </task>
-    <task id="LOCAL-00004" summary="feat: refactored folders and updated documentation">
-      <option name="closed" value="true" />
-      <created>1750176791265</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1750176791265</updated>
+      <workItem from="1752093669508" duration="10523000" />
     </task>
     <task id="LOCAL-00005" summary="feat: added conversation agent">
       <option name="closed" value="true" />
@@ -650,7 +649,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752093516774</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="fix: fixed bugs and added support for questions">
+      <option name="closed" value="true" />
+      <created>1752103479372</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1752103479373</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -668,7 +675,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: updated database_setup to include metadata" />
     <MESSAGE value="fix: deleted old file" />
     <MESSAGE value="feat: added langfuse" />
     <MESSAGE value="feat: updated README.md" />
@@ -693,7 +699,8 @@
     <MESSAGE value="feat: added LLM chain in answer_chain.py" />
     <MESSAGE value="feat: made improvements to LLM chain" />
     <MESSAGE value="feat: refactored codebase and fixed various bugs" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: refactored codebase and fixed various bugs" />
+    <MESSAGE value="fix: fixed bugs and added support for questions" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed bugs and added support for questions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -723,7 +730,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$chromaclient.coverage" NAME="chromaclient Coverage Results" MODIFIED="1750430321334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/chroma" />
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751987119801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752094730086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
+    <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752105589787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751299859841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1752083221589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
