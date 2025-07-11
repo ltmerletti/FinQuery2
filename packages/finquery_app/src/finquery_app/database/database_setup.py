@@ -5,7 +5,7 @@ from chromadb.api import Settings
 import chromadb
 
 from finquery_app.database.chroma_collection_metadata import CollectionMetadata, get_current_time_in_iso_8601_format_utc
-from finquery_app.config import DB_URL
+from finquery_app.config import DB_URL, EMBEDDING_MODEL_NAME
 
 
 def setup_vector_store(collection_name: str, embeddings: Embeddings, persist_directory: str) -> Chroma:
@@ -13,7 +13,7 @@ def setup_vector_store(collection_name: str, embeddings: Embeddings, persist_dir
 
     collection_metadata = CollectionMetadata(
         data_source="SEC Filings",
-        embedding_model_name="Qwen/Qwen3-Embedding-0.6B",
+        embedding_model_name=EMBEDDING_MODEL_NAME,
         created_by="Luke M",
         project_id="FinQuery",
         parser_version="1.1",

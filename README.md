@@ -32,6 +32,7 @@ FinQuery is a full-stack application designed for semantic search and question-a
 - **API Framework**: [Flask](https://flask.palletsprojects.com/) 
 - **AI Framework**: [LangChain](https://www.langchain.com/)
 - **Observability**: [LangFuse](https://langfuse.com/)
+- **Testing**: [pytest](https://docs.pytest.org/en/stable/)
 
 ### Frontend
 - **Core**: [React 19](https://react.dev/blog/2024/04/25/react-19)
@@ -212,7 +213,6 @@ See the `docs/` folder for:
 
 ```bash
 # Run the test suite
-cd packages/finquery_app/src/finquery_app/testing
 pytest
 ```
 
