@@ -1,0 +1,103 @@
+import pymupdf4llm
+
+pdf_path = "../../test_docs/aapl-20230930-short.pdf"
+
+try:
+    md_text = pymupdf4llm.to_markdown(pdf_path)
+    print(md_text)
+except Exception:
+    print("Issue parsing...")
+    print(f"Exception details: {Exception}")
+
+"""
+**Apple Inc.**
+
+
+**CONSOLIDATED STATEMENTS OF OPERATIONS**
+(In millions, except number of shares, which are reflected in thousands, and per-share amounts)
+
+
+**Years ended**
+
+
+
+**September 30,**
+
+
+
+**September 24,**
+
+
+
+**September 25,**
+
+
+
+**2023** **2022** **2021**
+
+
+Net sales:
+
+Products $ 298,085 $ 316,199 $ 297,392
+
+Services 85,200 78,129 68,425
+
+Total net sales 383,285 394,328 365,817
+
+
+
+**2023**
+
+
+
+**2022**
+
+
+
+Cost of sales:
+
+Products 189,282 201,471 192,266
+
+Services 24,855 22,075 20,715
+
+Total cost of sales 214,137 223,546 212,981
+
+Gross margin 169,148 170,782 152,836
+
+
+Operating expenses:
+
+Research and development 29,915 26,251 21,914
+Selling, general and administrative 24,932 25,094 21,973
+Total operating expenses 54,847 51,345 43,887
+
+
+Operating income 114,301 119,437 108,949
+Other income/(expense), net (565) (334) 258
+Income before provision for income taxes 113,736 119,103 109,207
+
+Provision for income taxes 16,741 19,300 14,527
+Net income $ 96,995 $ 99,803 $ 94,680
+
+
+Earnings per share:
+
+Basic $ 6.16 $ 6.15 $ 5.67
+Diluted $ 6.13 $ 6.11 $ 5.61
+
+
+Shares used in computing earnings per share:
+
+Basic 15,744,231 16,215,963 16,701,272
+
+Diluted 15,812,547 16,325,819 16,864,919
+
+
+See accompanying Notes to Consolidated Financial Statements.
+
+
+Apple Inc. | 2023 Form 10-K | 28
+
+
+https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm 40/74
+"""
