@@ -1,31 +1,69 @@
-from typing import Optional
-
-from pydantic import Field, BaseModel
+from docling_core.types.doc import (TableItem as DoclingTableItem, TextItem as DoclingTextItem,
+                                    DoclingDocument as DoclingDoc, )
 
 
 class Context:
-    def __init__(self, pdf_title: str = "", page_number: int = 0, section_title: str = "",
-                 relevant_keywords: list[str] = None, element_type: str = "", summary: Optional[str] = None):
+    def __init__(self, pdf_title, page_number, section_title, element_type, summary, table_prefix=""):
         self.pdf_title = pdf_title
         self.page_number = page_number
         self.section_title = section_title
-        self.relevant_keywords = relevant_keywords or []
         self.element_type = element_type
-        self.summary = summary or None
+        self.summary = summary
+        self.relevant_keywords = []
+        self.table_prefix = table_prefix
 
     def to_string(self):
-        return f"""[CONTEXT]
-PDF Title: {self.pdf_title}
-Page Number: {self.page_number}
-Section Title: {self.section_title}
-Element Type: {self.element_type}
-Relevant Keywords: {str(self.relevant_keywords)}
-{'Summary: ' + self.summary if self.summary else ''}"""
-
-    def to_dict(self):
-        return {"pdf_title": self.pdf_title, "page_number": self.page_number, "section_title": self.section_title,
-                "relevant_keywords": self.relevant_keywords, "summary": self.summary, "element_type": self.element_type}
+        return f"[CONTEXT]\nPDF Title: {self.pdf_title}\nSection: {self.section_title}\nKeywords: {', '.join(self.relevant_keywords)}\nSummary: {self.summary}"
 
 
-class TableSummary(BaseModel):
-    summary: str = Field(description="A single-sentence, non-quantitative description of the table's contents.")
+class TableSummary:
+    pass
+
+
+class TableSummarizationError(Exception):
+    """Custom exception for errors during the LLM table summarization step."""
+    pass
+
+
+class _DoclingElementAdapter:
+    """Base adapter to make Docling items compatible with dependent functions."""
+
+    def __init__(self, item: DoclingTextItem | DoclingTableItem, doc: DoclingDoc):
+        self._item = item
+        self._doc = doc
+        self.id = id(item)
+
+    @property
+    def metadata(self):
+        """Creates a mock metadata object with page_number."""
+
+        class MockMetadata:
+            pass
+
+        meta = MockMetadata()
+        if self._item.prov and self._item.prov[0]:
+            meta.page_number = self._item.prov[0].page_no
+        else:
+            meta.page_number = None
+        return meta
+
+
+class DoclingTableAdapter(_DoclingElementAdapter):
+    """Adapter for Docling's TableItem."""
+
+    @property
+    def text(self) -> str:
+        """Returns a markdown string representation of the table."""
+        try:
+            return self._item.export_to_markdown(doc=self._doc)
+        except Exception:
+            return ""
+
+
+class DoclingTextAdapter(_DoclingElementAdapter):
+    """Adapter for Docling's TextItem."""
+
+    @property
+    def text(self) -> str:
+        """Returns the text content of the item."""
+        return self._item.text

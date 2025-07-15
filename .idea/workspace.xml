@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added llm-based parsing and docling parsing, changed reranker">
-      <change afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pymupdf4llm_framework_test.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added pymupdf llm parsing test">
+      <change afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/unstructured_framework_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_framework_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/types.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,69 +62,71 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HTTP Request.All in generated-requests.executor": "Run",
-    "HTTP Request.generated-requests | #1.executor": "Run",
-    "HTTP Request.generated-requests | #2.executor": "Run",
-    "HTTP Request.generated-requests | #3.executor": "Run",
-    "HTTP Request.generated-requests | api_requests.http.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python tests.Python tests for test_utils.test_get_one_line_summary_llm_failure.executor": "Run",
-    "Python.MAIN.executor": "Run",
-    "Python.__init__.executor": "Run",
-    "Python.answer_chain.executor": "Run",
-    "Python.camelot_framework_test.executor": "Run",
-    "Python.chromaclient.executor": "Run",
-    "Python.chromainit.executor": "Run",
-    "Python.deep_doctection_framework_test.executor": "Run",
-    "Python.delete_collection.executor": "Run",
-    "Python.docling_framework_test.executor": "Run",
-    "Python.get_one_line_summary.executor": "Run",
-    "Python.langchaindef.executor": "Run",
-    "Python.llm_via_lm_studio_test.executor": "Run",
-    "Python.load_pdf.executor": "Run",
-    "Python.main (1).executor": "Run",
-    "Python.main (2).executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.mistral_small_via_lm_studio_test.executor": "Run",
-    "Python.nougat_framework_test.executor": "Run",
-    "Python.pdf_plumber_framework_test.executor": "Run",
-    "Python.pymupdf4llm_framework_test.executor": "Run",
-    "Python.pymupdf4llm_framewory_test.executor": "Run",
-    "Python.pymupdf_framework_test.executor": "Run",
-    "Python.query.executor": "Run",
-    "Python.run.executor": "Run",
-    "Python.split_into_chunks.executor": "Run",
-    "Python.split_into_parts_llamaparse.executor": "Run",
-    "Python.tabula_framework_test.executor": "Run",
-    "Python.test_generation.executor": "Run",
-    "Python.test_heuristic.executor": "Run",
-    "Python.test_response.executor": "Run",
-    "Python.visualize_db.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last.edited.regexp": "Apple Inc. | 2023 Form 10-K | 21",
-    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_app/src/finquery_app/testing/test_docs",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.All in generated-requests.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #3.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | api_requests.http.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for test_utils.test_get_one_line_summary_llm_failure.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MAIN.executor&quot;: &quot;Run&quot;,
+    &quot;Python.__init__.executor&quot;: &quot;Run&quot;,
+    &quot;Python.answer_chain.executor&quot;: &quot;Run&quot;,
+    &quot;Python.camelot_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromaclient.executor&quot;: &quot;Run&quot;,
+    &quot;Python.chromainit.executor&quot;: &quot;Run&quot;,
+    &quot;Python.deep_doctection_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.delete_collection.executor&quot;: &quot;Run&quot;,
+    &quot;Python.docling_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.get_one_line_summary.executor&quot;: &quot;Run&quot;,
+    &quot;Python.langchaindef.executor&quot;: &quot;Run&quot;,
+    &quot;Python.llm_via_lm_studio_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_pdf.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (2).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mistral_small_via_lm_studio_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.nougat_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pdf_plumber_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pymupdf4llm_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pymupdf4llm_framewory_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.pymupdf_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.query.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_into_chunks.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_into_parts_llamaparse.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tabula_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_generation.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_heuristic.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_response.executor&quot;: &quot;Run&quot;,
+    &quot;Python.unstructured_framework_test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils.executor&quot;: &quot;Run&quot;,
+    &quot;Python.visualize_db.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last.edited.regexp&quot;: &quot;Apple Inc. | 2023 Form 10-K | 21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_app/src/finquery_app/testing/test_docs&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/test_docs" />
@@ -138,7 +143,7 @@
       <recent name="$PROJECT_DIR$/reports" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.utils">
     <configuration name="deep_doctection_framework_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
@@ -254,29 +259,36 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_utils.test_get_one_line_summary_llm_failure" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_parser/src/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_utils.test_get_one_line_summary_llm_failure&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.llm_via_lm_studio_test" />
+        <item itemvalue="Python.utils" />
         <item itemvalue="Python.docling_framework_test" />
+        <item itemvalue="Python.llm_via_lm_studio_test" />
         <item itemvalue="Python.deep_doctection_framework_test" />
         <item itemvalue="Python.pdf_plumber_framework_test" />
-        <item itemvalue="Python tests.Python tests for test_utils.test_get_one_line_summary_llm_failure" />
       </list>
     </recent_temporary>
   </component>
@@ -328,15 +340,8 @@
       <workItem from="1752093669508" duration="12036000" />
       <workItem from="1752111351984" duration="7337000" />
       <workItem from="1752168975933" duration="26415000" />
-      <workItem from="1752498047294" duration="3296000" />
-    </task>
-    <task id="LOCAL-00011" summary="fix: reports added">
-      <option name="closed" value="true" />
-      <created>1750424454755</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1750424454755</updated>
+      <workItem from="1752498047294" duration="12507000" />
+      <workItem from="1752586861676" duration="18687000" />
     </task>
     <task id="LOCAL-00012" summary="initial commit">
       <option name="closed" value="true" />
@@ -722,7 +727,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752501590470</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="feat: added pymupdf llm parsing test">
+      <option name="closed" value="true" />
+      <created>1752502127774</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1752502127774</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -740,7 +753,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: .env problem resolved" />
     <MESSAGE value="fix: all rebase issues resolved" />
     <MESSAGE value="fix: created augmentation base" />
     <MESSAGE value="feat: redefining document parsing system for improved performance [CHECKPOINT]" />
@@ -765,7 +777,8 @@
     <MESSAGE value="feat: added tests" />
     <MESSAGE value="feat: added multiple different table parsing attempts" />
     <MESSAGE value="feat: added llm-based parsing and docling parsing, changed reranker" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added llm-based parsing and docling parsing, changed reranker" />
+    <MESSAGE value="feat: added pymupdf llm parsing test" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added pymupdf llm parsing test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -787,6 +800,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$pymupdf4llm_framewory_test.coverage" NAME="pymupdf4llm_framewory_test Coverage Results" MODIFIED="1752501784529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$tabula_framework_test.coverage" NAME="tabula_framework_test Coverage Results" MODIFIED="1752245347712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
+    <SUITE FILE_PATH="coverage/FinQuery2$utils.coverage" NAME="utils Coverage Results" MODIFIED="1752608304685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser" />
     <SUITE FILE_PATH="coverage/FinQuery2$MAIN.coverage" NAME="MAIN Coverage Results" MODIFIED="1750039406860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/run" />
     <SUITE FILE_PATH="coverage/FinQuery2$mistral_small_via_lm_studio_test.coverage" NAME="llm_via_lm_studio_test Coverage Results" MODIFIED="1752261093178" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_parts_llamaparse.coverage" NAME="split_into_parts_llamaparse Coverage Results" MODIFIED="1751499149663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
@@ -795,12 +809,13 @@
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751987119801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752171454294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$pymupdf4llm_framework_test.coverage" NAME="pymupdf4llm_framework_test Coverage Results" MODIFIED="1752501995067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
-    <SUITE FILE_PATH="coverage/FinQuery2$docling_framework_test.coverage" NAME="docling_framework_test Coverage Results" MODIFIED="1752500211976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+    <SUITE FILE_PATH="coverage/FinQuery2$docling_framework_test.coverage" NAME="docling_framework_test Coverage Results" MODIFIED="1752504077577" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1751832929604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$langchaindef.coverage" NAME="langchaindef Coverage Results" MODIFIED="1751499851071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$load_pdf.coverage" NAME="load_pdf Coverage Results" MODIFIED="1751640060501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/split_into_chunks_lib" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_heuristic.coverage" NAME="test_heuristic Coverage Results" MODIFIED="1751326336877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$query.coverage" NAME="query Coverage Results" MODIFIED="1751999447743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FinQuery2$unstructured_framework_test.coverage" NAME="unstructured_framework_test Coverage Results" MODIFIED="1752524282993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$__init__.coverage" NAME="__init__ Coverage Results" MODIFIED="1751549479338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$get_one_line_summary.coverage" NAME="get_one_line_summary Coverage Results" MODIFIED="1751551916159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$nougat_framework_test.coverage" NAME="nougat_framework_test Coverage Results" MODIFIED="1752246392180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />

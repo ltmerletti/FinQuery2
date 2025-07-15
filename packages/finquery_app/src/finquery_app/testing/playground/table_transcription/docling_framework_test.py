@@ -5,7 +5,7 @@ from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
 from docling.datamodel.base_models import InputFormat
 
-DEFAULT_PDF_PATH = "../../test_docs/aapl-20230930-short.pdf"
+DEFAULT_PDF_PATH = "../../test_docs/aapl-20230930.pdf"
 
 def extract_table_with_docling(filepath):
     if not os.path.exists(filepath):
