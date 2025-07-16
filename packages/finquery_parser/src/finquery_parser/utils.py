@@ -9,7 +9,9 @@ import tiktoken
 
 # Docling imports
 from docling.datamodel.base_models import InputFormat
-from docling.datamodel.pipeline_options import (PdfPipelineOptions, TableFormerMode, TableStructureOptions, )
+from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE, )
+from docling.datamodel.pipeline_options import PdfPipelineOptions, LayoutOptions
+from docling.datamodel.pipeline_options import (TableFormerMode, TableStructureOptions, )
 from docling.document_converter import DocumentConverter, PdfFormatOption
 
 # Langchain imports
@@ -18,6 +20,7 @@ from langchain_core.documents import Document
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from finquery_app.config import LMSTUDIO_BASE_URL, LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME
 
 # Local imports
 from finquery_parser.types import *
@@ -90,7 +93,7 @@ def _build_page_to_section_map(doc: DoclingDoc) -> Dict[int, str]:
 def partition_and_separate_elements(pdf_file_path: pathlib.Path,
                                     junk_filter_patterns: Optional[List[re.Pattern]] = None,
                                     custom_stop_words: Optional[Set[str]] = None, max_keywords: int = 5,
-                                    llm: ChatOpenAI = None) -> Tuple[
+                                    llm: ChatOpenAI = None, use_high_res: Optional[bool] = False) -> Tuple[
     Tuple[List[DoclingTableAdapter], List[Context]], Tuple[List[DoclingTextAdapter], List[Context]]]:
     """
     Partitions a PDF using Docling, enriches elements with metadata, and separates them.
@@ -104,8 +107,15 @@ def partition_and_separate_elements(pdf_file_path: pathlib.Path,
         return ([], []), ([], [])
 
     try:
-        pipeline_options = PdfPipelineOptions(do_table_structure=True, table_structure_options=TableStructureOptions(
-            mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+        if use_high_res:
+            pipeline_options = PdfPipelineOptions(do_table_structure=True,
+                                                  table_structure_options=TableStructureOptions(
+                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+        else:
+            pipeline_options = PdfPipelineOptions(do_table_structure=True,
+                                                  layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_LARGE),
+                                                  table_structure_options=TableStructureOptions(
+                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})
         doc = converter.convert(pdf_file_path).document
@@ -176,16 +186,30 @@ def partition_and_separate_elements(pdf_file_path: pathlib.Path,
         f"--- Finished processing. Found {len(final_table_elements)} tables and {len(final_text_elements)} text elements. ---")
     return (final_table_elements, final_table_contexts), (final_text_elements, final_text_contexts)
 
-
 def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, **kwargs) -> List[Document]:
     """
     Loads a PDF, partitions it, and converts elements into intelligently chunked Document objects.
     Tables are returned as separate documents, and text is chunked using an intelligent grouping
     strategy to preserve semantic cohesion.
     """
-    (table_elements, table_contexts), (text_elements, text_contexts) = partition_and_separate_elements(pdf_file_path,
-                                                                                                       llm=llm,
-                                                                                                       **kwargs)
+    (table_elements, table_contexts), (text_elements, text_contexts) = partition_and_separate_elements(
+        pdf_file_path,
+        llm=llm,
+        **kwargs
+    )
+
+    # If the initial pass finds no tables, rerun the partitioning once in high-resolution mode
+    # This redundancy is intentional to overcome potential intermittent detection failures
+    # Sometimes the computer falling to sleep or other issues can cause the parsing to not detect tables
+    if not table_elements:
+        print("No tables detected on initial pass. Retrying in high-resolution mode...")
+        (table_elements, table_contexts), (text_elements, text_contexts) = partition_and_separate_elements(
+            pdf_file_path,
+            llm=llm,
+            use_high_res=True
+        )
+
+    print(f"Number of tables: {len(table_elements)}")
 
     if not table_elements and not text_elements:
         return []
@@ -212,7 +236,8 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, **kwargs) -> List[Doc
         new_doc = Document(page_content=augmented_content,
                            metadata={"source": pdf_file_path.name, "page": context.page_number,
                                      "company": company_ticker, "element_type": "Table",
-                                     "section": context.section_title, "keywords": context.relevant_keywords})
+                                     "section": context.section_title,
+                                     "keywords": ", ".join(context.relevant_keywords)})
         final_chunks.append(new_doc)
 
     print(f"Grouping and chunking {len(text_elements)} text elements by section...")
@@ -250,7 +275,7 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, **kwargs) -> List[Doc
                                                  metadata={"source": pdf_file_path.name, "page": context.page_number,
                                                            "company": company_ticker, "element_type": "Text",
                                                            "section": section_title,
-                                                           "keywords": context.relevant_keywords}))
+                                                           "keywords": ", ".join(context.relevant_keywords)}))
                 continue
 
             # If this would go over the token count manually split it instead
@@ -268,7 +293,8 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, **kwargs) -> List[Doc
                 final_chunks.append(Document(page_content=augmented_content,
                                              metadata={"source": pdf_file_path.name, "page": first_context.page_number,
                                                        "company": company_ticker, "element_type": "Text",
-                                                       "section": section_title, "keywords": aggregated_keywords}))
+                                                       "section": section_title,
+                                                       "keywords": ", ".join(aggregated_keywords)}))
 
                 current_chunk_texts = [cleaned_text]
                 current_chunk_contexts = [context]
@@ -291,7 +317,8 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, **kwargs) -> List[Doc
             final_chunks.append(Document(page_content=augmented_content,
                                          metadata={"source": pdf_file_path.name, "page": first_context.page_number,
                                                    "company": company_ticker, "element_type": "Text",
-                                                   "section": section_title, "keywords": aggregated_keywords}))
+                                                   "section": section_title,
+                                                   "keywords": ", ".join(aggregated_keywords)}))
 
     return final_chunks
 
@@ -305,7 +332,7 @@ def clean_element_text(text: str, cleaning_rules: Optional[List[Tuple[str, str]]
     Applies regex substitutions to clean textual content.
     """
     if cleaning_rules is None:
-        cleaning_rules = [# Remove HTTP/HTTPS URLs like https://example.com/page
+        cleaning_rules = [  # Remove HTTP/HTTPS URLs like https://example.com/page
             (r'https?://\S+', ''),
 
             # Remove links to sec.gov
@@ -453,3 +480,48 @@ def get_relevant_keywords(element: _DoclingElementAdapter, context: Context, max
             break
 
     return final_keywords
+
+# ==============================================================================
+#  Main Execution Block - For Debugging and Testing
+# ==============================================================================
+def main():
+    """
+    Main function to execute the PDF loading and processing pipeline.
+    """
+    pdf_to_process = pathlib.Path("/reports/pltr-20231231.pdf")
+
+    llm_base_url = LMSTUDIO_BASE_URL
+    llm_api_key = LMSTUDIO_API_KEY
+    llm_model_name = LMSTUDIO_MODEL_NAME
+
+    print(f"Initializing LLM with base URL: {llm_base_url} and model: {llm_model_name}")
+
+    llm = ChatOpenAI(model=llm_model_name, api_key=llm_api_key, base_url=llm_base_url, temperature=0.1)
+
+    print(f"Starting the loading process for: {pdf_to_process.name}\n")
+
+    documents = load_pdf(pdf_to_process, llm=llm, use_high_res=False)
+
+    if not documents:
+        print("\nNo documents were processed or returned from the loader.")
+        return
+
+    print(f"\n✅ Successfully processed and chunked the document into {len(documents)} chunks.")
+    print("=======================================================================")
+    print("                          Processed Chunks")
+    print("=======================================================================\n")
+
+    for i, doc in enumerate(documents):
+        print(f"--- Chunk {i + 1}/{len(documents)} ---")
+        print(f"Type:     {doc.metadata.get('element_type', 'N/A')}")
+        print(f"Source:   {doc.metadata.get('source', 'N/A')}")
+        print(f"Page:     {doc.metadata.get('page', 'N/A')}")
+        print(f"Section:  {doc.metadata.get('section', 'N/A')}")
+        print(f"Keywords: {doc.metadata.get('keywords', 'N/A')}")
+        print("\n--- Content ---\n")
+        print(doc.page_content)
+        print("\n-----------------------------------------------------------------------\n")
+
+
+if __name__ == "__main__":
+    main()

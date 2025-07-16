@@ -2,10 +2,11 @@ import os
 import argparse
 import traceback
 from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
+from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode, LayoutOptions
+from docling.datamodel.layout_model_specs import DOCLING_LAYOUT_EGRET_LARGE, LayoutModelConfig
 from docling.datamodel.base_models import InputFormat
 
-DEFAULT_PDF_PATH = "../../test_docs/aapl-20230930.pdf"
+DEFAULT_PDF_PATH = "../../test_docs/tsla-20230930.pdf"
 
 def extract_table_with_docling(filepath):
     if not os.path.exists(filepath):
@@ -18,6 +19,9 @@ def extract_table_with_docling(filepath):
         pipeline_options = PdfPipelineOptions(do_table_structure=True)
         pipeline_options.table_structure_options.mode = TableFormerMode.ACCURATE
         pipeline_options.table_structure_options.do_cell_matching = False
+        # pipeline_options.layout_options = LayoutOptions(
+        #     model_spec=DOCLING_LAYOUT_EGRET_LARGE
+        # )
 
         converter = DocumentConverter(
             format_options={

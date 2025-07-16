@@ -134,5 +134,12 @@ def delete_db_collection():
     except Exception as e:
         return jsonify({"error": f"Failed to delete collection: {str(e)}"}), 500
 
+@app.route("/api/db/documents/content", methods=['GET'])
+def get_all_document_content_from_db():
+    try:
+        return jsonify({"status": "success", "content":vector_store.get()}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to delete collection: {str(e)}"}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

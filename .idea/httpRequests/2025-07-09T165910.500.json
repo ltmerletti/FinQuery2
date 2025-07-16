@@ -1,3 +1,0 @@
-{
-  "error": "Failed to start ingestion thread: unhashable type: 'ChatOpenAI'"
-}
