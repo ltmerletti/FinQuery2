@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: complete refactor of library to use docling">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: updated testing and added clearer documentation">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database/database_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database/database_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/nougat_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/nougat_framework_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pdf_plumber_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pdf_plumber_framework_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pymupdf_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pymupdf_framework_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/tests/test_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/tests/test_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/aapl-20230930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/aapl-20230930.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/nflx-20231231.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/nflx-20231231.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/pltr-20231231.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/pltr-20231231.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/tsla-20230930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/tsla-20230930.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/added/tsla-20240930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/tsla-20240930.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -342,15 +328,7 @@
       <workItem from="1752168975933" duration="26415000" />
       <workItem from="1752498047294" duration="12507000" />
       <workItem from="1752586861676" duration="19505000" />
-      <workItem from="1752673846267" duration="1840000" />
-    </task>
-    <task id="LOCAL-00013" summary="initial commit">
-      <option name="closed" value="true" />
-      <created>1750426113585</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1750426113585</updated>
+      <workItem from="1752673846267" duration="2126000" />
     </task>
     <task id="LOCAL-00014" summary="initial commit">
       <option name="closed" value="true" />
@@ -736,7 +714,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752610057505</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="feat: updated testing and added clearer documentation">
+      <option name="closed" value="true" />
+      <created>1752675840948</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1752675840948</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -754,7 +740,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: created augmentation base" />
     <MESSAGE value="feat: redefining document parsing system for improved performance [CHECKPOINT]" />
     <MESSAGE value="feat: added context functions and improved performance of RAG" />
     <MESSAGE value="feat: added one-line summary logic" />
@@ -779,7 +764,8 @@
     <MESSAGE value="feat: added llm-based parsing and docling parsing, changed reranker" />
     <MESSAGE value="feat: added pymupdf llm parsing test" />
     <MESSAGE value="feat: complete refactor of library to use docling" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: complete refactor of library to use docling" />
+    <MESSAGE value="feat: updated testing and added clearer documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: updated testing and added clearer documentation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

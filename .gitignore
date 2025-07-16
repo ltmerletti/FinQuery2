@@ -230,3 +230,5 @@ cython_debug/
 
 /chromadb/
 /reports/test_report.pdf
+
+.DS_Store
