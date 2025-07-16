@@ -196,12 +196,13 @@ This monorepo structure ensures that code is reused and there is a clear separat
 
 ## Future Roadmap
 
-- [x] **Advanced Table Parsing**: Implement dedicated table extraction libraries
+- [x] **Advanced Table Parsing**: Rewrite logic to have 
 - [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
-- [ ] **Evaluation Framework**: Further customize LangFuse for better observability
-- [ ] **Query Transformation**: LLM translation layer for better keyword matching
+- [ ] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
 - [ ] **Multi-Document Support**: Cross-document reasoning and comparison
 - [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
+- [ ] **Evaluation Framework**: Further customize LangFuse for better observability
+- [ ] **Query Transformation**: LLM translation layer for better keyword matching
 - [ ] **User Chat Refinement**: Have a "chatting" AI to refine user question before querying
 
 ## Documentation
