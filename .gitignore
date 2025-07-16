@@ -232,3 +232,10 @@ cython_debug/
 /reports/test_report.pdf
 
 .DS_Store
+.DS_Store?
+**/.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
