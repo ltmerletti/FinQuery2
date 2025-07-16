@@ -1,7 +1,6 @@
 import pdfplumber
 import pandas as pd
 
-# Define the path to your PDF file.
 pdf_path = "../../test_docs/aapl-20230930.pdf"
 
 try:

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from unstructured.documents.elements import Text, Table, ElementMetadata
 
-from finquery_parser.utils import (clean_element_text, get_relevant_keywords, is_table_functionally_empty,
+from finquery_parser.utils import (clean_element_text, get_relevant_keywords,
                                    get_one_line_summary, TableSummarizationError, Context, strip_thinking_tags)
 
 
@@ -33,31 +33,6 @@ def test_clean_element_text_no_change():
     """Verify that clean text remains unchanged."""
     text = "This is a clean sentence with no junk."
     assert clean_element_text(text) == text
-
-
-def test_table_is_empty_with_no_data_cells():
-    """Test that a table with no <td> tags is considered empty."""
-    empty_html = "<table><tr><th>Header</th></tr></table>"
-    assert is_table_functionally_empty(empty_html) is True
-
-
-def test_table_is_empty_with_empty_data_cells():
-    """Test that a table with empty <td> tags is considered empty."""
-    empty_html = "<table><tr><th>Header</th></tr><tr><td></td></tr></table>"
-    assert is_table_functionally_empty(empty_html) is True
-
-
-def test_table_is_empty_with_whitespace_data_cells():
-    """Test that a table with only whitespace in its data cells is empty."""
-    whitespace_html = "<table><tr><th>Header</th></tr><tr><td>  \n\t  </td></tr></table>"
-    assert is_table_functionally_empty(whitespace_html) is True
-
-
-def test_table_is_not_empty_with_data():
-    """Test that a table with text in its data cells is not considered empty."""
-    full_html = "<table><tr><th>Header</th></tr><tr><td>Value</td></tr></table>"
-    assert is_table_functionally_empty(full_html) is False
-
 
 @pytest.fixture
 def sample_context():

@@ -1,6 +1,5 @@
 import subprocess
 import os
-import re
 
 pdf_path = "../../test_docs/aapl-20230930.pdf"
 

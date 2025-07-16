@@ -1,7 +1,6 @@
-import fitz  # PyMuPDF
+import fitz
 import pandas as pd
 from collections import defaultdict
-import os
 
 pdf_path = "../../test_docs/aapl-20230930.pdf"
 

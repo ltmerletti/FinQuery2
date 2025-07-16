@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from langchain_chroma import Chroma
 from langchain_core.embeddings import Embeddings
 from langchain.indexes import SQLRecordManager
@@ -5,7 +7,8 @@ from chromadb.api import Settings
 import chromadb
 
 from finquery_app.database.chroma_collection_metadata import CollectionMetadata, get_current_time_in_iso_8601_format_utc
-from finquery_app.config import DB_URL, EMBEDDING_MODEL_NAME
+from finquery_app.config import DB_URL, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH
+from finquery_app.database.manager import get_embeddings
 
 
 def setup_vector_store(collection_name: str, embeddings: Embeddings, persist_directory: str) -> Chroma:
@@ -50,3 +53,12 @@ def setup_record_manager(collection_name: str) -> SQLRecordManager:
     record_manager.create_schema()
 
     return record_manager
+
+def main():
+    vector_store = setup_vector_store("financial_documents", get_embeddings(EMBEDDING_MODEL_NAME), CHROMA_DB_PATH)
+    record_manager = setup_record_manager("financial_documents")
+    pprint(vector_store)
+    pprint(record_manager)
+
+if __name__ == "__main__":
+    main()

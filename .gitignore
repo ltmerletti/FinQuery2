@@ -229,3 +229,4 @@ cython_debug/
 #.idea/
 
 /chromadb/
+/reports/test_report.pdf

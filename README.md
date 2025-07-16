@@ -15,7 +15,7 @@
 
 **An advanced, full-stack RAG application for querying complex financial documents using local-first AI models.**
 
-FinQuery is a full-stack application designed for semantic search and question-answering on complex financial documents. It leverages a local-first Retrieval-Augmented Generation (RAG) pipeline, which can ensure privacy while maintaining performance. By combining multi-step parsing with a multi-stage retrieval process, FinQuery delivers accurate, context-aware answers from dense technical texts.
+FinQuery is a full-stack application designed for semantic search and question-answering on complex financial documents. It leverages a local-first Retrieval-Augmented Generation (RAG) pipeline, which can ensure privacy while maintaining performance. By combining multistep parsing with a multi-stage retrieval process, FinQuery delivers accurate, context-aware answers from dense technical texts.
 
 ## Key Features
 
@@ -43,7 +43,7 @@ FinQuery is a full-stack application designed for semantic search and question-a
 - **Record Management**: [PostgreSQL](https://www.postgresql.org/)
 
 ### AI & Data Processing
-- **PDF Parsing**: [Unstructured.io](https://unstructured.io/)
+- **PDF Parsing**: [Docling](https://docling-project.github.io/docling/)
 - **Embedding Model**: [Qwen/Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
 - **High-Fidelity Generation**: [qwen3-30b-a3b-dwq-053125](https://huggingface.co/mlx-community/Qwen3-30B-A3B-4bit-DWQ-053125)
 - **Utility Generation**: [qwen3-30b-a3b-mixed-3](https://huggingface.co/mlx-community/Qwen3-30B-A3B-mixed-3-4bit) 
@@ -71,7 +71,7 @@ mv docs/.env.example .env
 
 ### 2. Install Dependencies
 ```bash
-# Activate your virtual environment
+# Activate the virtual environment
 source .venv/bin/activate
 
 # Install the parser library
@@ -83,6 +83,10 @@ pip install -e packages/finquery_app
 # Install frontend dependencies
 cd packages/finquery_frontend
 npm install
+
+# Initialize the database
+cd ../../packages/finquery_app/src/finquery_app/database
+python database_setup.py
 ```
 
 ### 3. Start Services
@@ -146,11 +150,11 @@ flowchart TD
 
 ### Custom Parsing Pipeline
 - Custom LangChain component with specialized financial document parsing
-- Unstructured's "hi-res" mode for maximum PDF fidelity
+- Customized Docling parsing for high-res, accurate tables
 - Preprocessing removes repetitive elements (headers, footers, pagination)
-- Tables preserved in structured markdown format
+- Tables preserved in structured Markdown format
 
-### Semantic Chunking Strategy
+### Specialized Chunking Strategy
 - Separate chunking approaches for text content versus tabular data
 - Strategic overlap between chunks to preserve semantic context
 - Chunk sizes optimized for both retrieval performance and context preservation
@@ -185,19 +189,19 @@ FinQuery2/
 └── docs/                   # Documentation & schemas
 ```
 
-This monorepo structure promotes code reuse and clear separation of concerns:
+This monorepo structure ensures that code is reused and there is a clear separation of concerns:
 - **finquery_parser**: Self-contained, reusable library for PDF parsing
 - **finquery_app**: Main Flask application with RAG implementation
 - **finquery_frontend**: React-based user interface
 
 ## Future Roadmap
 
-- [ ] **Advanced Table Parsing**: Implement dedicated table extraction libraries
-- [ ] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
-- [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
+- [x] **Advanced Table Parsing**: Implement dedicated table extraction libraries
+- [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
 - [ ] **Evaluation Framework**: Further customize LangFuse for better observability
 - [ ] **Query Transformation**: LLM translation layer for better keyword matching
 - [ ] **Multi-Document Support**: Cross-document reasoning and comparison
+- [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
 - [ ] **User Chat Refinement**: Have a "chatting" AI to refine user question before querying
 
 ## Documentation
