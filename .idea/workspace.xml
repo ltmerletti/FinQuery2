@@ -4,19 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added spacy test to find relevant keywords">
-      <change afterPath="$PROJECT_DIR$/reports/lly-20221231.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added spacy support for keyword generation and changed summarization">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database/database_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database/database_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database/manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/ingestion/pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/ingestion/pipeline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying/query.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying/query.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/tests/test_database.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/tests/test_database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -338,15 +328,7 @@
       <workItem from="1752688001886" duration="1548000" />
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
-      <workItem from="1752771524061" duration="16674000" />
-    </task>
-    <task id="LOCAL-00020" summary="feat: added/updated chroma init script">
-      <option name="closed" value="true" />
-      <created>1750694513563</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1750694513563</updated>
+      <workItem from="1752771524061" duration="16835000" />
     </task>
     <task id="LOCAL-00021" summary="feat: completed ingestion script">
       <option name="closed" value="true" />
@@ -732,7 +714,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752780705153</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="feat: added spacy support for keyword generation and changed summarization">
+      <option name="closed" value="true" />
+      <created>1752788297169</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1752788297169</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -750,7 +740,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: converted custom ingestion to a library for better usage and support" />
     <MESSAGE value="feat: added support for customized regex, stop words and kwargs in utils.py" />
     <MESSAGE value="feat: finalized ingestion logic" />
     <MESSAGE value="feat: created query.py" />
@@ -775,7 +764,8 @@
     <MESSAGE value="fix: fixed bugs during ingestion and updated utils.py" />
     <MESSAGE value="fix: added querying test and created future roadmap" />
     <MESSAGE value="feat: added spacy test to find relevant keywords" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added spacy test to find relevant keywords" />
+    <MESSAGE value="feat: added spacy support for keyword generation and changed summarization" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added spacy support for keyword generation and changed summarization" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
