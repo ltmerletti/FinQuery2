@@ -45,7 +45,7 @@ FinQuery is a full-stack application designed for semantic search and question-a
 ### AI & Data Processing
 - **PDF Parsing**: [Docling](https://docling-project.github.io/docling/)
 - **Embedding Model**: [Qwen/Qwen3-Embedding-0.6B](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B)
-- **High-Fidelity Generation**: [qwen3-30b-a3b-dwq-053125](https://huggingface.co/mlx-community/Qwen3-30B-A3B-4bit-DWQ-053125)
+- **High-Fidelity Generation**: [qwen3-14b](https://huggingface.co/Qwen/Qwen3-14B)
 - **Utility Generation**: [qwen3-30b-a3b-mixed-3](https://huggingface.co/mlx-community/Qwen3-30B-A3B-mixed-3-4bit) 
 - **Reranking Model**: [Qwen/Qwen3-Reranker-0.6B](https://huggingface.co/Qwen/Qwen3-Reranker-0.6B)
 
@@ -61,7 +61,7 @@ FinQuery is a full-stack application designed for semantic search and question-a
 
 ### 1. Clone & Setup Environment
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/ltmerletti/FinQuery2.git
 cd FinQuery2
 
 # Move and configure environment variables
@@ -198,7 +198,10 @@ This monorepo structure ensures that code is reused and there is a clear separat
 
 - [x] **Advanced Table Parsing**: Rewrite logic to have 
 - [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
-- [ ] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
+- [x] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
+- [ ] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy (original_chunk = "The company's revenue grew by 3% over the previous quarter."
+
+contextualized_chunk = "This chunk is from an SEC filing on ACME corp's performance in Q2 2023; the previous quarter's revenue was $314 million. The company's revenue grew by 3% over the previous quarter.")
 - [ ] **Multi-Document Support**: Cross-document reasoning and comparison
 - [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
 - [ ] **Evaluation Framework**: Further customize LangFuse for better observability

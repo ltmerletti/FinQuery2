@@ -1,5 +1,7 @@
 import shutil
 from typing import List
+from spacy.language import Language
+from tiktoken.core import Encoding
 
 from langchain.indexes import index
 from langchain_core.documents import Document
@@ -12,7 +14,7 @@ from finquery_app.ingestion.find_file_paths import get_file_paths
 
 from finquery_parser.loader import CustomPDFLoader
 
-def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager, llm: ChatOpenAI):
+def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager, llm: ChatOpenAI, nlp: Language, tokenizer: Encoding):
     """
     Finds, processes, and indexes all new PDF documents from the 'reports'
     directory into the vector store. This is the core, reusable logic.
@@ -34,7 +36,7 @@ def run_ingestion_process(vector_store: Chroma, record_manager: SQLRecordManager
         print(f"========================================")
 
         try:
-            loader: CustomPDFLoader = CustomPDFLoader(str(file_path), llm)
+            loader: CustomPDFLoader = CustomPDFLoader(str(file_path), llm, nlp, tokenizer)
             docs: List[Document] = loader.load()
 
             if not docs:

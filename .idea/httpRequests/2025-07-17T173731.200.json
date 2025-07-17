@@ -1,0 +1,14 @@
+{
+  "pending_ingestion": [
+    "lly-20221231.pdf"
+  ],
+  "processed_documents": [
+    "tsla-20230930.pdf",
+    ".DS_Store",
+    "pltr-20231231.pdf",
+    "tsla-20240930.pdf",
+    "aapl-20230930.pdf",
+    "nflx-20231231.pdf",
+    "nvda-20230129.pdf"
+  ]
+}

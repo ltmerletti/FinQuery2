@@ -8,7 +8,7 @@ import chromadb
 
 from finquery_app.database.chroma_collection_metadata import CollectionMetadata, get_current_time_in_iso_8601_format_utc
 from finquery_app.config import DB_URL, EMBEDDING_MODEL_NAME, CHROMA_DB_PATH
-from finquery_app.database.manager import get_embeddings
+from finquery_app.manager import get_embeddings
 
 
 def setup_vector_store(collection_name: str, embeddings: Embeddings, persist_directory: str) -> Chroma:

@@ -2,7 +2,7 @@ from langchain_chroma import Chroma
 from langchain_core.runnables import RunnableConfig
 
 from finquery_app.config import CHROMA_DB_PATH
-from finquery_app.database.manager import get_vector_store, get_embeddings
+from finquery_app.manager import get_vector_store, get_embeddings
 
 
 def get_rag_test_questions():

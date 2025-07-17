@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from finquery_app.database.delete_collection import delete_collection_and_folder
-from finquery_app.database.manager import get_llm
+from finquery_app.manager import get_llm
 
 
 @patch('finquery_app.database.manager.ChatOpenAI')

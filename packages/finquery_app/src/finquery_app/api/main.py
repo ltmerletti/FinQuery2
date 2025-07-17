@@ -10,8 +10,8 @@ from langchain_core.runnables import RunnableConfig
 from finquery_app.chains.answer_chain import create_rag_chain
 from finquery_app.config import SOURCE_DATA_DIR, SOURCE_PROCESSED_DATA_DIR, CHROMA_DB_PATH
 from finquery_app.database.delete_collection import delete_collection_and_folder
-from finquery_app.database.manager import get_vector_store, get_embeddings, get_langfuse_callback, \
-    get_record_manager, get_llm
+from finquery_app.manager import get_vector_store, get_embeddings, get_langfuse_callback, \
+    get_record_manager, get_llm, get_spacy_model, get_tiktoken_model
 from finquery_app.querying.query import execute_query, get_rag_test_questions
 from finquery_app.ingestion.pipeline import run_ingestion_process
 
@@ -36,6 +36,8 @@ record_manager = get_record_manager(COLLECTION_NAME)
 retrieval_chain = create_rag_chain(vector_store)
 handler = get_langfuse_callback()
 llm = get_llm()
+spacy_model = get_spacy_model()
+tiktoken_model = get_tiktoken_model()
 
 #  !!!!---------- API Endpoints ----------!!!!
 
@@ -63,7 +65,7 @@ def trigger_ingestion():
     try:
         ingestion_thread = threading.Thread(
             target=run_ingestion_process,
-            args=(vector_store, record_manager, llm)
+            args=(vector_store, record_manager, llm, spacy_model, tiktoken_model)
         )
         ingestion_thread.start()
         return jsonify({"status": "success", "message": "Ingestion process started in the background."}), 202

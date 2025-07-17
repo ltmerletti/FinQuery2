@@ -1,4 +1,6 @@
 import chromadb
+import spacy
+import tiktoken
 from chromadb.api import Settings
 from langchain.indexes import SQLRecordManager
 from langchain_chroma import Chroma
@@ -6,6 +8,8 @@ from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 from langfuse.langchain import CallbackHandler
+from spacy.language import Language
+from tiktoken.core import Encoding
 
 from finquery_app.config import DB_URL, LMSTUDIO_BASE_URL, LMSTUDIO_MODEL_NAME, LMSTUDIO_API_KEY, EMBEDDING_MODEL_NAME
 
@@ -67,3 +71,21 @@ def get_llm(base_url: str = None, api_key: str = None, model_name: str = None) -
 
     llm = ChatOpenAI(model=llm_model_name, api_key=llm_api_key, base_url=llm_base_url, temperature=0.1)
     return llm
+
+
+def get_spacy_model() -> Language | None:
+    try:
+        nlp = spacy.load("en_core_web_sm")
+        return nlp
+    except OSError:
+        print("FATAL ERROR: Spacy model 'en_core_web_sm' not found.")
+        print("Please run: python -m spacy download en_core_web_sm")
+        return None
+
+
+def get_tiktoken_model() -> Encoding | None:
+    try:
+        return tiktoken.get_encoding("cl100k_base")
+    except Exception as e:
+        print(f"ERROR loading tiktoken model: {e}")
+        return None
