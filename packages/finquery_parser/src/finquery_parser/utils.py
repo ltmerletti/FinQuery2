@@ -2,7 +2,7 @@
 import pathlib
 import re
 from collections import defaultdict
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Any
 
 # Tokenizers & NLP Tools
 from spacy.language import Language
@@ -187,20 +187,100 @@ def partition_and_separate_elements(pdf_file_path: pathlib.Path,
         f"--- Finished processing. Found {len(final_table_elements)} tables and {len(final_text_elements)} text elements. ---")
     return (final_table_elements, final_table_contexts), (final_text_elements, final_text_contexts)
 
+def _chunk_text_by_section(
+    section_texts: Dict[str, List[Tuple[str, Any]]],
+    tokenizer: Encoding,
+    pdf_file_path: pathlib.Path,
+    company_ticker: str
+) -> List[Document]:
+    """
+    Chunks text elements within each section based on a token limit.
+
+    This function iterates through text elements grouped by section, aggregates them
+    into chunks that respect MAX_CHUNK_TOKENS, and formats them into Document objects
+    with appropriate metadata.
+
+    Args:
+        section_texts: A dictionary mapping section titles to lists of (text, context) tuples.
+        tokenizer: The tokenizer used to count tokens.
+        pdf_file_path: The path to the source PDF file.
+        company_ticker: The company ticker symbol.
+
+    Returns:
+        A list of chunked Document objects for all text sections.
+    """
+    final_text_chunks: List[Document] = []
+
+    for section_title, content_list in section_texts.items():
+        current_chunk_texts = []
+        current_chunk_contexts = []
+        current_token_count = 0
+
+        for text, context in content_list:
+            cleaned_text = clean_element_text(text)
+            if not cleaned_text:
+                continue
+
+            element_tokens = len(tokenizer.encode(cleaned_text))
+
+            # If adding the new element exceeds the token limit, finalize the current chunk
+            if current_token_count + element_tokens > MAX_CHUNK_TOKENS and current_chunk_texts:
+                final_text = "\n\n".join(current_chunk_texts)
+                first_context = current_chunk_contexts[0]
+
+                # Aggregate and filter keywords from all contexts in the chunk
+                aggregated_candidates = {kw for ctx in current_chunk_contexts for kw in ctx.relevant_keywords}
+                final_keywords = _filter_and_clean_keywords(aggregated_candidates, 5, tokenizer)
+                first_context.relevant_keywords = final_keywords
+
+                # Create the final augmented content and Document
+                context_string = first_context.to_string()
+                augmented_content = f"{context_string}\n\n[CONTENT]\n{final_text}"
+                final_text_chunks.append(Document(page_content=augmented_content,
+                                                  metadata={"source": pdf_file_path.name, "page": first_context.page_number,
+                                                            "company": company_ticker, "element_type": "Text",
+                                                            "section": section_title,
+                                                            "keywords": ", ".join(final_keywords)}))
+
+                # Reset for the next chunk, starting it with the current element
+                current_chunk_texts = [cleaned_text]
+                current_chunk_contexts = [context]
+                current_token_count = element_tokens
+            else:
+                # Otherwise, add the element to the current chunk
+                current_chunk_texts.append(cleaned_text)
+                current_chunk_contexts.append(context)
+                current_token_count += element_tokens
+
+        # After the loop, process any remaining elements in the last chunk
+        if current_chunk_texts:
+            final_text = "\n\n".join(current_chunk_texts)
+            first_context = current_chunk_contexts[0]
+
+            aggregated_candidates = {kw for ctx in current_chunk_contexts for kw in ctx.relevant_keywords}
+            final_keywords = _filter_and_clean_keywords(aggregated_candidates, 5, tokenizer)
+            first_context.relevant_keywords = final_keywords
+
+            context_string = first_context.to_string()
+            augmented_content = f"{context_string}\n\n[CONTENT]\n{final_text}"
+            final_text_chunks.append(Document(page_content=augmented_content,
+                                              metadata={"source": pdf_file_path.name, "page": first_context.page_number,
+                                                        "company": company_ticker, "element_type": "Text",
+                                                        "section": section_title, "keywords": ", ".join(final_keywords)}))
+
+    return final_text_chunks
+
 
 def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language = None, tokenizer: Encoding = None,
              **kwargs) -> List[Document]:
     """
     Loads a PDF, partitions it, and converts elements into intelligently chunked Document objects.
-    Tables are returned as separate documents, and text is chunked using an intelligent grouping
-    strategy to preserve semantic cohesion.
+    Tables are returned as separate documents, and text is chunked using a helper function.
     """
     (table_elements, table_contexts), (text_elements, text_contexts) = partition_and_separate_elements(pdf_file_path,
         tokenizer=tokenizer, nlp=nlp, llm=llm, max_keywords=5, **kwargs)
 
     # If the initial pass finds no tables, rerun the partitioning once in high-resolution mode
-    # This redundancy is intentional to overcome potential intermittent detection failures
-    # Sometimes the computer falling to sleep or other issues can cause the parsing to not detect tables
     if not table_elements:
         print("No tables detected on initial pass. Retrying in high-resolution mode...")
         (table_elements, table_contexts), (text_elements, text_contexts) = partition_and_separate_elements(
@@ -237,68 +317,20 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language = None,
                                      "keywords": ", ".join(context.relevant_keywords)})
         final_chunks.append(new_doc)
 
-    print(f"Grouping and chunking {len(text_elements)} text elements by section...")
-
+    print(f"Grouping {len(text_elements)} text elements by section...")
     section_texts = defaultdict(list)
     for text_element, context in zip(text_elements, text_contexts):
         section_texts[context.section_title].append((text_element.text, context))
 
-    for section_title, content_list in section_texts.items():
-        current_chunk_texts = []
-        current_chunk_contexts = []
-        current_token_count = 0
+    # The entire text chunking loop is now replaced by a single call
+    # to the dedicated helper function.
+    print("Calling dedicated function to chunk text elements...")
+    text_chunks = _chunk_text_by_section(section_texts, tokenizer, pdf_file_path, company_ticker)
+    final_chunks.extend(text_chunks)
 
-        for text, context in content_list:
-            cleaned_text = clean_element_text(text)
-            if not cleaned_text:
-                continue
-
-            element_tokens = len(tokenizer.encode(cleaned_text))
-
-            if current_token_count + element_tokens > MAX_CHUNK_TOKENS and current_chunk_texts:
-                final_text = "\n\n".join(current_chunk_texts)
-                first_context = current_chunk_contexts[0]
-
-                aggregated_candidates = {kw for ctx in current_chunk_contexts for kw in ctx.relevant_keywords}
-
-                final_keywords = _filter_and_clean_keywords(aggregated_candidates, 5, tokenizer)
-
-                first_context.relevant_keywords = final_keywords
-                context_string = first_context.to_string()
-                augmented_content = f"{context_string}\n\n[CONTENT]\n{final_text}"
-
-                final_chunks.append(Document(page_content=augmented_content,
-                                             metadata={"source": pdf_file_path.name, "page": first_context.page_number,
-                                                       "company": company_ticker, "element_type": "Text",
-                                                       "section": section_title,
-                                                       "keywords": ", ".join(final_keywords)}))  # Use the capped list
-
-                # Reset for the next chunk
-                current_chunk_texts = [cleaned_text]
-                current_chunk_contexts = [context]
-                current_token_count = element_tokens
-            else:
-                current_chunk_texts.append(cleaned_text)
-                current_chunk_contexts.append(context)
-                current_token_count += element_tokens
-
-        if current_chunk_texts:
-            final_text = "\n\n".join(current_chunk_texts)
-            first_context = current_chunk_contexts[0]
-
-            aggregated_candidates = {kw for ctx in current_chunk_contexts for kw in ctx.relevant_keywords}
-            final_keywords = _filter_and_clean_keywords(aggregated_candidates, 5, tokenizer)
-
-            first_context.relevant_keywords = final_keywords
-            context_string = first_context.to_string()
-            augmented_content = f"{context_string}\n\n[CONTENT]\n{final_text}"
-
-            final_chunks.append(Document(page_content=augmented_content,
-                                         metadata={"source": pdf_file_path.name, "page": first_context.page_number,
-                                                   "company": company_ticker, "element_type": "Text",
-                                                   "section": section_title, "keywords": ", ".join(final_keywords)}))
-
+    print(f"Total chunks created: {len(final_chunks)}")
     return final_chunks
+
 
 
 # ==============================================================================
