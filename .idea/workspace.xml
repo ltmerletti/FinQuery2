@@ -4,9 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: reformatted load_pdf function and added structure for semantic chunking">
-      <change afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added various sample reports for testing">
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/apple_10k_filing_2023.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/ifrs_example_financial_statements_2024.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/indian_financial_statement_societe_generale.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/indian_itr1_form_2023-2024.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/indian_lease_agreement_residential.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/indian_property_valuation_report_brookfield.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/tcs_annual_report_2023-2024.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/us_tax_return_form_1040.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/various_sample_files_intl_and_us_various_types_and_formats/us_uniform_residential_appraisal_report.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +123,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "last.edited.regexp": "Apple Inc. | 2023 Form 10-K | 21",
-    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2/packages/finquery_app/src/finquery_app/testing/test_docs",
+    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -132,11 +142,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/test_docs" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/ingestion" />
-      <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/database" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_md_files" />
@@ -146,8 +156,31 @@
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/test_docs" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.docling_markdown_framework_test">
     <configuration name="generated-requests | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#2" index="2" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="docling_markdown_framework_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -188,29 +221,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="query" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="FinQuery2" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying/query.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -267,11 +277,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.docling_markdown_framework_test" />
         <item itemvalue="Python.utils" />
         <item itemvalue="HTTP Request.generated-requests | #2" />
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.spacy_get_relevant_keywords" />
-        <item itemvalue="Python.query" />
       </list>
     </recent_temporary>
   </component>
@@ -330,15 +340,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="4266000" />
-    </task>
-    <task id="LOCAL-00023" summary="fix: updated workspace &amp; todo">
-      <option name="closed" value="true" />
-      <created>1750717787905</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1750717787905</updated>
+      <workItem from="1752853932870" duration="15715000" />
     </task>
     <task id="LOCAL-00024" summary="fix: updated chunking">
       <option name="closed" value="true" />
@@ -724,7 +726,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752854885685</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="feat: added experimentation with different parsing strategy and corresponding outputs">
+      <option name="closed" value="true" />
+      <created>1752859129833</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1752859129833</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -742,8 +752,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: created query.py" />
-    <MESSAGE value="feat: finished query.py" />
     <MESSAGE value="feat: refactored codebase; added API support" />
     <MESSAGE value="feat: added LLM chain in answer_chain.py" />
     <MESSAGE value="feat: made improvements to LLM chain" />
@@ -767,7 +775,9 @@
     <MESSAGE value="feat: added spacy support for keyword generation and changed summarization" />
     <MESSAGE value="feat: added .gitattributes" />
     <MESSAGE value="feat: reformatted load_pdf function and added structure for semantic chunking" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: reformatted load_pdf function and added structure for semantic chunking" />
+    <MESSAGE value="feat: added experimentation with different parsing strategy and corresponding outputs" />
+    <MESSAGE value="feat: added various sample reports for testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added various sample reports for testing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -791,7 +801,7 @@
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$tabula_framework_test.coverage" NAME="tabula_framework_test Coverage Results" MODIFIED="1752245347712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
     <SUITE FILE_PATH="coverage/FinQuery2$utils.coverage" NAME="utils Coverage Results" MODIFIED="1752854570127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser" />
-    <SUITE FILE_PATH="coverage/FinQuery2$docling_markdown_framework_test.coverage" NAME="docling_markdown_framework_test Coverage Results" MODIFIED="1752857236948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+    <SUITE FILE_PATH="coverage/FinQuery2$docling_markdown_framework_test.coverage" NAME="docling_markdown_framework_test Coverage Results" MODIFIED="1752872046370" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$MAIN.coverage" NAME="MAIN Coverage Results" MODIFIED="1750039406860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/run" />
     <SUITE FILE_PATH="coverage/FinQuery2$mistral_small_via_lm_studio_test.coverage" NAME="llm_via_lm_studio_test Coverage Results" MODIFIED="1752261093178" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_parts_llamaparse.coverage" NAME="split_into_parts_llamaparse Coverage Results" MODIFIED="1751499149663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
