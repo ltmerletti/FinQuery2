@@ -6,11 +6,16 @@ import tempfile
 from typing import Dict, List, Set, Tuple, Any
 
 # Docling Imports
-from docling.datamodel.base_models import InputFormat
-from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE)
-from docling.datamodel.pipeline_options import PdfPipelineOptions, LayoutOptions
+from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE, DOCLING_LAYOUT_EGRET_XLARGE)
+from docling.datamodel.pipeline_options import LayoutOptions, EasyOcrOptions
 from docling.datamodel.pipeline_options import (TableFormerMode, TableStructureOptions)
+from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import (
+    PdfPipelineOptions,
+)
 from docling.document_converter import DocumentConverter, PdfFormatOption
+
 
 # Langchain Imports
 from langchain_core.documents import Document
@@ -59,21 +64,55 @@ STOP_WORDS = {'a', 'an', 'and', 'the', 'is', 'it', 'in', 'on', 'for', 'of', 'as'
 #  Core Processing Functions
 # ==============================================================================
 
-def _create_and_clean_markdown_from_pdf(pdf_file_path: pathlib.Path, temp_dir: str, use_high_res: bool = False) -> str:
+def _create_and_clean_markdown_from_pdf(pdf_file_path: pathlib.Path, temp_dir: str, use_high_res: bool = False, is_tricky_document: bool = False) -> str:
     print("Converting PDF to .md...")
 
     raw_md_path = os.path.join(temp_dir, f"{pdf_file_path.stem}.md")
 
     try:
-        if use_high_res:
-            pipeline_options = PdfPipelineOptions(do_table_structure=True,
-                                                  table_structure_options=TableStructureOptions(
-                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+        accelerator_options = AcceleratorOptions(
+            num_threads=8, device=AcceleratorDevice.CPU
+        )
+
+        if is_tricky_document:
+            pipeline_options = PdfPipelineOptions(
+                do_ocr=True,
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE,
+                    do_cell_matching=False
+                ),
+                layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_XLARGE),
+                images_scale=2.0,
+                generate_page_images=True,
+                accelerator_options=AcceleratorOptions(
+                    num_threads=8, device=AcceleratorDevice.CPU
+                ),
+                ocr_options=EasyOcrOptions(
+                    lang=["en"],
+                    confidence_threshold=0.4,
+                    force_full_page_ocr=True
+                )
+            )
+        elif use_high_res:
+            pipeline_options = PdfPipelineOptions(
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE,
+                    do_cell_matching=False
+                ),
+                layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_LARGE),
+                images_scale=2.0,
+                accelerator_options=accelerator_options
+            )
         else:
-            pipeline_options = PdfPipelineOptions(do_table_structure=True,
-                                                  layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_LARGE),
-                                                  table_structure_options=TableStructureOptions(
-                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+            pipeline_options = PdfPipelineOptions(
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE, do_cell_matching=False),
+                accelerator_options=accelerator_options
+            )
+
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})
 
@@ -472,7 +511,7 @@ def main():
     """
     Main function to execute the PDF loading and processing pipeline.
     """
-    pdf_to_process = pathlib.Path("./../../../../../../../reports/added/pltr-20231231.pdf")
+    pdf_to_process = pathlib.Path("./../../../../../../../various_sample_files_intl_and_us_various_types_and_formats/indian_financial_statement_societe_generale.pdf")
 
     llm_base_url = LMSTUDIO_BASE_URL
     llm_api_key = LMSTUDIO_API_KEY
@@ -492,7 +531,7 @@ def main():
     except Exception as e:
         print(f"ERROR loading tiktoken model: {e}")
 
-    documents = load_pdf(pdf_to_process, llm=llm, use_high_res=False, nlp=nlp, tokenizer=tiktoken_encoding)
+    documents = load_pdf(pdf_to_process, llm=llm, use_high_res=True, nlp=nlp, tokenizer=tiktoken_encoding)
 
     if not documents:
         print("\nNo documents were processed or returned from the loader.")

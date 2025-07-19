@@ -6,10 +6,14 @@ import tempfile
 from typing import Dict, List, Set, Tuple, Any
 
 # Docling Imports
-from docling.datamodel.base_models import InputFormat
-from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE)
-from docling.datamodel.pipeline_options import PdfPipelineOptions, LayoutOptions
+from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE, DOCLING_LAYOUT_EGRET_XLARGE)
+from docling.datamodel.pipeline_options import LayoutOptions, EasyOcrOptions
 from docling.datamodel.pipeline_options import (TableFormerMode, TableStructureOptions)
+from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import (
+    PdfPipelineOptions,
+)
 from docling.document_converter import DocumentConverter, PdfFormatOption
 
 # Langchain Imports
@@ -59,21 +63,57 @@ STOP_WORDS = {'a', 'an', 'and', 'the', 'is', 'it', 'in', 'on', 'for', 'of', 'as'
 #  Core Processing Functions
 # ==============================================================================
 
-def _create_and_clean_markdown_from_pdf(pdf_file_path: pathlib.Path, temp_dir: str, use_high_res: bool = False) -> str:
+def _create_and_clean_markdown_from_pdf(pdf_file_path: pathlib.Path, temp_dir: str, use_high_res: bool = False, is_tricky_document: bool = False, describe_images: bool = False) -> str:
     print("Converting PDF to .md...")
 
     raw_md_path = os.path.join(temp_dir, f"{pdf_file_path.stem}.md")
 
     try:
-        if use_high_res:
-            pipeline_options = PdfPipelineOptions(do_table_structure=True,
-                                                  table_structure_options=TableStructureOptions(
-                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+        accelerator_options = AcceleratorOptions(
+            num_threads=8, device=AcceleratorDevice.CPU
+        )
+
+        if is_tricky_document:
+            pipeline_options = PdfPipelineOptions(
+                do_ocr=True,
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE,
+                    do_cell_matching=False
+                ),
+                layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_XLARGE),
+                images_scale=2.0,
+                generate_page_images=True,
+                accelerator_options=AcceleratorOptions(
+                    num_threads=8, device=AcceleratorDevice.CPU
+                ),
+                ocr_options=EasyOcrOptions(
+                    lang=["en"],
+                    confidence_threshold=0.4,
+                    force_full_page_ocr=True
+                )
+            )
+        elif use_high_res:
+            pipeline_options = PdfPipelineOptions(
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE,
+                    do_cell_matching=False
+                ),
+                layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_LARGE),
+                images_scale=2.0,
+                accelerator_options=accelerator_options
+            )
         else:
-            pipeline_options = PdfPipelineOptions(do_table_structure=True,
-                                                  layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_LARGE),
-                                                  table_structure_options=TableStructureOptions(
-                                                      mode=TableFormerMode.ACCURATE, do_cell_matching=False))
+            pipeline_options = PdfPipelineOptions(
+                do_table_structure=True,
+                table_structure_options=TableStructureOptions(
+                    mode=TableFormerMode.ACCURATE, do_cell_matching=False),
+                accelerator_options=accelerator_options
+            )
+        # if describe_images:
+        #     pipeline_options.
+
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})
 
