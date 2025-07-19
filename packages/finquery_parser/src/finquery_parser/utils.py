@@ -7,7 +7,7 @@ from typing import Dict, List, Set, Tuple, Any
 
 # Docling Imports
 from docling.datamodel.layout_model_specs import (DOCLING_LAYOUT_EGRET_LARGE, DOCLING_LAYOUT_EGRET_XLARGE)
-from docling.datamodel.pipeline_options import LayoutOptions, EasyOcrOptions
+from docling.datamodel.pipeline_options import LayoutOptions, EasyOcrOptions, PictureDescriptionVlmOptions
 from docling.datamodel.pipeline_options import (TableFormerMode, TableStructureOptions)
 from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
 from docling.datamodel.base_models import InputFormat
@@ -111,8 +111,16 @@ def _create_and_clean_markdown_from_pdf(pdf_file_path: pathlib.Path, temp_dir: s
                     mode=TableFormerMode.ACCURATE, do_cell_matching=False),
                 accelerator_options=accelerator_options
             )
-        # if describe_images:
-        #     pipeline_options.
+
+        if describe_images:
+            pipeline_options.do_picture_description = True
+            pipeline_options.picture_description_options = PictureDescriptionVlmOptions(
+                repo_id="unsloth/granite-vision-3.2-2b-unsloth-bnb-4bit",
+                prompt="Describe the image in three sentences. Be concise and accurate.",
+            )
+            pipeline_options.images_scale = 2.0
+            pipeline_options.generate_picture_images = True
+
 
         converter = DocumentConverter(
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})

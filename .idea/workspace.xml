@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: rewrote utils.py to use a different, more logical, robust approach">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added and tested customization for higher fidelity on less ideal PDFs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_markdown_framework_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -331,15 +330,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="25620000" />
-    </task>
-    <task id="LOCAL-00026" summary="fix: updated splitting into chunks functionality for improved retrieval">
-      <option name="closed" value="true" />
-      <created>1750881347601</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1750881347601</updated>
+      <workItem from="1752853932870" duration="25920000" />
     </task>
     <task id="LOCAL-00027" summary="feat: migrated entire codebase to use langchain">
       <option name="closed" value="true" />
@@ -725,7 +716,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752872436062</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="feat: added and tested customization for higher fidelity on less ideal PDFs">
+      <option name="closed" value="true" />
+      <created>1752934421858</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1752934421858</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -743,7 +742,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: added LLM chain in answer_chain.py" />
     <MESSAGE value="feat: made improvements to LLM chain" />
     <MESSAGE value="feat: refactored codebase and fixed various bugs" />
     <MESSAGE value="fix: fixed bugs and added support for questions" />
@@ -768,7 +766,8 @@
     <MESSAGE value="feat: added experimentation with different parsing strategy and corresponding outputs" />
     <MESSAGE value="feat: added various sample reports for testing" />
     <MESSAGE value="feat: rewrote utils.py to use a different, more logical, robust approach" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: rewrote utils.py to use a different, more logical, robust approach" />
+    <MESSAGE value="feat: added and tested customization for higher fidelity on less ideal PDFs" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added and tested customization for higher fidelity on less ideal PDFs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
