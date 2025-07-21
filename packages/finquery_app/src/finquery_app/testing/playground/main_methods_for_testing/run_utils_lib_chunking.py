@@ -11,7 +11,7 @@ def main():
     """
     Main function to execute the PDF loading and processing pipeline.
     """
-    pdf_to_process = pathlib.Path("../../../../../../reports/added/pltr-20231231.pdf")
+    pdf_to_process = pathlib.Path("../../../../../../../reports/added/pltr-20231231.pdf")
 
     llm_base_url = LMSTUDIO_BASE_URL
     llm_api_key = LMSTUDIO_API_KEY
