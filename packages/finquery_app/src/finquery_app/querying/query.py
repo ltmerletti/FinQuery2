@@ -1,9 +1,14 @@
+from typing import List
+
 from langchain_chroma import Chroma
 from langchain_core.runnables import RunnableConfig
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_core.documents import Document
 
+from finquery_app.chains.answer_chain import QwenReranker
 from finquery_app.config import CHROMA_DB_PATH
 from finquery_app.manager import get_vector_store, get_embeddings
-
 
 def get_rag_test_questions():
     return [  # Direct Data Retrieval
@@ -331,6 +336,30 @@ def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, confi
     retriever = vectorstore.as_retriever(search_kwargs={'k': num_to_fetch})
 
     return retriever.invoke(query_text, config=config)
+
+def execute_query_with_reranking(query_text: str, vectorstore: Chroma, total_num_to_fetch: int, num_to_return: int, config: RunnableConfig) -> List[Document]:
+    if not query_text:
+        print("Query text cannot be empty.")
+        return []
+
+    base_retriever = vectorstore.as_retriever(search_kwargs={'k': total_num_to_fetch})
+
+    try:
+        reranker_model = QwenReranker()
+    except Exception as e:
+        print(f"Error initializing QwenReranker: {e}")
+        print("Please ensure you have the necessary API keys or configurations for QwenReranker.")
+        return []
+
+    compressor = CrossEncoderReranker(model=reranker_model, top_n=num_to_return)
+
+    compression_retriever = ContextualCompressionRetriever(
+        base_compressor=compressor,
+        base_retriever=base_retriever
+    )
+
+    return compression_retriever.invoke(query_text, config=config)
+
 
 def main():
     vectorstore = get_vector_store("financial_documents", get_embeddings(), CHROMA_DB_PATH)

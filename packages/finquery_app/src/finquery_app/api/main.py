@@ -1,5 +1,6 @@
 import pathlib
 import threading
+from typing import List
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -12,7 +13,7 @@ from finquery_app.config import SOURCE_DATA_DIR, SOURCE_PROCESSED_DATA_DIR, CHRO
 from finquery_app.database.delete_collection import delete_collection_and_folder
 from finquery_app.manager import get_vector_store, get_embeddings, get_langfuse_callback, \
     get_record_manager, get_llm, get_spacy_model, get_tiktoken_model
-from finquery_app.querying.query import execute_query, get_rag_test_questions
+from finquery_app.querying.query import execute_query, get_rag_test_questions, execute_query_with_reranking
 from finquery_app.ingestion.pipeline import run_ingestion_process
 
 app = Flask(__name__)
@@ -89,6 +90,24 @@ def query_documents():
     except Exception as e:
         return jsonify({"error": f"An error occurred during query execution: {str(e)}"}), 500
 
+@app.route("/api/query/rerank", methods=['POST'])
+def query_documents_with_rerank():
+    data = request.get_json()
+    if not data or 'query_text' not in data:
+        return jsonify({"error": "Request must include 'query_text'"}), 400
+
+    query_text = data['query_text']
+    num_to_fetch = data.get('num_to_fetch', 10)
+    num_to_return = data.get('num_to_return', 4)
+
+    try:
+        config = RunnableConfig(callbacks=[handler])
+        results = execute_query_with_reranking(query_text, vector_store, num_to_fetch, num_to_return, config)
+        formatted_results = [{"content": doc.page_content, "metadata": doc.metadata} for doc in results]
+        return jsonify({"query": query_text, "results": formatted_results}), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred during query execution: {str(e)}"}), 500
+
 @app.route("/api/question", methods=['POST'])
 def ask_question():
     data = request.get_json()
@@ -102,6 +121,36 @@ def ask_question():
         return jsonify({"query": query_text, "answer": answer}), 200
     except Exception as e:
         return jsonify({"error": f"An error occurred during question answering: {str(e)}"}), 500
+
+
+@app.route("/api/questions/batch", methods=['POST'])
+def ask_questions_batch():
+    data = request.get_json()
+    if not data or 'query_texts' not in data or not isinstance(data['query_texts'], list):
+        return jsonify({"error": "Request must include 'query_texts' as a list of strings"}), 400
+
+    query_texts: List[str] = data['query_texts']
+
+    valid_queries = [q for q in query_texts if q.strip()]
+    if not valid_queries:
+        return jsonify({"error": "The 'query_texts' list cannot be empty or contain only empty strings."}), 400
+
+    try:
+        config = RunnableConfig(callbacks=[handler])
+
+        inputs_for_batch = valid_queries
+
+        answers = retrieval_chain.batch(inputs_for_batch, config=config)
+
+        results = [{"query": q, "answer": a} for q, a in zip(valid_queries, answers)]
+
+        return jsonify({"results": results}), 200
+    except Exception as e:
+        import traceback
+        app.logger.error(f"Error in batch question answering: {e}\n{traceback.format_exc()}")
+        return jsonify({"error": f"An error occurred during batch question answering: {str(e)}"}), 500
+
+
 
 @app.route("/api/documents", methods=['GET'])
 def get_documents_list():

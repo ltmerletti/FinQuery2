@@ -309,7 +309,7 @@ def _chunk_text_elements(text_elements, tokenizer, source_pdf_path, company_tick
     return final_text_chunks
 
 
-def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokenizer: Encoding, use_high_res: bool, filter_small_elements: bool = True) -> \
+def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokenizer: Encoding, use_high_res: bool = False, filter_small_elements: bool = True) -> \
 List[Document]:
     """Main orchestrator: Loads a PDF, converts, cleans, parses, and chunks it."""
     company_ticker = pdf_file_path.stem.split('-')[0].upper()
