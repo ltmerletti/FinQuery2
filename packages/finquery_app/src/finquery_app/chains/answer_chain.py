@@ -2,15 +2,15 @@ import sys
 
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain.retrievers.document_compressors.cross_encoder import BaseCrossEncoder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import ChatOpenAI
-from langchain.retrievers.document_compressors.cross_encoder import BaseCrossEncoder
 from sentence_transformers import CrossEncoder
 
-from finquery_app.config import LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME, LMSTUDIO_BASE_URL, PROJECT_ROOT, \
-    RERANKING_MODEL_NAME, LMSTUDIO_SMART_MODEL_NAME
+from finquery_app.config import LMSTUDIO_API_KEY, LMSTUDIO_BASE_URL, PROJECT_ROOT, RERANKING_MODEL_NAME, \
+    LMSTUDIO_SMART_MODEL_NAME
 
 
 class QwenReranker(BaseCrossEncoder):
@@ -26,6 +26,7 @@ class QwenReranker(BaseCrossEncoder):
 
 
 sys.path.insert(0, str(PROJECT_ROOT))
+
 
 def format_docs_with_metadata(docs: list) -> str:
     if not docs:
@@ -47,17 +48,13 @@ def format_docs_with_metadata(docs: list) -> str:
 
 
 def create_rag_chain(vector_store):
-
     base_retriever = vector_store.as_retriever(search_kwargs={'k': 10})
 
     reranker_tool = QwenReranker()
 
     compressor = CrossEncoderReranker(model=reranker_tool, top_n=4)
 
-    compression_retriever = ContextualCompressionRetriever(
-        base_compressor=compressor,
-        base_retriever=base_retriever
-    )
+    compression_retriever = ContextualCompressionRetriever(base_compressor=compressor, base_retriever=base_retriever)
 
     template = """You are an expert financial analyst AI. Your task is to provide a precise answer to the user's question based *only* on the context provided from financial documents.
 

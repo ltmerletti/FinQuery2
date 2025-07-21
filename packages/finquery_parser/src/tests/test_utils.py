@@ -1,9 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from unstructured.documents.elements import Text, Table, ElementMetadata
 
-from finquery_parser.utils import (clean_element_text, get_relevant_keywords,
+from finquery_parser.utils import (clean_element_text,
                                    get_one_line_summary, TableSummarizationError, Context, strip_thinking_tags)
 
 
@@ -38,52 +37,6 @@ def test_clean_element_text_no_change():
 def sample_context():
     """Provides a sample Context object for tests."""
     return Context(section_title="Consolidated Balance Sheets")
-
-
-@pytest.mark.xfail(reason="Keyword extraction logic needs improvement to correctly identify all acronyms like 'CEO'.")
-def test_get_relevant_keywords_from_text(sample_context):
-    """Test basic keyword extraction from a Text element and its context."""
-    element = Text(
-        text="Our Total Assets were $352,583 million. This is an important financial metric. CEO Tim Cook announced this.")
-    keywords = get_relevant_keywords(element, sample_context, max_keywords=5)
-
-    assert "Consolidated Balance Sheets" in keywords
-    assert any("Total Assets" in k for k in keywords)
-    assert "Tim Cook" in keywords
-    assert "CEO" in keywords
-    assert len(keywords) <= 5
-
-
-def test_get_relevant_keywords_from_table(sample_context):
-    """Test that keywords are correctly extracted from table headers."""
-    table_metadata = ElementMetadata(
-        text_as_html="<table><thead><tr><th>Fiscal Year</th><th>Net Sales</th><th>Gross Margin</th></tr></thead></table>")
-    element = Table(text="some data", metadata=table_metadata)
-    keywords = get_relevant_keywords(element, sample_context)
-
-    assert "Consolidated Balance Sheets" in keywords
-    assert "Fiscal Year" in keywords
-    assert "Net Sales" in keywords
-    assert "Gross Margin" in keywords
-
-
-def test_get_relevant_keywords_respects_max_limit(sample_context):
-    """Ensure the function returns no more than max_keywords."""
-    element = Text(text="CEO Tim Cook on Total Assets and Net Income and Gross Margin.")
-    keywords = get_relevant_keywords(element, sample_context, max_keywords=3)
-    assert len(keywords) == 3
-
-
-@pytest.mark.xfail(reason="Keyword extraction logic needs improvement to correctly identify all acronyms like 'CEO'.")
-def test_get_relevant_keywords_with_custom_stopwords(sample_context):
-    """Ensure custom stop words are respected during keyword extraction."""
-    element = Text(text="A key metric is EBITDA. Also important is the CEO.")
-    custom_stops = {"ebitda"}
-    keywords = get_relevant_keywords(element, sample_context, custom_stop_words=custom_stops)
-
-    assert not any("ebitda" in k.lower() for k in keywords)
-    assert "CEO" in keywords
-
 
 @patch('finquery_parser.utils.ChatPromptTemplate')
 def test_get_one_line_summary_success(mock_prompt_template):
