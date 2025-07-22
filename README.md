@@ -158,7 +158,6 @@ flowchart TD
 
     subgraph "Ingestion Process (Per-File Loop)"
         direction TB
-        style SubGraph1 subgraphStyle
 
         %% --- Stage 1: Conversion & Cleaning ---
         subgraph "PDF to Markdown Conversion"
@@ -231,7 +230,7 @@ flowchart TD
     class Z_End io;
 ```
 
-Full Detail Retrieval
+Full-Detail Retrieval
 ```mermaid
 flowchart TD
  subgraph subGraph0["Metadata Generation"]
