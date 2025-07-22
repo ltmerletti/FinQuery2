@@ -1,0 +1,6 @@
+CREATE TABLE document_types (
+    id SERIAL PRIMARY KEY,
+    type_name VARCHAR(256) NOT NULL UNIQUE,
+    metadata_schema JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

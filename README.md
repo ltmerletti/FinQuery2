@@ -323,13 +323,6 @@ flowchart TD
 - Significant improvement in relevance ranking over semantic similarity alone
 - Reduces noise from tangentially related content
 
-## Data Flow
-
-1. **Upload PDF** → Parse with AI → Store in encrypted DB
-2. **User asks question** → AI understands and generates optimized query
-3. **RAG retrieval** → Relevant information retrieved and reranked
-4. **Final answer** → Generated with source tracing returned to user
-
 ## Project Structure
 
 ```
@@ -350,15 +343,18 @@ This monorepo structure ensures that code is reused and there is a clear separat
 
 ## Future Roadmap
 
-- [x] **Advanced Table Parsing**: Rewrite logic to have 
+- [x] **Advanced Table Parsing**: Rewrite logic to have more advanced and accurate table parsing
 - [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
 - [x] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
 - [x] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy
-- [ ] **Multi-Document Support**: Cross-document reasoning and comparison
-- [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
 - [x] **Evaluation Framework**: Further customize LangFuse for better observability
-- [ ] **Query Transformation**: LLM translation layer for better keyword matching
-- [ ] **User Chat Refinement**: Have a "chatting" AI to refine user question before querying
+- [ ] **MLX Adapter**: Finalize MLX adapter and embedding models for higher efficiency on Apple Silicon
+- [ ] **Document Summarization**: Finalize document summarization functionality for better format
+- [ ] **Initialize Database**: Set up PostgreSQL db for metadata and document types
+- [ ] **Implement Advanced Metadata Capturing**: Implement and finalize logic to extract metadata and augment chunks with it
+- [ ] **Implement Filtering System**: Implement filtering system for data
+- [ ] **Create LLM Chatbot**: Create the chatbot for direct user interface
+- [ ] **Update API & Frontend**: Update the API and frontend to fit better
 
 ## Documentation
 

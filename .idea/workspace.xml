@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: fixed mermaid formatting in README.md">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: updated future roadmap">
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/schemas/document_types.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e6e3a5e7-14db-476f-9435-488b733702f7/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/llm_model_information/rationalle.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/llm_model_information/rationalle.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -332,15 +338,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="62789000" />
-    </task>
-    <task id="LOCAL-00035" summary="fix: .env problem resolved">
-      <option name="closed" value="true" />
-      <created>1751409680099</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1751409680100</updated>
+      <workItem from="1752853932870" duration="65095000" />
     </task>
     <task id="LOCAL-00036" summary="fix: all rebase issues resolved">
       <option name="closed" value="true" />
@@ -726,7 +724,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753216498681</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="fix: updated future roadmap">
+      <option name="closed" value="true" />
+      <created>1753216543001</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1753216543001</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -744,7 +750,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: added llm-based parsing and docling parsing, changed reranker" />
     <MESSAGE value="feat: added pymupdf llm parsing test" />
     <MESSAGE value="feat: complete refactor of library to use docling" />
     <MESSAGE value="feat: updated testing and added clearer documentation" />
@@ -769,7 +774,8 @@
     <MESSAGE value="feat: added support for document summarization for future MRI system" />
     <MESSAGE value="feat: updated documentation and added clear flowchart for finalization of RAG system" />
     <MESSAGE value="fix: fixed mermaid formatting in README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed mermaid formatting in README.md" />
+    <MESSAGE value="fix: updated future roadmap" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: updated future roadmap" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
