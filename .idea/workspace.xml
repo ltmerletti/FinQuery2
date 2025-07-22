@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added support for document summarization for future MRI system">
-      <change afterPath="$PROJECT_DIR$/docs/flowcharts/ingestion.mmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/flowcharts/retrieval.mmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/prompts/get_document_summary.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: fixed mermaid formatting in README.md">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/flowcharts/module1__ingestor.mermaid" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_load_pdf.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_load_pdf.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -338,23 +332,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="62435000" />
-    </task>
-    <task id="LOCAL-00033" summary="feat: added some heuristics [temp]">
-      <option name="closed" value="true" />
-      <created>1751326717514</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1751326717514</updated>
-    </task>
-    <task id="LOCAL-00034" summary="fix: updated query.py script for efficiency + fixes">
-      <option name="closed" value="true" />
-      <created>1751408890248</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1751408890249</updated>
+      <workItem from="1752853932870" duration="62789000" />
     </task>
     <task id="LOCAL-00035" summary="fix: .env problem resolved">
       <option name="closed" value="true" />
@@ -732,7 +710,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753207393805</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="feat: updated documentation and added clear flowchart for finalization of RAG system">
+      <option name="closed" value="true" />
+      <created>1753216205643</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1753216205643</updated>
+    </task>
+    <task id="LOCAL-00083" summary="fix: fixed mermaid formatting in README.md">
+      <option name="closed" value="true" />
+      <created>1753216498681</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1753216498681</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -750,8 +744,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: added tests" />
-    <MESSAGE value="feat: added multiple different table parsing attempts" />
     <MESSAGE value="feat: added llm-based parsing and docling parsing, changed reranker" />
     <MESSAGE value="feat: added pymupdf llm parsing test" />
     <MESSAGE value="feat: complete refactor of library to use docling" />
@@ -775,7 +767,9 @@
     <MESSAGE value="feat: moved run .py files to subfolder for organization in playground" />
     <MESSAGE value="feat: added support for MLX in query; improved playground run logic across all run files" />
     <MESSAGE value="feat: added support for document summarization for future MRI system" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added support for document summarization for future MRI system" />
+    <MESSAGE value="feat: updated documentation and added clear flowchart for finalization of RAG system" />
+    <MESSAGE value="fix: fixed mermaid formatting in README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed mermaid formatting in README.md" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

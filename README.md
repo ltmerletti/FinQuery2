@@ -353,9 +353,7 @@ This monorepo structure ensures that code is reused and there is a clear separat
 - [x] **Advanced Table Parsing**: Rewrite logic to have 
 - [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
 - [x] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
-- [x] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy (original_chunk = "The company's revenue grew by 3% over the previous quarter."
-
-contextualized_chunk = "This chunk is from an SEC filing on ACME corp's performance in Q2 2023; the previous quarter's revenue was $314 million. The company's revenue grew by 3% over the previous quarter.")
+- [x] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy
 - [ ] **Multi-Document Support**: Cross-document reasoning and comparison
 - [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
 - [x] **Evaluation Framework**: Further customize LangFuse for better observability
