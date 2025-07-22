@@ -1,0 +1,89 @@
+flowchart TD
+    %% Styling
+    classDef process fill:#E3F2FD,stroke:#333,stroke-width:2px;
+    classDef decision fill:#FFF9C4,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef datastore fill:#D1C4E9,stroke:#333,stroke-width:2px;
+    classDef model fill:#C8E6C9,stroke:#333,stroke-width:2px;
+    classDef io fill:#FFCCBC,stroke:#333,stroke-width:2px;
+    classDef subgraphStyle fill:#FAFAFA,stroke:#BDBDBD,stroke-width:2px;
+
+    %% --- Start of Pipeline ---
+    A["Start: PDF Files in Source Directory"] --> B{"Find New Files"};
+    class A,B io;
+
+    B --> C["Run Ingestion Process"];
+    class C process;
+
+    subgraph "Ingestion Process (Per-File Loop)"
+        direction TB
+        style SubGraph1 subgraphStyle
+
+        %% --- Stage 1: Conversion & Cleaning ---
+        subgraph "PDF to Markdown Conversion"
+            D["CustomPDFLoader"] --> E["Convert PDF to Markdown (docling)"];
+            E --> F{"PDF Complexity?"};
+            F -- "Tricky PDF" --> G["Use XLARGE Layout Model & Full OCR"];
+            F -- "High-Res" --> H["Use LARGE Layout Model"];
+            F -- "Default" --> I["Standard Layout Model"];
+            G & H & I --> J["Clean Markdown Artifacts"];
+        end
+
+        %% --- Stage 2: Parsing & Element Separation ---
+        subgraph "Parse & Separate Elements"
+            J --> K["Parse Cleaned Markdown"];
+            K --> L["Identify Text Blocks"];
+            K --> M["Identify Table Blocks"];
+            L -- "Find Potential Prefaces" --> N{"Is text block a preface for a table?"};
+            N -- Yes --> O["Associate Preface with Table"];
+            N -- No --> P([Text Elements]);
+            M & O --> Q([Table Elements]);
+        end
+
+        %% --- Stage 3: Parallel Processing of Elements ---
+        subgraph "Text Element Processing"
+            P --> P1["Batch Extract Keywords (spaCy)"];
+            P1 --> P2["Content-Aware Chunking (max 256 tokens)"];
+            P2 --> P3["Merge small consecutive chunks (over 175 tokens)"];
+            P3 --> R_Text["Create Augmented Text Chunks"];
+        end
+
+        subgraph "Table Element Processing"
+            Q --> Q1["Batch Extract Keywords (spaCy)"];
+            Q1 --> Q2["Generate 1-Sentence Summary (ChatOpenAI LLM)"];
+            Q2 --> R_Table["Create Augmented Table Chunks"];
+        end
+
+        %% --- Document Level Summary (in parallel) ---
+        J & R_Table -- "MD Headers & Table Summaries" --> DS1["Generate High-Level Document Summary (small_llm)"]
+        DS1 --> DS2["Save Document Summary to TXT File"]
+        class DS1 model
+        class DS2 io
+
+        %% --- Stage 4: Unification & Indexing ---
+        subgraph "Unification, Indexing & Storage"
+            R_Text & R_Table --> S["Combine all chunks"];
+            S --> T["Filter out small chunks (under 200 chars)"];
+            T --> U["Index Documents (langchain.indexes.index)"];
+            U --> V{"Check for existing chunk ID (SQLRecordManager)"};
+            V -- "No / Changed" --> W["Generate Embeddings (Embedding Model)"];
+            W --> X["Write to Vector Store (ChromaDB)"];
+            V -- "Yes / Unchanged" --> Y["Skip Indexing"];
+            X & Y --> Z["Update Record Manager"];
+        end
+
+        %% --- Stage 5: Finalization ---
+        subgraph "Finalization"
+            Z --> Z1["Move Processed PDF to 'added' directory"];
+        end
+
+        class D,E,J,K,P1,P2,P3,Q1,Z,Z1 process;
+        class F,N,V decision;
+        class G,H,I,Q2,W model;
+        class L,M,P,Q,R_Text,R_Table,S,T,U datastore;
+    end
+
+    %% Connects process step to the first node IN the subgraph
+    C --> D;
+
+    Z1 --> Z_End("End of Process");
+    class Z_End io;

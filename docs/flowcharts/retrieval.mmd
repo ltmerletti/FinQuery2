@@ -1,0 +1,66 @@
+flowchart TD
+ subgraph subGraph0["Metadata Generation"]
+        D{"LLM: Defines Doc Type &amp; Metadata Schema, Creates Document Summary"}
+        D_DB[("Database of Known Doc Types")]
+        C["Document Map (Headings, Tables)"]
+        E{"Decision"}
+        F["Generate New Schema"]
+        G["Use Existing Schema"]
+  end
+ subgraph subGraph1["Document Ingestion Pipeline (Offline)"]
+        B["Stage 1: Structural Parsing (No LLM)"]
+        A["New Document (PDF, DOCX, etc.)"]
+        subGraph0
+        H["LLM: Extracts Metadata from Snippets"]
+        I("Extracted Metadata JSON")
+        J["Chunk Full Document"]
+        K["Augment Chunks"]
+        L(("[Vector DB w/ Metadata]"))
+  end
+ subgraph subGraph2["Query Planning & Filtering (Single LLM Call)"]
+        N["LLM: Analyzes Query, Extracts Filters & Decomposes into Sub-Queries"]
+  end
+ subgraph subGraph3["Query Execution Pipeline (Online)"]
+        M["User Query"]
+        subGraph2
+        Q["Apply Metadata Filters"]
+        R["Filtered Search Space"]
+        S["Vector Search / Hybrid Search"]
+        T["Reranking"]
+        U["Top-N Chunks (Factual Data)"]
+        V{"Analytical Agent: Calculates & Synthesizes Final Answer (with Tool Access)"}
+        W(["Final Answer"])
+  end
+    A --> B & H & J
+    B --> C
+    D_DB --> D
+    C --> D
+    D -- Is Type Known? --> E
+    E -- No --> F
+    E -- Yes --> G
+    F --> H
+    G --> H
+    H --> I
+    J --> K
+    I --> K
+    K --> L
+    M --> N
+    N --> Q
+    L --> Q
+    Q --> R
+    R --> S
+    S --> T
+    T --> U
+    U --> V
+    V --> W
+
+     D:::llmCall
+     H:::llmCall
+     N:::llmCall
+     V:::llmCall
+    classDef llmCall fill:#ffc300,stroke:#333,stroke-width:2px,font-weight:bold
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style D_DB fill:#bbf,stroke:#333,stroke-width:2px
+    style L fill:#bbf,stroke:#333,stroke-width:2px
+    style M fill:#f9f,stroke:#333,stroke-width:2px
+    style W fill:#9f9,stroke:#333,stroke-width:2px

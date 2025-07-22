@@ -110,40 +110,195 @@ npm run dev
 ```
 
 ## System Architecture
-
+Simplified Full Pipeline 
 ```mermaid
 flowchart TD
-    %% --- Ingestion Pipeline ---
-    subgraph "One-Time Ingestion Pipeline"
+    %% --- Subgraphs for Organization ---
+    subgraph "Phase 1: Ingestion Pipeline (Offline)"
         direction LR
-        IngestStart(PDF Document) --> Parse["Custom Parsing (finquery_parser)"]
-        Parse --> Chunk["Semantic Chunking (Text/Tables)"]
-        Chunk --> Augment["Chunk Augmentation (Keywords, Summary)"]
-        Augment --> Embed("Embedding Model")
-        Embed --> Store(Vector Store & Record Manager)
+        A["<b>Source Document</b> <br/>(e.g., PDF, DOCX)"] --> B;
+        B["<b>1. Parse & Extract</b><br/>Separate raw text, tables, and headers"] --> C;
+        C["<b>2. Enrich Content (LLM)</b><br/>- Generate summaries for tables<br/>- Extract keywords for text sections"] --> D;
+        D["<b>3. Chunk & Augment</b><br/>Create small text chunks and attach<br/>the generated summaries/keywords as metadata"] --> E;
+        E["<b>4. Embed & Store</b><br/>Convert chunks into vectors and save<br/>in a specialized Vector Database"] --> F[("📚 <br/> <b>Vector Store</b><br/>with Rich Metadata")];
     end
 
-    %% --- Query & Observability Pipeline ---
-    subgraph "Per-Query Retrieval Pipeline"
-        A[User asks a question] --> D(Vector Store)
-        D -- "Retrieves Top 10 Chunks" --> E{Reranking}
-        E -- "Reranks for relevance" --> F[Top 4 Chunks]
-        F -- "Relevant Context" --> G[Prompt Template]
-        A -- "Original Query" --> G
-        G --> H{Final LLM Call}
-        H -- "Generates final answer" --> I[Answer + Source Metadata]
-        
-        subgraph "Observability"
-            direction RL
-            L(Langfuse)
-            A -- "Trace" --> L
-            E -- "Trace" --> L
-            H -- "Trace" --> L
+    subgraph "Phase 2: Query Pipeline (Online)"
+        direction LR
+        Q1["<b>User Query</b>"] --> Q2;
+        Q2["<b>1. Plan & Filter (LLM)</b><br/>- Understand user intent<br/>- Identify metadata filters (e.g., dates, sections)"] --> Q3;
+        F --> Q3;
+        Q3["<b>2. Retrieve & Re-rank</b><br/>- Fetch relevant chunks using filters & vector search<br/>- Re-rank results for highest relevance"] --> Q4;
+        Q4["<b>3. Synthesize & Respond (LLM)</b><br/>Use the best chunks and the original query<br/>to generate a final, cited answer"] --> Q5["✅ <br/> <b>Final Answer</b><br/>with Source Citations"];
+    end
+
+    %% --- Styling ---
+    classDef llmNode fill:#C8E6C9,stroke:#333,stroke-width:2px;
+    class C,Q2,Q4 llmNode;
+    style F fill:#D1C4E9,stroke:#333,stroke-width:2px; 
+```
+    
+Full-Detail Ingestion Process
+```mermaid
+flowchart TD
+    %% Styling
+    classDef process fill:#E3F2FD,stroke:#333,stroke-width:2px;
+    classDef decision fill:#FFF9C4,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef datastore fill:#D1C4E9,stroke:#333,stroke-width:2px;
+    classDef model fill:#C8E6C9,stroke:#333,stroke-width:2px;
+    classDef io fill:#FFCCBC,stroke:#333,stroke-width:2px;
+    classDef subgraphStyle fill:#FAFAFA,stroke:#BDBDBD,stroke-width:2px;
+
+    %% --- Start of Pipeline ---
+    A["Start: PDF Files in Source Directory"] --> B{"Find New Files"};
+    class A,B io;
+
+    B --> C["Run Ingestion Process"];
+    class C process;
+
+    subgraph "Ingestion Process (Per-File Loop)"
+        direction TB
+        style SubGraph1 subgraphStyle
+
+        %% --- Stage 1: Conversion & Cleaning ---
+        subgraph "PDF to Markdown Conversion"
+            D["CustomPDFLoader"] --> E["Convert PDF to Markdown (docling)"];
+            E --> F{"PDF Complexity?"};
+            F -- "Tricky PDF" --> G["Use XLARGE Layout Model & Full OCR"];
+            F -- "High-Res" --> H["Use LARGE Layout Model"];
+            F -- "Default" --> I["Standard Layout Model"];
+            G & H & I --> J["Clean Markdown Artifacts"];
         end
+
+        %% --- Stage 2: Parsing & Element Separation ---
+        subgraph "Parse & Separate Elements"
+            J --> K["Parse Cleaned Markdown"];
+            K --> L["Identify Text Blocks"];
+            K --> M["Identify Table Blocks"];
+            L -- "Find Potential Prefaces" --> N{"Is text block a preface for a table?"};
+            N -- Yes --> O["Associate Preface with Table"];
+            N -- No --> P([Text Elements]);
+            M & O --> Q([Table Elements]);
+        end
+
+        %% --- Stage 3: Parallel Processing of Elements ---
+        subgraph "Text Element Processing"
+            P --> P1["Batch Extract Keywords (spaCy)"];
+            P1 --> P2["Content-Aware Chunking (max 256 tokens)"];
+            P2 --> P3["Merge small consecutive chunks (over 175 tokens)"];
+            P3 --> R_Text["Create Augmented Text Chunks"];
+        end
+
+        subgraph "Table Element Processing"
+            Q --> Q1["Batch Extract Keywords (spaCy)"];
+            Q1 --> Q2["Generate 1-Sentence Summary (ChatOpenAI LLM)"];
+            Q2 --> R_Table["Create Augmented Table Chunks"];
+        end
+        
+        %% --- Document Level Summary (in parallel) ---
+        J & R_Table -- "MD Headers & Table Summaries" --> DS1["Generate High-Level Document Summary (small_llm)"]
+        DS1 --> DS2["Save Document Summary to TXT File"]
+        class DS1 model
+        class DS2 io
+
+        %% --- Stage 4: Unification & Indexing ---
+        subgraph "Unification, Indexing & Storage"
+            R_Text & R_Table --> S["Combine all chunks"];
+            S --> T["Filter out small chunks (under 200 chars)"];
+            T --> U["Index Documents (langchain.indexes.index)"];
+            U --> V{"Check for existing chunk ID (SQLRecordManager)"};
+            V -- "No / Changed" --> W["Generate Embeddings (Embedding Model)"];
+            W --> X["Write to Vector Store (ChromaDB)"];
+            V -- "Yes / Unchanged" --> Y["Skip Indexing"];
+            X & Y --> Z["Update Record Manager"];
+        end
+
+        %% --- Stage 5: Finalization ---
+        subgraph "Finalization"
+            Z --> Z1["Move Processed PDF to 'added' directory"];
+        end
+        
+        class D,E,J,K,P1,P2,P3,Q1,Z,Z1 process;
+        class F,N,V decision;
+        class G,H,I,Q2,W model;
+        class L,M,P,Q,R_Text,R_Table,S,T,U datastore;
     end
 
-    %% --- Final Output ---
-    I --> J[User receives answer with sources]
+    %% Connects process step to the first node IN the subgraph
+    C --> D; 
+    
+    Z1 --> Z_End("End of Process");
+    class Z_End io;
+```
+
+Full Detail Retrieval
+```mermaid
+flowchart TD
+ subgraph subGraph0["Metadata Generation"]
+        D{"LLM: Defines Doc Type &amp; Metadata Schema, Creates Document Summary"}
+        D_DB[("Database of Known Doc Types")]
+        C["Document Map (Headings, Tables)"]
+        E{"Decision"}
+        F["Generate New Schema"]
+        G["Use Existing Schema"]
+  end
+ subgraph subGraph1["Document Ingestion Pipeline (Offline)"]
+        B["Stage 1: Structural Parsing (No LLM)"]
+        A["New Document (PDF, DOCX, etc.)"]
+        subGraph0
+        H["LLM: Extracts Metadata from Snippets"]
+        I("Extracted Metadata JSON")
+        J["Chunk Full Document"]
+        K["Augment Chunks"]
+        L(("[Vector DB w/ Metadata]"))
+  end
+ subgraph subGraph2["Query Planning & Filtering (Single LLM Call)"]
+        N["LLM: Analyzes Query, Extracts Filters & Decomposes into Sub-Queries"]
+  end
+ subgraph subGraph3["Query Execution Pipeline (Online)"]
+        M["User Query"]
+        subGraph2
+        Q["Apply Metadata Filters"]
+        R["Filtered Search Space"]
+        S["Vector Search / Hybrid Search"]
+        T["Reranking"]
+        U["Top-N Chunks (Factual Data)"]
+        V{"Analytical Agent: Calculates & Synthesizes Final Answer (with Tool Access)"}
+        W(["Final Answer"])
+  end
+    A --> B & H & J
+    B --> C
+    D_DB --> D
+    C --> D
+    D -- Is Type Known? --> E
+    E -- No --> F
+    E -- Yes --> G
+    F --> H
+    G --> H
+    H --> I
+    J --> K
+    I --> K
+    K --> L
+    M --> N
+    N --> Q
+    L --> Q
+    Q --> R
+    R --> S
+    S --> T
+    T --> U
+    U --> V
+    V --> W
+
+     D:::llmCall
+     H:::llmCall
+     N:::llmCall
+     V:::llmCall
+    classDef llmCall fill:#ffc300,stroke:#333,stroke-width:2px,font-weight:bold
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style D_DB fill:#bbf,stroke:#333,stroke-width:2px
+    style L fill:#bbf,stroke:#333,stroke-width:2px
+    style M fill:#f9f,stroke:#333,stroke-width:2px
+    style W fill:#9f9,stroke:#333,stroke-width:2px
 ```
 
 ## How We Ensure Accurate Retrieval
@@ -199,12 +354,12 @@ This monorepo structure ensures that code is reused and there is a clear separat
 - [x] **Advanced Table Parsing**: Rewrite logic to have 
 - [x] **Hybrid Chunking Strategy**: Formal separation of text vs table chunking
 - [x] **Table Context Modifications**: Change the one-line summary to be longer with more specifics, and include more keywords extracted for each table to have higher semantic density
-- [ ] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy (original_chunk = "The company's revenue grew by 3% over the previous quarter."
+- [x] **Contextual Retrieval**: Look into [Anthropic's contextual retrieval](https://www.anthropic.com/news/contextual-retrieval) strategy (original_chunk = "The company's revenue grew by 3% over the previous quarter."
 
 contextualized_chunk = "This chunk is from an SEC filing on ACME corp's performance in Q2 2023; the previous quarter's revenue was $314 million. The company's revenue grew by 3% over the previous quarter.")
 - [ ] **Multi-Document Support**: Cross-document reasoning and comparison
 - [ ] **Multi-Representation Indexing**: Multiple vector representations per chunk
-- [ ] **Evaluation Framework**: Further customize LangFuse for better observability
+- [x] **Evaluation Framework**: Further customize LangFuse for better observability
 - [ ] **Query Transformation**: LLM translation layer for better keyword matching
 - [ ] **User Chat Refinement**: Have a "chatting" AI to refine user question before querying
 

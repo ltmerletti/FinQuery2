@@ -41,7 +41,7 @@ def main():
     PDF_INPUT_PATH = pathlib.Path("/Users/lukem/PycharmProjects/FinQuery2/reports/added/tsla-20240930.pdf")
     print(f"\nProcessing document: {PDF_INPUT_PATH.name}")
     if not PDF_INPUT_PATH.exists():
-        print(f"🔴 ERROR: File not found at '{PDF_INPUT_PATH}'. Please check the path.")
+        print(f"ERROR: File not found at '{PDF_INPUT_PATH}'. Please check the path.")
         return
 
     try:
