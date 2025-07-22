@@ -1,14 +1,16 @@
 from typing import List
 
-from langchain_chroma import Chroma
-from langchain_core.runnables import RunnableConfig
+import mlx.core as mx
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_chroma import Chroma
 from langchain_core.documents import Document
+from langchain_core.runnables import RunnableConfig
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from finquery_app.chains.answer_chain import QwenReranker
-from finquery_app.config import CHROMA_DB_PATH
-from finquery_app.manager import get_vector_store, get_embeddings
+from finquery_app.config import RERANKING_MODEL_NAME, MLX_RERANKING_MODEL_NAME
+
 
 def get_rag_test_questions():
     return [  # Direct Data Retrieval
@@ -325,8 +327,10 @@ def get_rag_test_questions():
         "What were the total proceeds from maturities of marketable securities in 2023?",
         "What was the value of the adjustment for net gains/losses on marketable debt securities realized and included in net income for 2023?"]
 
+
 def get_db_content(vector_store):
     return vector_store.get()
+
 
 def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, config: RunnableConfig):
     if not query_text:
@@ -337,7 +341,10 @@ def execute_query(query_text: str, vectorstore: Chroma, num_to_fetch: int, confi
 
     return retriever.invoke(query_text, config=config)
 
-def execute_query_with_reranking(query_text: str, vectorstore: Chroma, total_num_to_fetch: int, num_to_return: int, config: RunnableConfig) -> List[Document]:
+
+def execute_query_with_reranking(query_text: str, vectorstore: Chroma, total_num_to_fetch: int, num_to_return: int,
+                                 config: RunnableConfig,
+                                 reranker_model: QwenReranker = QwenReranker(RERANKING_MODEL_NAME)) -> List[Document]:
     if not query_text:
         print("Query text cannot be empty.")
         return []
@@ -345,7 +352,8 @@ def execute_query_with_reranking(query_text: str, vectorstore: Chroma, total_num
     base_retriever = vectorstore.as_retriever(search_kwargs={'k': total_num_to_fetch})
 
     try:
-        reranker_model = QwenReranker()
+        if reranker_model is None:
+            reranker_model = QwenReranker()
     except Exception as e:
         print(f"Error initializing QwenReranker: {e}")
         print("Please ensure you have the necessary API keys or configurations for QwenReranker.")
@@ -361,4 +369,36 @@ def execute_query_with_reranking(query_text: str, vectorstore: Chroma, total_num
     return compression_retriever.invoke(query_text, config=config)
 
 
+def execute_query_with_reranking_mlx(
+        query_text: str,
+        vectorstore,
+        total_num_to_fetch: int,
+        num_to_return: int,
+        config
+) -> List[Document]:
+    """
+    Executes a query with a dedicated MLX reranker model, bypassing CrossEncoder.
+    This function should be run directly in your Python script.
+    """
+    base_retriever = vectorstore.as_retriever(search_kwargs={'k': total_num_to_fetch})
+    retrieved_docs = base_retriever.invoke(query_text, config=config)
 
+    model_id = MLX_RERANKING_MODEL_NAME
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_id)
+        model = AutoModelForSequenceClassification.from_pretrained(model_id)
+    except Exception as e:
+        print(f"Failed to load reranker model '{model_id}': {e}")
+        return retrieved_docs[:num_to_return]
+
+    scored_docs = []
+    for doc in retrieved_docs:
+        pair = [query_text, doc.page_content]
+        inputs = tokenizer(pair, return_tensors="np", truncation=True, max_length=512)
+        mlx_inputs = {key: mx.array(value) for key, value in inputs.items()}
+        score = model(**mlx_inputs).logits.item()
+        scored_docs.append({"doc": doc, "score": score})
+
+    reranked_docs = sorted(scored_docs, key=lambda x: x["score"], reverse=True)
+    final_docs = [item["doc"] for item in reranked_docs]
+    return final_docs[:num_to_return]

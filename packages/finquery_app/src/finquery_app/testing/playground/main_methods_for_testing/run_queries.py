@@ -1,12 +1,12 @@
 from langchain_core.runnables import RunnableConfig
 
-from finquery_app.config import CHROMA_DB_PATH
+from finquery_app.config import CHROMA_DB_PATH, COLLECTION_NAME
 from finquery_app.manager import get_vector_store, get_embeddings
 from finquery_app.querying.query import get_rag_test_questions, execute_query
 
 
 def main():
-    vectorstore = get_vector_store("financial_documents", get_embeddings(), CHROMA_DB_PATH)
+    vectorstore = get_vector_store(COLLECTION_NAME, get_embeddings(), CHROMA_DB_PATH)
 
     test_questions = get_rag_test_questions()
 
@@ -24,6 +24,7 @@ def main():
         except Exception as e:
             print(f"Error processing question {i}: {e}")
             print("-" * 80)
+
 
 if __name__ == "__main__":
     main()

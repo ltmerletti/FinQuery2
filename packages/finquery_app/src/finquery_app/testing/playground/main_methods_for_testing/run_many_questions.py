@@ -1,17 +1,16 @@
+import time
+
 from langchain_core.runnables import RunnableConfig
 
 from finquery_app.chains.answer_chain import create_rag_chain
-from finquery_app.config import CHROMA_DB_PATH
+from finquery_app.config import CHROMA_DB_PATH, COLLECTION_NAME
 from finquery_app.manager import get_langfuse_callback
 from finquery_app.manager import get_vector_store, get_embeddings
 from finquery_app.querying.query import get_rag_test_questions
 
 
 def main():
-    import time
-
     print("--- Initializing FinQuery Components ---")
-    COLLECTION_NAME = "financial_documents"
 
     embeddings = get_embeddings()
     vector_store = get_vector_store(COLLECTION_NAME, embeddings, str(CHROMA_DB_PATH))
@@ -44,7 +43,7 @@ def main():
             continue
 
         if (i + 1) % 10 == 0 and (i + 1) < total_questions:
-            print("\n--- Pausing for 2 minutes (60 seconds) to let computer cool down... ---")
+            print("\n--- Pausing for 1 minutes (60 seconds) to let computer cool down... ---")
             time.sleep(60)
             print("--- ▶️ Resuming processing. ---")
 

@@ -7,6 +7,7 @@ from tiktoken import get_encoding
 from finquery_app.config import LMSTUDIO_BASE_URL, LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME
 from finquery_parser.utils import load_pdf
 
+
 def main():
     """
     Main function to execute the PDF loading and processing pipeline.
