@@ -21,16 +21,15 @@ from langchain_core.documents import Document
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_core.output_parsers import StrOutputParser
 
 # Tokenizers & NLP Tools
-from tiktoken import get_encoding
 from tiktoken.core import Encoding
-from spacy import load
 from spacy.language import Language
 
+from finquery_app.config import SUMMARY_DIRECTORY
 # Local Imports
 from finquery_parser.types import *
-from finquery_app.config import LMSTUDIO_BASE_URL, LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME
 
 # ==============================================================================
 #  Constants
@@ -309,17 +308,29 @@ def _chunk_text_elements(text_elements, tokenizer, source_pdf_path, company_tick
     return final_text_chunks
 
 
-def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokenizer: Encoding, use_high_res: bool = False, filter_small_elements: bool = True) -> \
-List[Document]:
+def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokenizer: Encoding,
+             use_high_res: bool = False, filter_small_elements: bool = True, small_llm: ChatOpenAI = None) -> \
+        List[Document]:
     """Main orchestrator: Loads a PDF, converts, cleans, parses, and chunks it."""
     company_ticker = pdf_file_path.stem.split('-')[0].upper()
     final_chunks = []
     parser = define_parser()
 
+    table_contexts_for_summary = []
+
+    cleaned_md_content = ""
+
     with tempfile.TemporaryDirectory() as temp_dir:
         cleaned_md_path_str = _create_and_clean_markdown_from_pdf(pdf_file_path, temp_dir)
 
         if not cleaned_md_path_str:
+            return []
+
+        try:
+            with open(cleaned_md_path_str, 'r', encoding='utf-8') as f:
+                cleaned_md_content = f.read()
+        except FileNotFoundError:
+            print(f"ERROR: Could not read temporary markdown file at {cleaned_md_path_str}")
             return []
 
         tables, text_elements = _parse_markdown_for_elements(cleaned_md_path_str)
@@ -339,7 +350,6 @@ List[Document]:
         for i, table in enumerate(tables):
             section_title = table['headers'][-1]['title'] if table['headers'] else "Financial Table"
             preface = table.get('preface', '')
-
             full_content = f"{preface}\n\n{table['content']}".strip()
 
             try:
@@ -352,8 +362,9 @@ List[Document]:
             context = Context(pdf_file_path.stem, 1, section_title, "Table", summary=summary_text, table_prefix=preface)
             context.relevant_keywords = table_keywords_list[i]
 
-            augmented_content = f"{context.to_string()}\n\n[CONTENT]\n{full_content}"
+            table_contexts_for_summary.append(context)
 
+            augmented_content = f"{context.to_string()}\n\n[CONTENT]\n{full_content}"
             final_chunks.append(Document(page_content=augmented_content, metadata={
                 "source": pdf_file_path.name, "company": company_ticker,
                 "element_type": "Table", "section": section_title, "keywords": ", ".join(context.relevant_keywords)}))
@@ -361,6 +372,21 @@ List[Document]:
     if text_elements:
         text_chunks = _chunk_text_elements(text_elements, tokenizer, pdf_file_path, company_ticker, nlp)
         final_chunks.extend(text_chunks)
+
+    if table_contexts_for_summary and cleaned_md_content:
+        print("\n--- Generating High-Level Document Summary ---")
+        try:
+            document_summary = get_document_summary(cleaned_md_content, table_contexts_for_summary, small_llm)
+
+            summary_output_path = SUMMARY_DIRECTORY / f"{pdf_file_path.stem}_summary.txt"
+
+            with open(summary_output_path, 'w', encoding='utf-8') as f:
+                f.write(document_summary)
+
+            print(f"Document summary saved to: {summary_output_path}")
+
+        except Exception as e:
+            print(f"Failed to generate document summary: {e}")
 
     print(f"\nTotal chunks created: {len(final_chunks)}")
 
@@ -507,7 +533,57 @@ def batch_extract_nlp_keywords(items_for_processing, nlp_model: Language, encode
     return all_results
 
 
-def get_document_summary(chunks: List[str]) -> str:
-    # get all headings and table summaries from content
-    # if there are <10 chunks then just return the parsed text
-    return
+def get_document_summary(cleaned_md: str, chunks: List[Context], llm) -> str:
+    """
+    Constructs a prompt, invokes an LLM, and returns a high-level summary
+    of a document based on its headings and table summaries.
+
+    Args:
+        cleaned_md: The cleaned markdown content of the document.
+        chunks: A list of Context objects, each containing information about
+                an element (like a table) and its summary.
+        llm: The language model instance to use for generating the summary.
+
+    Returns:
+        A string containing the generated high-level summary.
+    """
+    document_outline_parts = []
+
+    for line in cleaned_md.splitlines():
+        if line.startswith("##"):
+            document_outline_parts.append(line)
+
+    document_outline_parts.append("\nALL TABLE SUMMARIES ARE BELOW:")
+
+    for chunk_context in chunks:
+        if chunk_context.element_type.casefold() == "Table".casefold():
+            document_outline_parts.append(chunk_context.summary)
+
+    document_outline = "\n".join(document_outline_parts)
+
+    template = """You are an expert document analyst and indexer. Your task is to create a dense, structured summary of a document that will be used for high-recall vector retrieval. The document could be a financial report, a legal contract, a research paper, or another type.
+
+Based on the document's headings and table summaries provided below, generate a summary that acts as a "meta-document" or an index of the core topics.
+
+**Instructions:**
+1.  Read the entire outline to identify all major topics, entities, and concepts.
+2.  First, create a "Keyword Index" by listing the key terms under the following generic markdown headings. Be **extractive** and pull the literal names from the outline.
+    - `### Key Topics & Concepts:`
+    - `### Key Entities (Products, Companies, People):`
+    - `### Geographic Locations Mentioned:`
+    - `### Discussed Risks, Challenges, or Limitations:`
+3.  Second, create a brief "Analytical Summary" by providing a 1-2 sentence analysis for the most important categories you identified. Use markdown headings for each category.
+4.  The goal is a hybrid summary: dense with keywords for machine retrieval, but with concise analysis for human understanding. Do not write long narrative paragraphs.
+
+---
+**DOCUMENT OUTLINE AND TABLE SUMMARIES:**
+{outline}
+---
+
+**STRUCTURED DOCUMENT SUMMARY:**"""
+
+    prompt = ChatPromptTemplate.from_template(template)
+
+    chain = prompt | llm | StrOutputParser()
+
+    return chain.invoke({"outline": document_outline})
