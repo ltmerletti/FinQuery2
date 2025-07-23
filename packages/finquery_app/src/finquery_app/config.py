@@ -15,7 +15,7 @@ EMBEDDING_MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"
 RERANKING_MODEL_NAME = "Qwen/Qwen3-Reranker-0.6B"
 MLX_RERANKING_MODEL_NAME = "arthurcollet/Qwen3-Reranker-0.6B-mlx-6bit"
 LLM_NAME = "qwen3-30b-a3b-mixed-3"
-SMALL_LLM_NAME = "liquid/lfm2-1.2b"
+SMALL_LLM_NAME = "qwen3-1.7b-mlx"
 
 # --- Collection ---
 COLLECTION_NAME = "financial_documents"
