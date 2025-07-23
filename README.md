@@ -401,6 +401,7 @@ page_content: |
 - [x] **Document Summarization**: Finalize document summarization functionality for better format
 - [x] **Initialize Database**: Set up PostgreSQL db for metadata and document types
 - [x] **Implement Advanced Metadata Capturing**: Implement and finalize logic to extract metadata and augment chunks with it
+- [ ] **Improve Pre-Table Statement Finding**: Improve the logic to detect table description sentences (ex. ones with "(in millions)")
 - [ ] **Implement Filtering System**: Implement filtering system for data
 - [ ] **Create LLM Chatbot**: Create the chatbot for direct user interface
 - [ ] **Update API & Frontend**: Update the API and frontend to fit better
