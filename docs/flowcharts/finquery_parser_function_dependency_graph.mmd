@@ -1,0 +1,47 @@
+graph TD
+    %% --- Style Definitions ---
+    classDef func fill:#E3F2FD,stroke:#1565C0,stroke-width:2px;
+    classDef mainFunc fill:#BBDEFB,stroke:#1976D2,stroke-width:3px;
+
+    %% --- Main Orchestrator ---
+    L0("<b>load_pdf</b><br/>Main orchestrator for the entire pipeline.<hr/><b>IN:</b> pdf_file_path, llm, nlp, tokenizer<br/><b>OUT:</b> List of final `Document` chunks"):::mainFunc
+
+    %% --- Stage 1 Sub-Functions ---
+    L1("<b>_parse_document</b><br/>Manages conversion and parsing.<hr/><b>IN:</b> pdf_file_path, use_high_res<br/><b>OUT:</b> cleaned_md_content, table_elements, prose_elements"):::func
+    L1_1("<b>_convert_and_clean_pdf</b><br/>Orchestrates PDF-to-Markdown conversion and cleaning.<hr/><b>IN:</b> pdf_file_path, temp_dir_path<br/><b>OUT:</b> Path to cleaned .md file"):::func
+    L1_1_1("<b>_get_pdf_pipeline_options</b><br/>Configures the Docling converter (e.g., resolution, OCR).<hr/><b>IN:</b> use_high_res, is_tricky_document<br/><b>OUT:</b> `PdfPipelineOptions` object"):::func
+    L1_1_2("<b>_convert_pdf_to_raw_markdown</b><br/>Uses the Docling library to convert the PDF to raw Markdown.<hr/><b>IN:</b> pdf_file_path, pipeline_options<br/><b>OUT:</b> Path to raw .md file"):::func
+    L1_1_3("<b>_clean_raw_markdown</b><br/>Removes artifact lines from the raw Markdown.<hr/><b>IN:</b> Path to raw .md file<br/><b>OUT:</b> Path to cleaned .md file"):::func
+    L1_2("<b>_parse_markdown_for_elements</b><br/>Reads the clean Markdown and splits it into Prose and Table elements.<hr/><b>IN:</b> Path to cleaned .md file<br/><b>OUT:</b> List of `table_elements`, List of `prose_elements`"):::func
+
+    %% --- Stage 2 Sub-Functions ---
+    L2("<b>_run_intelligence_layer</b><br/>Extracts structured metadata (e.g., document type, dates).<hr/><b>IN:</b> llm, tokenizer, md_content, elements<br/><b>OUT:</b> extracted_metadata, needs_human_review flag"):::func
+    L2_1("<b>_decide_document_type_and_schema</b><br/>Uses a small LLM to classify the document.<hr/><b>IN:</b> small_llm, tokenizer, content, outline<br/><b>OUT:</b> Dictionary with decision ('match' or 'create')"):::func
+    L2_3("<b>_run_extraction_agent</b><br/>Manages the tiered process to fill the schema.<hr/><b>IN:</b> llm, elements, metadata_schema<br/><b>OUT:</b> extracted_metadata, needs_human_review flag"):::func
+    L2_3_1("<b>_extract_metadata_with_llm</b><br/>Tier 1: Uses a large LLM on the start of the doc to get most metadata.<hr/><b>IN:</b> llm, schema, document_snippet<br/><b>OUT:</b> Dictionary of extracted metadata"):::func
+    L2_3_2("<b>_surgical_table_extractor_no_llm</b><br/>Tier 2: For any missed fields, it searches tables with Regex.<hr/><b>IN:</b> table_elements, field_to_find<br/><b>OUT:</b> Found value (string) or None"):::func
+
+    %% --- Stage 3 Sub-Functions ---
+    L3("<b>_enrich_and_chunk_elements</b><br/>Orchestrates chunking and enriching of all elements.<hr/><b>IN:</b> elements, metadata, llm, nlp<br/><b>OUT:</b> List of final `Document` chunks, List of `table_contexts`"):::func
+    L3_1("<b>_process_table_elements</b><br/>Loops through tables to add summaries and create Documents.<hr/><b>IN:</b> table_elements, metadata, llm, nlp<br/><b>OUT:</b> List of table `Document` chunks, List of `table_contexts`"):::func
+    L3_1_1("<b>get_one_line_summary</b><br/>Uses an LLM to generate a summary for a single table.<hr/><b>IN:</b> table_text, section_title, llm<br/><b>OUT:</b> Dictionary with 'summary' key"):::func
+    L3_2("<b>_chunk_text_elements</b><br/>Manages the multi-pass process of chunking prose.<hr/><b>IN:</b> prose_elements, tokenizer, nlp, metadata<br/><b>OUT:</b> List of text `Document` chunks"):::func
+    L3_2_1("<b>_create_initial_text_chunks</b><br/>Pass 1: Groups text by section and token limits.<hr/><b>IN:</b> prose_elements, tokenizer<br/><b>OUT:</b> List of `IntermediateChunk`s"):::func
+    L3_2_2("<b>_merge_small_chunks</b><br/>Pass 2: Merges chunks that are too small.<hr/><b>IN:</b> List of `IntermediateChunk`s<br/><b>OUT:</b> List of merged `IntermediateChunk`s"):::func
+    L3_2_3("<b>_format_chunks_as_documents</b><br/>Pass 3: Converts intermediate chunks into final Documents.<hr/><b>IN:</b> List of merged `IntermediateChunk`s<br/><b>OUT:</b> List of final `Document` chunks"):::func
+    L3_HELPER("<b>batch_extract_nlp_keywords</b><br/>Utility used by both table and text processing to get keywords via spaCy.<hr/><b>IN:</b> List of texts, nlp, tokenizer<br/><b>OUT:</b> List of keyword lists"):::func
+
+    %% --- Stage 4 Sub-Functions ---
+    L4("<b>_generate_final_summary</b><br/>Creates a high-level summary of the entire document.<hr/><b>IN:</b> md_content, table_contexts, llm<br/><b>OUT:</b> (Writes a file, no return value)"):::func
+    L4_1("<b>_get_document_summary</b><br/>Uses an LLM to write the final summary based on an outline.<hr/><b>IN:</b> outline, llm<br/><b>OUT:</b> Summary string"):::func
+
+    %% --- Connections ---
+    L0 --> L1; L0 --> L2; L0 --> L3; L0 --> L4;
+    L1 --> L1_1; L1 --> L1_2;
+    L1_1 --> L1_1_1; L1_1 --> L1_1_2; L1_1 --> L1_1_3;
+    L2 --> L2_1; L2 --> L2_3;
+    L2_3 --> L2_3_1; L2_3 --> L2_3_2;
+    L3 --> L3_1; L3 --> L3_2;
+    L3_1 --> L3_1_1; L3_1 --> L3_HELPER;
+    L3_2 --> L3_HELPER; L3_2 --> L3_2_1; L3_2_1 --> L3_2_2; L3_2_2 --> L3_2_3;
+    L4 --> L4_1;

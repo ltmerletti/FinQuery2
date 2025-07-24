@@ -1,0 +1,90 @@
+graph TD
+    %% --- Style Definitions ---
+    classDef func fill:#E3F2FD,stroke:#1565C0,stroke-width:2px;
+    classDef mainFunc fill:#BBDEFB,stroke:#1976D2,stroke-width:3px;
+    classDef loopSubgraph fill:#F1F8E9,stroke:#7CB342,stroke-width:2px,stroke-dasharray: 5 5;
+
+    %% --- Main Orchestrator ---
+    L0("<b>load_pdf</b><br/>Main orchestrator. Calls parsing, intelligence, enrichment, and summarization in sequence.<hr/><b>IN:</b> pdf_file_path, llm, nlp, tokenizer<br/><b>OUT:</b> List of final Document chunks"):::mainFunc
+
+    %% --- Stage 1 Functions ---
+    L1("<b>_parse_document</b><br/>Calls _convert_and_clean_pdf then _parse_markdown_for_elements."):::func
+    L1_1("<b>_convert_and_clean_pdf</b><br/>Uses Docling library to convert PDF to a clean Markdown file."):::func
+    L1_2("<b>_parse_markdown_for_elements</b><br/>Performs the detailed line-by-line parsing loop (see below)."):::func
+
+    %% --- Stage 2 Functions ---
+    L2("<b>_run_intelligence_layer</b><br/>Orchestrates document classification and metadata extraction."):::func
+    L2_3("<b>_run_extraction_agent</b><br/>Manages the two-tier metadata search."):::func
+    L2_3_2("<b>_surgical_table_extractor_no_llm</b><br/>Performs the detailed surgical Regex search loop (see below)."):::func
+
+    %% --- Stage 3 Functions ---
+    L3("<b>_enrich_and_chunk_elements</b><br/>Top-level function for Stage 3. Calls table and text processors."):::func
+    L3_1("<b>_process_table_elements</b><br/>Performs the detailed table processing loop (see below)."):::func
+    L3_2("<b>_chunk_text_elements</b><br/>Performs the detailed multi-pass text chunking loops (see below)."):::func
+
+    %% --- Stage 4 Functions ---
+    L4("<b>_generate_final_summary</b><br/>Creates the final document summary."):::func
+
+    %% --- Main Connections ---
+    L0 --> L1 --> L1_1 & L1_2
+    L0 --> L2 --> L2_3 --> L2_3_2
+    L0 --> L3 --> L3_1 & L3_2
+    L0 --> L4
+
+    %% --- Detailed Loop Subgraphs ---
+
+    subgraph loop_parse [Detailed Loop 1: Markdown Parsing in _parse_markdown_for_elements]
+        style loop_parse loopSubgraph
+        direction TB
+
+        LP1_Input(["<b>Input:</b><br/>A single cleaned .md file"]) --> LP1_L1
+        LP1_L1("fa:fa-repeat For each line in the file...") --> LP1_L2{"Is line a new<br/>'# Section Header'?"}
+        LP1_L2 -- Yes --> LP1_L3["<b>Action:</b> Finalize the previous block of content<br/>(text or table) and save it as a complete element."] --> LP1_L4["<b>Action:</b> Update the current section context<br/>with the new header's title and level."]
+        LP1_L2 -- No --> LP1_L5{"Is there a state change?<br/>(e.g., text ending and a '|table|' beginning, or vice-versa)"}
+        LP1_L5 -- Yes --> LP1_L6["<b>Action:</b> Finalize the previous block of content."] --> LP1_L7["<b>Action:</b> Check if the just-saved text block<br/>is short and contains keywords like 'table', marking it as a 'preface'."]
+        LP1_L4 & LP1_L7 --> LP1_L10["<b>Action:</b> Append the current line<br/>to the currently active block of text or table content."]
+        LP1_L5 -- No --> LP1_L10
+        LP1_L10 --> LP1_L1
+        LP1_L1 -- End of File --> LP1_Output(["<b>Output:</b><br/>- List of ProseElements<br/>- List of TableElements"])
+    end
+    L1_2 --> LP1_Input
+
+    subgraph loop_surgical [Detailed Loop 2: Surgical Extraction in _surgical_table_extractor_no_llm]
+        style loop_surgical loopSubgraph
+        direction TB
+
+        LS_Input(["<b>Input:</b><br/>- A 'field_to_find' (e.g., 'fiscal_year_end')<br/>- List of all TableElements"]) --> LS_L1
+        LS_L1("fa:fa-repeat <b>Outer Loop:</b> For each table element...") --> LS_L2
+        LS_L2("fa:fa-repeat <b>Inner Loop:</b> For each line in the table's markdown content...") --> LS_L3
+        LS_L3{"<b>Logic:</b> Use a Regex pattern to check if the first column's text<br/>matches the 'field_to_find' (case-insensitive)."}
+        LS_L3 -- No Match --> LS_L2
+        LS_L3 -- Match Found --> LS_L4("<b>Action:</b> Split the line by '|' and grab the<br/>text from the next (value) column.") --> LS_Output("fa:fa-check-circle <b>Output:</b><br/>The found value as a string")
+        LS_L2 -- End of Table --> LS_L1
+        LS_L1 -- All tables checked without match --> LS_Fail("<b>Output:</b><br/>None")
+    end
+    L2_3_2 --> LS_Input
+
+    subgraph loop_tables [Detailed Loop 3: Table Processing in _process_table_elements]
+        style loop_tables loopSubgraph
+        direction TB
+
+        LT_Input(["<b>Input:</b><br/>- List of TableElements<br/>- Document metadata"]) --> LT_L1
+        LT_L1("fa:fa-repeat For each TableElement...") --> LT_L2
+        LT_L2{"<b>LLM Call:</b> Invoke LLM with a specific prompt<br/>to generate a one-sentence summary of the table."} --> LT_L3
+        LT_L3["<b>NLP Call:</b> Use spaCy to perform Named Entity Recognition<br/>and Noun Chunking on the table text to find keywords."] --> LT_L4
+        LT_L4["<b>Action:</b> Create a new LangChain Document object,<br/>populating its page_content with the original table<br/>and its metadata with the new summary and keywords."] --> LT_L1
+        LT_L1 -- All tables processed --> LT_Output(["<b>Output:</b><br/>- List of table Documents<br/>- List of Context objects"])
+    end
+    L3_1 --> LT_Input
+
+    subgraph loop_text [Detailed Loop 4: Text Chunking in _chunk_text_elements]
+        style loop_text loopSubgraph
+        direction TB
+
+        LTC_Input(["<b>Input:</b><br/>- List of ProseElements<br/>- Document metadata"]) --> LTC_P1
+        LTC_P1("<b>Pass 1 Loop (_create_initial_text_chunks):</b><br/>Iterate through all ProseElements. Group consecutive elements<br/>into an IntermediateChunk. Start a new chunk if the<br/>section header changes or token count exceeds MAX_CHUNK_TOKENS.") --> LTC_P2
+        LTC_P2("<b>Pass 2 Loop (_merge_small_chunks):</b><br/>Iterate through the IntermediateChunks from Pass 1.<br/>If a chunk's token count is below MIN_CHUNK_TOKENS,<br/>merge its text and keywords into the previous chunk.") --> LTC_P3
+        LTC_P3("<b>Pass 3 Loop (_format_chunks_as_documents):</b><br/>Iterate through the final merged chunks from Pass 2.<br/>For each, create a final LangChain Document object,<br/>adding all metadata and a formatted context header.") --> LTC_Output(["<b>Output:</b><br/>A final list of text Documents"])
+    end
+    L3_2 --> LTC_Input
+

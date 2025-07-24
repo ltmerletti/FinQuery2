@@ -83,10 +83,12 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokeni
     _generate_final_summary(cleaned_md_content, table_contexts_for_summary, pdf_file_path, small_llm or llm)
 
     print(f"\nTotal chunks created: {len(final_chunks)}")
+
     if filter_small_elements:
         original_count = len(final_chunks)
         final_chunks = [doc for doc in final_chunks if len(doc.page_content.split("[CONTENT]\n", 1)[1]) >= 200]
         print(f"Filtered {original_count - len(final_chunks)} small chunks. Returning {len(final_chunks)} final chunks.")
+
     return final_chunks
 
 

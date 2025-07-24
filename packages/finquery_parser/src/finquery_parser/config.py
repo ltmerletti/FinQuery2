@@ -1,19 +1,34 @@
 import re
 
+# Experiment with these first two and see what works best for your system. For the financial documents,
+# The content tends to be semantically dense, so I recommend smaller chunks.
 MAX_CHUNK_TOKENS = 256
 MIN_CHUNK_TOKENS = 175
+
+# The cover page token count doesn't matter too much. Look at your documents and find a rough estimate of the
+# tokens used for the token count
 COVER_PAGE_TOKEN_COUNT = 400
+
+# This is the first bit of the document that will be sent for metadata extraction. 2000 seems to be the sweet spot.
 TIER_1_SNIPPET_TOKEN_LIMIT = 2000
+
+# 600 chars is the max preface length for a table. Beyond that, it's likely a paragraph.
 MAX_PREFACE_LENGTH = 600
+
 VISION_MODEL_ID = "unsloth/granite-vision-3.2-2b-unsloth-bnb-4bit"
 
 MARKDOWN_CLEANING_PATTERNS = [
+    # Get rid of table of contents mentions, sometimes a link back
     re.compile(r"^## table of contents\s*$", re.IGNORECASE),
+    # Get rid of page number artifacts
     re.compile(r"^\s*(\|?\s*page\s*\|?\s*)?\d+(\s*of\s*\d+)?\s*\|?\s*$", re.IGNORECASE),
+    # Get rid of page number artifacts
     re.compile(r"^([*\-]) \[PAGE \d+]\(#\d+\)\s*$"),
+    # For 10-Ks specifically, remove the artifact at the bottom
     re.compile(r".*Form 10-K\s*\|\s*\d+\s*$", re.IGNORECASE | re.MULTILINE)
 ]
 
+# Words not to be taken as keywords, since spaCy could perform badly at times
 STOP_WORDS = {
     'a', 'an', 'and', 'the', 'is', 'it', 'in', 'on', 'for', 'of', 'as', 'to', 'inc', 'was', 'were', 'by', 'with', 'or',
     'at', 'from', 'that', 'this', 'llc', 'ltd', 'company', 'corp', 'about', 'after', 'all', 'also', 'been', 'because',
@@ -26,6 +41,7 @@ STOP_WORDS = {
     'primarily', 'approximately', 'significant', 'generally', 'thereunto', 'therewith'
 }
 
+# Words to use when detecting a preface; check your documents and change as you see fit
 PREFACE_KEYWORDS = [
     'the following table', 'consisted of the following', 'as follows:', 'were as follows', 'summarizes', 'presents',
     'sets forth', '(in thousands', '(in millions', 'except per share'

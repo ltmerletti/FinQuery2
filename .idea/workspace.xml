@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: added example chunk to README.md">
+      <change afterPath="$PROJECT_DIR$/docs/flowcharts/finquery_parser_function_dependency_graph.mmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/flowcharts/finquery_parser_loops_in_utils.mmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/prompts/extract_document_metadata_prompt.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/llm_model_information/rationalle.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/llm_model_information/rationalle.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/prompts/get_document_summary.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/prompts/get_one_line_summary_prompt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prompts/get_one_line_table_summary_prompt.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/prompts/in_development__get_doc_summary.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prompts/get_full_doc_summary_prompt.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/prompts/in_development__get_doc_type.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prompts/get_doc_type_and_schema_prompt.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/prompts/retrieve_answer_prompt.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/prompts/retrieve_answer_from_retrieved_responses_prompt.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -334,15 +344,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="92349000" />
-    </task>
-    <task id="LOCAL-00039" summary="feat: added context functions and improved performance of RAG">
-      <option name="closed" value="true" />
-      <created>1751504056255</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1751504056255</updated>
+      <workItem from="1752853932870" duration="97981000" />
     </task>
     <task id="LOCAL-00040" summary="feat: added one-line summary logic">
       <option name="closed" value="true" />
@@ -728,7 +730,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753306754761</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="feat: added example chunk to README.md">
+      <option name="closed" value="true" />
+      <created>1753306811147</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1753306811147</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
