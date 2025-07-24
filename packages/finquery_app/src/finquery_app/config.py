@@ -14,8 +14,6 @@ SUMMARY_DIRECTORY = PROJECT_ROOT / "reports" / "summaries"
 EMBEDDING_MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"
 RERANKING_MODEL_NAME = "Qwen/Qwen3-Reranker-0.6B"
 MLX_RERANKING_MODEL_NAME = "arthurcollet/Qwen3-Reranker-0.6B-mlx-6bit"
-LLM_NAME = "qwen3-30b-a3b-mixed-3"
-SMALL_LLM_NAME = "qwen3-1.7b-mlx"
 
 # --- Collection ---
 COLLECTION_NAME = "financial_documents"
@@ -41,9 +39,55 @@ OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL")
 
 # --- LM STUDIO ---
 LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL")
-LMSTUDIO_MODEL_NAME = os.getenv("LMSTUDIO_MODEL_NAME")
 LMSTUDIO_API_KEY = os.getenv("LMSTUDIO_API_KEY")
+LMSTUDIO_MODEL_NAME = os.getenv("LMSTUDIO_MODEL_NAME")
 LMSTUDIO_SMART_MODEL_NAME = os.getenv("LMSTUDIO_SMART_MODEL_NAME")
+LMSTUDIO_FAST_LLM_MODEL_NAME = os.getenv("LMSTUDIO_FAST_LLM_MODEL_NAME")
 
 # --- DB URL ---
 DB_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+# --- Templates ---
+FIND_ANSWER_FROM_RETRIEVALS_TEMPLATE = """You are an expert financial analyst AI. Your task is to provide a precise answer to the user's question based *only* on the context provided from financial documents.
+
+Follow these steps rigorously:
+1.  Carefully read the user's question to understand exactly what information is being asked for.
+2.  Review each of the context snippets below. Each snippet is from a specific source document and page.
+3.  Identify the single snippet that most directly and accurately answers the user's question. Ignore snippets that are only tangentially related or do not contain the specific data point requested.
+4.  If no snippet contains the answer, respond with: "I could not find the answer in the provided documents."
+5.  If a relevant snippet is found, construct your answer by directly extracting the information. State the fact or figure clearly and concisely.
+6.  After providing the answer, you MUST cite your source in the format: "(Source: [filename], Page: [page number])".
+
+Do not add any preamble, conversational text, or information that is not from the provided context.
+
+---
+CONTEXT SNIPPETS:
+{context}
+---
+USER QUESTION:
+{question}
+---
+PRECISE ANSWER:"""
+
+FILTER_PROMPT_TEMPLATE = """You are an expert routing agent. Your goal is to determine if a user's question should be filtered to a specific type of financial document.
+
+You will be given the user's question and a list of available document types from a database.
+
+Analyze the user's question. If the question explicitly mentions or strongly implies one of the available document types, you must output the exact name of that document type.
+
+Examples:
+- Question: "What was the revenue from the last annual report?" and Types: ["10-K", "Press Release"] -> Output: 10-K
+- Question: "What did the CEO say on the last earnings call?" and Types: ["10-K", "Earnings Call Transcript"] -> Output: Earnings Call Transcript
+- Question: "What was the net income?" and Types: ["10-K", "Press Release"] -> Output: None
+
+If the question is generic and does not point to a specific document type, you MUST output the word "None".
+Do not explain your reasoning. Only output the single document type name or the word "None".
+
+---
+AVAILABLE DOCUMENT TYPES:
+{document_types}
+---
+USER QUESTION:
+{question}
+---
+DOCUMENT TYPE TO FILTER ON:"""
