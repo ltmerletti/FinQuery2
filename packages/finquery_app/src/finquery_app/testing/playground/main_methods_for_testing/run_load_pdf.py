@@ -5,7 +5,7 @@ from pprint import pprint
 from langchain_openai import ChatOpenAI
 
 from finquery_app.config import (
-    SMALL_LLM_NAME, LMSTUDIO_BASE_URL, LMSTUDIO_API_KEY, LLM_NAME,
+    LMSTUDIO_FAST_LLM_MODEL_NAME, LMSTUDIO_BASE_URL, LMSTUDIO_API_KEY, LMSTUDIO_MODEL_NAME,
     DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 )
 from finquery_app.manager import get_spacy_model, get_tiktoken_model
@@ -33,13 +33,13 @@ def main():
     try:
         small_llm = ChatOpenAI(
             temperature=0.1,
-            model=SMALL_LLM_NAME,
+            model=LMSTUDIO_FAST_LLM_MODEL_NAME,
             base_url=LMSTUDIO_BASE_URL,
             api_key=LMSTUDIO_API_KEY
         )
         llm = ChatOpenAI(
             temperature=0.1,
-            model=LLM_NAME,
+            model=LMSTUDIO_MODEL_NAME,
             base_url=LMSTUDIO_BASE_URL,
             api_key=LMSTUDIO_API_KEY
         )

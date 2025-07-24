@@ -56,7 +56,6 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokeni
     Returns:
         A list of LangChain Document objects ready for ingestion.
     """
-    company_ticker = pdf_file_path.stem.split('-')[0].upper()
 
     print("\n--- Step 1: Parsing Document ---")
     try:
@@ -77,7 +76,7 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokeni
 
     print("\n--- Step 3: Enriching and Chunking Document Elements ---")
     final_chunks, table_contexts_for_summary = _enrich_and_chunk_elements(
-        prose_elements, table_elements, extracted_metadata, pdf_file_path, company_ticker, nlp, tokenizer, llm
+        prose_elements, table_elements, extracted_metadata, pdf_file_path, nlp, tokenizer, llm
     )
 
     _generate_final_summary(cleaned_md_content, table_contexts_for_summary, pdf_file_path, small_llm or llm)
@@ -490,7 +489,7 @@ def _extract_metadata_with_llm(llm: ChatOpenAI, schema: Dict, snippet: str) -> D
 
 def _surgical_table_extractor_no_llm(table_elements: List[TableElement], field_to_find: str) -> Optional[str]:
     """
-    Performs a targeted, non-LLM regex search for a field within markdown tables.
+    Performs a targeted, non-LLM regex search for a field within Markdown tables.
 
     Args:
         table_elements: The list of parsed tables.
@@ -522,7 +521,7 @@ def _surgical_table_extractor_no_llm(table_elements: List[TableElement], field_t
 
 def _enrich_and_chunk_elements(
     prose_elements: List[ProseElement], table_elements: List[TableElement], extracted_metadata: Dict,
-    pdf_file_path: pathlib.Path, company_ticker: str, nlp: Language, tokenizer: Encoding, llm: ChatOpenAI
+    pdf_file_path: pathlib.Path, nlp: Language, tokenizer: Encoding, llm: ChatOpenAI
 ) -> Tuple[List[Document], List[Context]]:
     """
     Processes table and prose elements to create final, enriched Document chunks.
@@ -532,7 +531,6 @@ def _enrich_and_chunk_elements(
         table_elements: List of parsed table elements.
         extracted_metadata: Metadata to be added to each chunk.
         pdf_file_path: Path to the original PDF for source info.
-        company_ticker: The company ticker symbol.
         nlp: spaCy model for keyword extraction.
         tokenizer: Tokenizer for various NLP tasks.
         llm: Language model for table summarization.
@@ -547,14 +545,14 @@ def _enrich_and_chunk_elements(
     # Process Tables
     if table_elements:
         table_chunks, table_contexts_for_summary = _process_table_elements(
-            table_elements, extracted_metadata, pdf_file_path, company_ticker, nlp, tokenizer, llm
+            table_elements, extracted_metadata, pdf_file_path, nlp, tokenizer, llm
         )
         final_chunks.extend(table_chunks)
 
     # Process and Chunk Prose
     if prose_elements:
         text_chunks = _chunk_text_elements(
-            prose_elements, tokenizer, pdf_file_path, company_ticker, nlp, extracted_metadata
+            prose_elements, tokenizer, pdf_file_path, nlp, extracted_metadata
         )
         final_chunks.extend(text_chunks)
 
@@ -562,7 +560,7 @@ def _enrich_and_chunk_elements(
 
 
 def _process_table_elements(
-    table_elements: List[TableElement], extracted_metadata: Dict, pdf_file_path: pathlib.Path, company_ticker: str,
+    table_elements: List[TableElement], extracted_metadata: Dict, pdf_file_path: pathlib.Path,
     nlp: Language, tokenizer: Encoding, llm: ChatOpenAI
 ) -> Tuple[List[Document], List[Context]]:
     """Generates summaries and Documents for all table elements."""
@@ -593,7 +591,7 @@ def _process_table_elements(
 
         augmented_content = f"{context.to_string()}\n\n[CONTENT]\n{full_content}"
         chunk_metadata = {
-            "source": pdf_file_path.name, "company": company_ticker, "element_type": "Table",
+            "source": pdf_file_path.name, "element_type": "Table",
             "section": section_title, "keywords": ", ".join(context.relevant_keywords)
         }
         chunk_metadata.update(extracted_metadata)
@@ -604,7 +602,7 @@ def _process_table_elements(
 
 def _chunk_text_elements(
     prose_elements: List[ProseElement], tokenizer: Encoding, pdf_file_path: pathlib.Path,
-    company_ticker: str, nlp: Language, extracted_metadata: Dict
+        nlp: Language, extracted_metadata: Dict
 ) -> List[Document]:
     """
     Performs content-aware chunking on prose elements.
@@ -613,7 +611,6 @@ def _chunk_text_elements(
         prose_elements: The list of prose elements to chunk.
         tokenizer: The tokenizer for counting tokens.
         pdf_file_path: Path for sourcing metadata.
-        company_ticker: Company ticker for metadata.
         nlp: spaCy model for keyword extraction.
         extracted_metadata: Previously extracted metadata.
 
@@ -634,7 +631,7 @@ def _chunk_text_elements(
         return []
 
     merged_chunks = _merge_small_chunks(initial_chunks, tokenizer)
-    return _format_chunks_as_documents(merged_chunks, pdf_file_path, company_ticker, extracted_metadata, tokenizer)
+    return _format_chunks_as_documents(merged_chunks, pdf_file_path, extracted_metadata, tokenizer)
 
 
 def _create_initial_text_chunks(prose_elements: List[ProseElement], tokenizer: Encoding) -> List[IntermediateChunk]:
@@ -693,7 +690,7 @@ def _merge_small_chunks(chunks: List[IntermediateChunk], tokenizer: Encoding) ->
 
 
 def _format_chunks_as_documents(
-    chunks: List[IntermediateChunk], pdf_file_path: pathlib.Path, company_ticker: str,
+    chunks: List[IntermediateChunk], pdf_file_path: pathlib.Path,
     extracted_metadata: Dict, tokenizer: Encoding
 ) -> List[Document]:
     """Converts intermediate chunks into final LangChain Document objects."""
@@ -707,7 +704,7 @@ def _format_chunks_as_documents(
         augmented_content = f"{context.to_string()}\n\n[CONTENT]\n{final_text}"
 
         chunk_metadata = {
-            "source": pdf_file_path.name, "company": company_ticker, "element_type": "Text",
+            "source": pdf_file_path.name, "element_type": "Text",
             "section": section, "keywords": ", ".join(final_keywords)
         }
         chunk_metadata.update(extracted_metadata)
@@ -727,7 +724,7 @@ def _generate_final_summary(
     Generates and saves a high-level summary for the entire document.
 
     Args:
-        cleaned_md_content: The full cleaned markdown text.
+        cleaned_md_content: The full cleaned Markdown text.
         table_contexts: A list of Context objects from processed tables.
         pdf_file_path: The path to the source PDF for naming the output file.
         llm: The language model to use for summarization.
@@ -797,7 +794,7 @@ def get_one_line_summary(table_text: str, section_title: str, parser: JsonOutput
     Generates a one-sentence summary of a financial table using an LLM.
 
     Args:
-        table_text: The full markdown text of the table.
+        table_text: The full Markdown text of the table.
         section_title: The title of the section containing the table.
         parser: The LangChain JSON output parser.
         llm: The language model to use for summarization.

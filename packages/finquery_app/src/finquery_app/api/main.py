@@ -9,7 +9,8 @@ from werkzeug.utils import secure_filename
 from langchain_core.runnables import RunnableConfig
 
 from finquery_app.chains.answer_chain import create_rag_chain
-from finquery_app.config import SOURCE_DATA_DIR, SOURCE_PROCESSED_DATA_DIR, CHROMA_DB_PATH, COLLECTION_NAME
+from finquery_app.config import SOURCE_DATA_DIR, SOURCE_PROCESSED_DATA_DIR, CHROMA_DB_PATH, COLLECTION_NAME, \
+    LMSTUDIO_SMART_MODEL_NAME
 from finquery_app.database.delete_collection import delete_collection_and_folder
 from finquery_app.manager import get_vector_store, get_embeddings, get_langfuse_callback, \
     get_record_manager, get_llm, get_spacy_model, get_tiktoken_model
@@ -33,7 +34,8 @@ def allowed_file(filename):
 embeddings = get_embeddings()
 vector_store = get_vector_store(COLLECTION_NAME, embeddings, CHROMA_DB_PATH)
 record_manager = get_record_manager(COLLECTION_NAME)
-retrieval_chain = create_rag_chain(vector_store)
+smart_llm = get_llm(model_name=LMSTUDIO_SMART_MODEL_NAME)
+retrieval_chain = create_rag_chain(vector_store, smart_llm)
 handler = get_langfuse_callback()
 llm = get_llm()
 spacy_model = get_spacy_model()
