@@ -57,7 +57,7 @@ def test_create_rag_chain_structure(mock_qwen, mock_reranker, mock_retriever, mo
     mock_retriever_instance = MagicMock()
     mock_vector_store.as_retriever.return_value = mock_retriever_instance
 
-    rag_chain = create_rag_chain(mock_vector_store)
+    rag_chain = create_rag_chain(mock_vector_store, mock_llm)
 
     mock_vector_store.as_retriever.assert_called_once_with(search_kwargs={'k': 10})
 
