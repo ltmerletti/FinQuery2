@@ -6,11 +6,10 @@ from finquery_app.config import CHROMA_DB_PATH
 from finquery_app.manager import get_langfuse_callback
 from finquery_app.manager import get_vector_store, get_embeddings
 from finquery_app.querying.query import execute_query_with_reranking_mlx
-from finquery_app.querying.query import get_rag_test_questions
 
 print("--- Initializing FinQuery Components ---")
 
-questions = get_rag_test_questions()
+questions = ["What is the operating income in Japan of Apple in 2023?"]
 embeddings = get_embeddings()
 vector_store = get_vector_store("financial_documents", embeddings, str(CHROMA_DB_PATH))
 langfuse_handler = get_langfuse_callback()

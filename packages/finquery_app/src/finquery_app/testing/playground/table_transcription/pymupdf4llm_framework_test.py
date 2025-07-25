@@ -1,6 +1,6 @@
 import pymupdf4llm
 
-pdf_path = "../../test_docs/aapl-20230930-short.pdf"
+pdf_path = "../../../../../../../reports/tsla-20230930.pdf"
 
 try:
     md_text = pymupdf4llm.to_markdown(pdf_path)

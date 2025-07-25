@@ -4,9 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="feat: refactored code for more consistent formatting">
+    <list default="true" id="47c3026b-6513-4ed1-aac1-2ee81f5a5249" name="Changes" comment="fix: added tempfix for answer_chain.py before feature implementation">
+      <change afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pdf_to_ocr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sample_mds/docling_high_easyocr.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sample_mds/docling_high_preprocessed_1st_try_rapidocr.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sample_mds/docling_high_rapidocr.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sample_mds/docling_high_tesseract.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sample_mds/preprocessed_sanction_letter_tata.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reports/sanction_letter_tata.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_load_pdf.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_load_pdf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_many_questions.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_many_questions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_many_reranks.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_many_reranks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_utils_lib_chunking.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_utils_lib_chunking.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_framework_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pymupdf4llm_framework_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pymupdf4llm_framework_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/added/nvda-20230129.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/nvda-20230129.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/added/pltr-20231231.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/pltr-20231231.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/added/tsla-20230930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/tsla-20230930.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/added/tsla-20240930.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/reports/tsla-20240930.pdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +108,7 @@
     "Python.mistral_small_via_lm_studio_test.executor": "Run",
     "Python.nougat_framework_test.executor": "Run",
     "Python.pdf_plumber_framework_test.executor": "Run",
+    "Python.pdf_to_ocr.executor": "Run",
     "Python.pymupdf4llm_framework_test.executor": "Run",
     "Python.pymupdf4llm_framewory_test.executor": "Run",
     "Python.pymupdf_framework_test.executor": "Run",
@@ -117,7 +134,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "last.edited.regexp": "Apple Inc. | 2023 Form 10-K | 21",
-    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2/docs",
+    "last_opened_file_path": "/Users/lukem/PycharmProjects/FinQuery2/reports/sample_mds",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -136,25 +153,47 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reports/sample_mds" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/prompts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/test_docs" />
-      <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/reports" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
       <recent name="$PROJECT_DIR$/reports/added" />
-      <recent name="$PROJECT_DIR$/reports" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_md_files" />
       <recent name="$PROJECT_DIR$/packages/finquery_app/src/finquery_app" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.run_many_questions">
-    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#3" index="3" runType="Run single request">
+  <component name="RunManager" selected="Python.docling_framework_test">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="TESSDATA_PREFIX" value="/opt/homebrew/opt/tesseract/share" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.9 (FinQuery2)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="answer_chain" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="docling_framework_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="FinQuery2" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -163,12 +202,35 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains/answer_chain.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/docling_framework_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -187,11 +249,36 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pdf_to_ocr" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FinQuery2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="TESSDATA_PREFIX" value="/opt/homebrew/opt/tesseract/share" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.9 (FinQuery2)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription/pdf_to_ocr.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -246,36 +333,21 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="run_utils_lib_chunking" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="FinQuery2" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing/run_utils_lib_chunking.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.pdf_to_ocr" />
+      <item itemvalue="Python.docling_framework_test" />
+      <item itemvalue="Python.main (1)" />
+      <item itemvalue="Python.run_load_pdf" />
+      <item itemvalue="Python.run_many_questions" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.docling_framework_test" />
+        <item itemvalue="Python.pdf_to_ocr" />
         <item itemvalue="Python.run_many_questions" />
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.run_load_pdf" />
-        <item itemvalue="Python.run_utils_lib_chunking" />
-        <item itemvalue="Python.answer_chain" />
-        <item itemvalue="HTTP Request.generated-requests | #3" />
       </list>
     </recent_temporary>
   </component>
@@ -334,15 +406,7 @@
       <workItem from="1752689647746" duration="1544000" />
       <workItem from="1752692142623" duration="5649000" />
       <workItem from="1752771524061" duration="17468000" />
-      <workItem from="1752853932870" duration="104675000" />
-    </task>
-    <task id="LOCAL-00045" summary="feat: added support for customized regex, stop words and kwargs in utils.py">
-      <option name="closed" value="true" />
-      <created>1751982287699</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1751982287699</updated>
+      <workItem from="1752853932870" duration="116617000" />
     </task>
     <task id="LOCAL-00046" summary="feat: finalized ingestion logic">
       <option name="closed" value="true" />
@@ -728,7 +792,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753391718671</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="fix: added tempfix for answer_chain.py before feature implementation">
+      <option name="closed" value="true" />
+      <created>1753407535483</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1753407535483</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -746,7 +818,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: added querying test and created future roadmap" />
     <MESSAGE value="feat: added spacy test to find relevant keywords" />
     <MESSAGE value="feat: added spacy support for keyword generation and changed summarization" />
     <MESSAGE value="feat: added .gitattributes" />
@@ -771,7 +842,8 @@
     <MESSAGE value="feat: added second table to database" />
     <MESSAGE value="feat: optimized answer chain" />
     <MESSAGE value="feat: refactored code for more consistent formatting" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: refactored code for more consistent formatting" />
+    <MESSAGE value="fix: added tempfix for answer_chain.py before feature implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: added tempfix for answer_chain.py before feature implementation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -789,10 +861,11 @@
     <SUITE FILE_PATH="coverage/FinQuery2$pdf_plumber_framework_test.coverage" NAME="pdf_plumber_framework_test Coverage Results" MODIFIED="1752247816560" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
     <SUITE FILE_PATH="coverage/FinQuery2$.coverage" NAME=" Coverage Results" MODIFIED="1752674647381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/tests" />
     <SUITE FILE_PATH="coverage/FinQuery2$camelot_framework_test.coverage" NAME="camelot_framework_test Coverage Results" MODIFIED="1752245058928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run_load_pdf.coverage" NAME="run_load_pdf Coverage Results" MODIFIED="1753305335315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run_load_pdf.coverage" NAME="run_load_pdf Coverage Results" MODIFIED="1753442453831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
     <SUITE FILE_PATH="coverage/FinQuery2$deep_doctection_framework_test.coverage" NAME="deep_doctection_framework_test Coverage Results" MODIFIED="1752249290996" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_generation.coverage" NAME="test_generation Coverage Results" MODIFIED="1751321757919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/testing" />
     <SUITE FILE_PATH="coverage/FinQuery2$pymupdf4llm_framewory_test.coverage" NAME="pymupdf4llm_framewory_test Coverage Results" MODIFIED="1752501784529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+    <SUITE FILE_PATH="coverage/FinQuery2$pdf_to_ocr.coverage" NAME="pdf_to_ocr Coverage Results" MODIFIED="1753472663181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$visualize_db.coverage" NAME="visualize_db Coverage Results" MODIFIED="1750771744707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$tabula_framework_test.coverage" NAME="tabula_framework_test Coverage Results" MODIFIED="1752245347712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground" />
     <SUITE FILE_PATH="coverage/FinQuery2$utils.coverage" NAME="utils Coverage Results" MODIFIED="1752854570127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_parser/src/finquery_parser" />
@@ -805,12 +878,12 @@
     <SUITE FILE_PATH="coverage/FinQuery2$delete_collection.coverage" NAME="delete_collection Coverage Results" MODIFIED="1750715509091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/chromainit" />
     <SUITE FILE_PATH="coverage/FinQuery2$run.coverage" NAME="run Coverage Results" MODIFIED="1751987119801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1752171454294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
-    <SUITE FILE_PATH="coverage/FinQuery2$pymupdf4llm_framework_test.coverage" NAME="pymupdf4llm_framework_test Coverage Results" MODIFIED="1752501995067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
-    <SUITE FILE_PATH="coverage/FinQuery2$docling_framework_test.coverage" NAME="docling_framework_test Coverage Results" MODIFIED="1752684095943" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+    <SUITE FILE_PATH="coverage/FinQuery2$pymupdf4llm_framework_test.coverage" NAME="pymupdf4llm_framework_test Coverage Results" MODIFIED="1753471871077" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
+    <SUITE FILE_PATH="coverage/FinQuery2$docling_framework_test.coverage" NAME="docling_framework_test Coverage Results" MODIFIED="1753473732414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
     <SUITE FILE_PATH="coverage/FinQuery2$split_into_chunks.coverage" NAME="split_into_chunks Coverage Results" MODIFIED="1751832929604" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$langchaindef.coverage" NAME="langchaindef Coverage Results" MODIFIED="1751499851071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$load_pdf.coverage" NAME="load_pdf Coverage Results" MODIFIED="1751640060501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion/split_into_chunks_lib" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run_many_questions.coverage" NAME="run_many_questions Coverage Results" MODIFIED="1753407479128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run_many_questions.coverage" NAME="run_many_questions Coverage Results" MODIFIED="1753443286911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_heuristic.coverage" NAME="test_heuristic Coverage Results" MODIFIED="1751326336877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$query.coverage" NAME="query Coverage Results" MODIFIED="1752690190028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/querying" />
     <SUITE FILE_PATH="coverage/FinQuery2$unstructured_framework_test.coverage" NAME="unstructured_framework_test Coverage Results" MODIFIED="1752524282993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
@@ -822,9 +895,9 @@
     <SUITE FILE_PATH="coverage/FinQuery2$main.coverage" NAME="main Coverage Results" MODIFIED="1752097454024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$quicktest.coverage" NAME="quicktest Coverage Results" MODIFIED="1751406409454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$answer_chain.coverage" NAME="answer_chain Coverage Results" MODIFIED="1753123680518" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/chains" />
-    <SUITE FILE_PATH="coverage/FinQuery2$run_many_reranks.coverage" NAME="run_many_reranks Coverage Results" MODIFIED="1753190313365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
+    <SUITE FILE_PATH="coverage/FinQuery2$run_many_reranks.coverage" NAME="run_many_reranks Coverage Results" MODIFIED="1753443506226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/main_methods_for_testing" />
     <SUITE FILE_PATH="coverage/FinQuery2$test_response.coverage" NAME="test_response Coverage Results" MODIFIED="1751299859841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ingestion" />
-    <SUITE FILE_PATH="coverage/FinQuery2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1753109378106" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
+    <SUITE FILE_PATH="coverage/FinQuery2$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1753442490180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/api" />
     <SUITE FILE_PATH="coverage/FinQuery2$chromainit.coverage" NAME="chromainit Coverage Results" MODIFIED="1750449947339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/1_ingestion" />
     <SUITE FILE_PATH="coverage/FinQuery2$llm_via_lm_studio_test.coverage" NAME="llm_via_lm_studio_test Coverage Results" MODIFIED="1752500444917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/packages/finquery_app/src/finquery_app/testing/playground/table_transcription" />
   </component>

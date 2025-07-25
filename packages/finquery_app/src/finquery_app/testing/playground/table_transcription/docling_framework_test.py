@@ -1,108 +1,138 @@
 import os
-import argparse
-import traceback
-from docling.document_converter import DocumentConverter, PdfFormatOption
-from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode, LayoutOptions
-from docling.datamodel.layout_model_specs import DOCLING_LAYOUT_EGRET_LARGE, LayoutModelConfig
+import fitz  # PyMuPDF
+import cv2
+import numpy as np
+import pytesseract
+from pdf2image import convert_from_path
+from PIL import Image
+from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
 from docling.datamodel.base_models import InputFormat
+from docling.datamodel.layout_model_specs import DOCLING_LAYOUT_EGRET_XLARGE
+from docling.datamodel.pipeline_options import (LayoutOptions, PdfPipelineOptions, TableFormerMode,
+                                                TableStructureOptions, RapidOcrOptions)
+from docling.document_converter import DocumentConverter, PdfFormatOption
 
-DEFAULT_PDF_PATH = "../../test_docs/tsla-20230930.pdf"
+# --- Configuration ---
+# Set the Tesseract data path for PyMuPDF's OCR function
+os.environ['TESSDATA_PREFIX'] = '/opt/homebrew/opt/tesseract/share/tessdata'
 
-def extract_table_with_docling(filepath):
-    if not os.path.exists(filepath):
-        print(f"Error: The file was not found at the specified path: '{filepath}'")
-        return
+# Define file paths for the pipeline
+SOURCE_PDF = "/Users/lukem/PycharmProjects/FinQuery2/reports/pltr-20231231.pdf"
+PHASE1_OUTPUT_PDF = "/Users/lukem/PycharmProjects/FinQuery2/reports/preprocessed_output.pdf"
+PHASE2_OUTPUT_PDF = "/Users/lukem/PycharmProjects/FinQuery2/reports/final_ocr_output.pdf"
 
-    print(f"Processing '{filepath}' with docling using high-accuracy settings...")
 
+# --- Helper Functions for Preprocessing ---
+def deskew_image(image: np.ndarray) -> np.ndarray:
     try:
-        pipeline_options = PdfPipelineOptions(do_table_structure=True)
-        pipeline_options.table_structure_options.mode = TableFormerMode.ACCURATE
-        pipeline_options.table_structure_options.do_cell_matching = False
-        # pipeline_options.layout_options = LayoutOptions(
-        #     model_spec=DOCLING_LAYOUT_EGRET_LARGE
-        # )
+        osd = pytesseract.image_to_osd(image, output_type=pytesseract.Output.DICT)
+        angle = osd['rotate']
+        if angle != 0:
+            (h, w) = image.shape[:2]
+            center = (w // 2, h // 2)
+            M = cv2.getRotationMatrix2D(center, -angle, 1.0)
+            deskewed = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue=(255, 255, 255))
+            return deskewed
+    except pytesseract.TesseractError as e:
+        print(f"  - Could not determine skew: {e}. Skipping deskew.")
+    return image
 
-        converter = DocumentConverter(
-            format_options={
-                InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-            }
-        )
+def denoise_image(image: np.ndarray) -> np.ndarray:
+    return cv2.fastNlMeansDenoising(image, None, h=10, templateWindowSize=7, searchWindowSize=21)
 
-        result = converter.convert(filepath)
-        doc = result.document
+def binarize_image(image: np.ndarray) -> np.ndarray:
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    binarized = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+    return cv2.cvtColor(binarized, cv2.COLOR_GRAY2BGR)
 
-        if not doc or not hasattr(doc, 'tables') or not doc.tables:
-            print("\n--- PROCESSING COMPLETE ---")
-            print("Docling processed the file, but no tables were found in the document.")
-            return
 
-        print(f"\nFound {len(doc.tables)} table(s) in the document.")
+# --- Pipeline Phase Functions ---
+def phase1_preprocess_pdf(source_filepath: str, output_filepath: str) -> bool:
+    """Takes a raw PDF, cleans each page, and saves a new PDF."""
+    print(f"--- Phase 1: Preprocessing PDF ---")
+    print(f"Input: {source_filepath}")
+    try:
+        images = convert_from_path(source_filepath, dpi=300)
+        processed_pil_images = []
+        for i, pil_image in enumerate(images):
+            print(f"  - Cleaning page {i + 1}/{len(images)}...")
+            cv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+            deskewed = deskew_image(cv_image)
+            denoised = denoise_image(deskewed)
+            binarized = binarize_image(denoised)
+            final_pil_image = Image.fromarray(cv2.cvtColor(binarized, cv2.COLOR_BGR2RGB))
+            processed_pil_images.append(final_pil_image)
 
-        for i, table in enumerate(doc.tables):
-            page_num = table.prov[0].page_no if table.prov else 'Unknown'
-            print(f"\n--- Table {i + 1} (from Page {page_num}) ---")
-
-            markdown_output = table.export_to_markdown(doc=doc)
-
-            print(markdown_output)
-            print("-" * (len(f"Table {i + 1}...") + 20))
-
+        if processed_pil_images:
+            processed_pil_images[0].save(output_filepath, save_all=True, append_images=processed_pil_images[1:])
+            print(f"Success! Saved preprocessed PDF to: {output_filepath}")
+            return True
     except Exception as e:
-        print(f"\n--- AN UNEXPECTED ERROR OCCURRED ---")
-        print(f"Error Type: {type(e)}")
-        print(f"Error Details: {e}")
-        print("\n--- Full Traceback ---")
-        traceback.print_exc()
-        print("----------------------")
-        print("\nStrategic Advice: This error is unusual. It might indicate a problem with docling's underlying")
-        print("dependencies (like PyTorch, MLX, or Poppler) or the environment itself.")
-        print("Please ensure all dependencies are correctly installed and the PDF file is not corrupted.")
+        print(f"Error in Phase 1: {e}")
+        return False
+
+def phase2_ocr_with_pymupdf(source_filepath: str, output_filepath: str) -> bool:
+    """Takes a preprocessed PDF, performs OCR, and saves a new searchable PDF."""
+    print(f"\n--- Phase 2: Performing OCR with PyMuPDF ---")
+    print(f"Input: {source_filepath}")
+    try:
+        source_doc = fitz.open(source_filepath)
+        ocr_doc = fitz.open()
+        for i, page in enumerate(source_doc):
+            print(f"  - OCR'ing page {i + 1}/{len(source_doc)}...")
+            pix = page.get_pixmap(dpi=600)
+            page_ocr_bytes = pix.pdfocr_tobytes()
+            page_ocr_doc = fitz.open("pdf", page_ocr_bytes)
+            ocr_doc.insert_pdf(page_ocr_doc)
+            page_ocr_doc.close()
+
+        ocr_doc.save(output_filepath)
+        print(f"Success! Saved searchable PDF to: {output_filepath}")
+        source_doc.close()
+        ocr_doc.close()
+        return True
+    except Exception as e:
+        print(f"Error in Phase 2: {e}")
+        return False
+
+def phase3_parse_with_docling(filepath: str):
+    """Takes a fully OCR'd PDF and parses it with Docling."""
+    print(f"\n--- Phase 3: Parsing with Docling ---")
+    print(f"Input: {filepath}")
+    try:
+        pipeline_options = PdfPipelineOptions(
+            do_ocr=True,
+            do_table_structure=True,
+            table_structure_options=TableStructureOptions(mode=TableFormerMode.ACCURATE, do_cell_matching=False),
+            layout_options=LayoutOptions(model_spec=DOCLING_LAYOUT_EGRET_XLARGE),
+            images_scale=2.0,
+            generate_page_images=True,
+            accelerator_options=AcceleratorOptions(num_threads=8, device=AcceleratorDevice.CPU),
+            ocr_options=RapidOcrOptions(lang=["en"], force_full_page_ocr=True)
+        )
+        converter = DocumentConverter(
+            format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
+        )
+        result = converter.convert(filepath)
+        doc = result.document.export_to_markdown()
+        print("\n--- FINAL DOCLING MARKDOWN OUTPUT ---")
+        print(doc)
+        print("--- END OF DOCLING OUTPUT ---")
+    except Exception as e:
+        print(f"Error in Phase 3: {e}")
 
 
+# --- Main Execution ---
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Extract tables from a PDF using docling with high-accuracy settings."
-    )
-    parser.add_argument(
-        "filepath",
-        nargs='?',
-        default=DEFAULT_PDF_PATH,
-        help=f"Path to the PDF file to process. Defaults to '{DEFAULT_PDF_PATH}'"
-    )
-    args = parser.parse_args()
-
-    extract_table_with_docling(args.filepath)
-
-
-"""
---- Table 1 (from Page 1) ---
-|                                              | Years ended        | Years ended        | Years ended        |
-|----------------------------------------------|--------------------|--------------------|--------------------|
-|                                              | September 30, 2023 | September 24, 2022 | September 25, 2021 |
-| Net sales:                                   |                    |                    |                    |
-| Products                                     | $ 298,085          | $ 316,199          | $ 297,392          |
-| Services                                     | 85,200             | 78,129             | 68,425             |
-| Total net sales                              | 383,285            | 394,328            | 365,817            |
-| Cost of sales:                               |                    |                    |                    |
-| Products                                     | 189,282            | 201,471            | 192,266            |
-| Services                                     | 24,855             | 22,075             | 20,715             |
-| Total cost of sales                          | 214,137            | 223,546            | 212,981            |
-| Gross margin                                 | 169,148            | 170,782            | 152,836            |
-| Operating expenses:                          |                    |                    |                    |
-| Research and development                     | 29,915             | 26,251             | 21,914             |
-| Selling, general and administrative          | 24,932             | 25,094             | 21,973             |
-| Total operating expenses                     | 54,847             | 51,345             | 43,887             |
-| Operating income                             | 114,301            | 119,437            | 108,949            |
-| Other income/(expense), net                  | (565)              | (334)              | 258                |
-| Income before provision for income taxes     | 113,736            | 119,103            | 109,207            |
-| Provision for income taxes                   | 16,741             | 19,300             | 14,527             |
-| Net income                                   | 96,995             | $ 99,803           | $ 94,680           |
-| Earnings per share:                          |                    |                    |                    |
-| Basic                                        | $ 6.16             | $ 6.15             | $ 5.67             |
-| Diluted                                      | 6.13               | $ 6.11             | $ 5.61             |
-| Shares used in computing earnings per share: |                    |                    |                    |
-| Basic                                        | 15,744,231         | 16,215,963         | 16,701,272         |
-| Diluted                                      | 15,812,547         | 16,325,819         | 16,864,919         |
-------------------------------
-"""
+    try:
+        p1_ok = phase1_preprocess_pdf(SOURCE_PDF, PHASE1_OUTPUT_PDF)
+        if p1_ok:
+            p2_ok = phase2_ocr_with_pymupdf(PHASE1_OUTPUT_PDF, PHASE2_OUTPUT_PDF)
+            if p2_ok:
+                phase3_parse_with_docling(PHASE2_OUTPUT_PDF)
+    finally:
+        print("\n--- Cleaning up intermediate files ---")
+        for f in [PHASE1_OUTPUT_PDF, PHASE2_OUTPUT_PDF]:
+            if os.path.exists(f):
+                os.remove(f)
+                print(f"Removed: {f}")

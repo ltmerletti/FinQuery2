@@ -54,8 +54,8 @@ def main():
         db_connector.close()
         return
 
-    # --- 3. Document Processing ---
-    PDF_INPUT_PATH = pathlib.Path("/Users/lukem/PycharmProjects/FinQuery2/reports/added/tsla-20240930.pdf")
+    # PDF_INPUT_PATH = pathlib.Path("/reports/tsla-20240930.pdf")
+    PDF_INPUT_PATH = pathlib.Path("/Users/lukem/PycharmProjects/FinQuery2/reports/pltr-20231231.pdf")
     print(f"\nProcessing document: {PDF_INPUT_PATH.name}")
     if not PDF_INPUT_PATH.exists():
         print(f"ERROR: File not found at '{PDF_INPUT_PATH}'. Please check the path.")

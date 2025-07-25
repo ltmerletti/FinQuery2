@@ -27,7 +27,7 @@ def main():
         print(f"Failed to create RAG chain: {e}")
         return
 
-    questions = get_rag_test_questions()
+    questions = ["What is the change in foreign currency translation, net of tax for Apple in September 30, 2023"]
     total_questions = len(questions)
 
     print(f"\n--- Processing {total_questions} questions ---")
