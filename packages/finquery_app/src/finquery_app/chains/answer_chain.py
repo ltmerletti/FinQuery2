@@ -46,10 +46,14 @@ def format_docs_with_metadata(docs: list) -> str:
 
 
 def create_rag_chain(vector_store, llm):
-    filtered_kwargs: dict = {}
+    # Logic to be implemented:
+    # filtered_kwargs: dict = {}
 
-    base_retriever = vector_store.as_retriever(search_kwargs={'k': 10, 'filter': {
-        **filtered_kwargs}})
+    # base_retriever = vector_store.as_retriever(search_kwargs={'k': 10, 'filter': {
+    #     **filtered_kwargs}})
+
+    base_retriever = vector_store.as_retriever(search_kwargs={'k': 10})
+
 
     reranker_tool = QwenReranker()
 
