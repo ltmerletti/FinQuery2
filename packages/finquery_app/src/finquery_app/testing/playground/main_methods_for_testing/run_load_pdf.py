@@ -79,6 +79,7 @@ def main():
             print(f"Successfully processed and created {len(final_documents)} documents.")
             for document in final_documents:
                 pprint(document)
+            pprint(final_documents.metadata)
         else:
             print("No documents were generated. Please check the logs for errors.")
 

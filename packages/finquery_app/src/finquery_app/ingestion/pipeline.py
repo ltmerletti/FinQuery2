@@ -1,17 +1,20 @@
+# Standard Library Imports
 import shutil
-from typing import List
+import pathlib
+from typing import List, Dict, Any
+
+# Langchain and Third-Party Imports
+from langchain_chroma import Chroma
+from langchain.indexes import SQLRecordManager, index
+from langchain_core.documents import Document
+from langchain_openai import ChatOpenAI
 from spacy.language import Language
 from tiktoken.core import Encoding
 
-from langchain.indexes import index
-from langchain_core.documents import Document
-from langchain_chroma import Chroma
-from langchain.indexes import SQLRecordManager
-from langchain_openai import ChatOpenAI
-
+# Local Application Imports
 from finquery_app.config import SOURCE_DATA_DIR
 from finquery_app.ingestion.find_file_paths import get_file_paths
-from finquery_parser.types import PostgresDBConnector
+from finquery_parser.types import DocumentList, PostgresDBConnector
 from finquery_parser.utils import load_pdf
 
 def run_ingestion_process(
@@ -24,7 +27,8 @@ def run_ingestion_process(
     db_connector: PostgresDBConnector
 ):
     """
-    Finds, processes, and indexes new PDF documents using the load_pdf logic.
+    Finds, processes, indexes, and saves metadata for all new PDF documents
+    from the source directory.
     """
     file_paths = get_file_paths(str(SOURCE_DATA_DIR))
     if not file_paths:
@@ -41,7 +45,7 @@ def run_ingestion_process(
         print(f"========================================")
 
         try:
-            docs: List[Document] = load_pdf(
+            docs = load_pdf(
                 pdf_file_path=file_path,
                 small_llm=small_llm,
                 llm=llm,
@@ -67,14 +71,38 @@ def run_ingestion_process(
             )
             print(f"Successfully indexed {file_path.name}.")
 
-            # Move the processed file to the 'added' subdirectory
+            if hasattr(docs, 'metadata') and docs.metadata:
+                print(f"Inserting metadata for {file_path.name} into the database...")
+                try:
+                    metadata = docs.metadata
+                    document_id = db_connector.get_or_create_document_by_filename(file_path.name)
+
+                    if not document_id:
+                        print(f"ERROR: Could not retrieve or create a document ID for {file_path.name}.")
+                    else:
+                        for key, value in metadata.items():
+                            if value is not None:
+                                db_connector.insert_metadata_value(
+                                    document_id=document_id,
+                                    meta_key=key,
+                                    meta_value=str(value)
+                                )
+                        print(f"Successfully inserted {len(metadata)} metadata values for document ID {document_id}.")
+
+                except AttributeError as e:
+                    print(f"!!! DATABASE CONNECTOR ERROR: A required method is likely missing: {e}")
+                except Exception as e:
+                    print(f"!!! DATABASE ERROR while inserting metadata for {file_path.name}: {e}")
+            else:
+                print("No additional metadata was found to insert into the database.")
+
             destination_dir = SOURCE_DATA_DIR / 'added'
             destination_dir.mkdir(exist_ok=True)
             shutil.move(str(file_path), destination_dir / file_path.name)
             print(f"File {file_path.name} has been moved to the '{destination_dir.name}' directory.")
 
         except Exception as e:
-            print(f"!!! An error occurred while processing {file_path.name}: {e}")
+            print(f"!!! An unhandled error occurred while processing {file_path.name}: {e}")
             continue
 
     print("\n--- Finished processing all files ---")
