@@ -51,9 +51,6 @@ def main():
         if db_connector:
             db_connector.close()
         print("\n--- FinQuery PDF Ingestion Pipeline Finished ---")
-        for final_document in final_documents:
-            pprint(final_document)
-
 
 
 if __name__ == "__main__":
