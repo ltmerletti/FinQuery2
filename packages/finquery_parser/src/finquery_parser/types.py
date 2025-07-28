@@ -1,9 +1,10 @@
 import json
-from typing import Set, List, Dict, Optional, TypedDict, Protocol
+from typing import Set, List, Dict, Optional, TypedDict, Protocol, Any
 
 import psycopg2
 from docling_core.types.doc import (TableItem as DoclingTableItem, TextItem as DoclingTextItem,
                                     DoclingDocument as DoclingDoc)
+from langchain_core.documents import Document
 
 
 class Context:
@@ -89,6 +90,14 @@ class IntermediateChunk(TypedDict):
     keywords: Set[str]
     section: str
 
+class DocumentList(List[Document]):
+    """
+    A custom list subclass that can carry extra metadata.
+    It behaves exactly like a list but has an additional `.metadata` attribute.
+    """
+    def __init__(self, *args, metadata: Dict[str, Any] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.metadata = metadata or {}
 
 class DatabaseInterface(Protocol):
     """
@@ -109,6 +118,7 @@ class PostgresDBConnector:
     A connector for a PostgreSQL database that implements the DatabaseInterface.
     """
     def __init__(self, dbname, user, password, host, port):
+        """Initializes the connection and sets up database tables."""
         print("Initializing PostgreSQL DB Connector...")
         self.conn_string = f"dbname='{dbname}' user='{user}' password='{password}' host='{host}' port='{port}'"
         self._conn = None
@@ -118,23 +128,48 @@ class PostgresDBConnector:
             self._setup_tables()
         except psycopg2.OperationalError as e:
             print(f"DATABASE CONNECTION FAILED: {e}")
-            print("Please check your connection details and ensure the database is running.")
+            print("Please make sure the database is running.")
             raise
 
     def _setup_tables(self):
-        """Creates the necessary tables if they don't already exist."""
-        create_types_table_sql = """
-        CREATE TABLE IF NOT EXISTS document_types (
-            id SERIAL PRIMARY KEY,
-            type_name VARCHAR(256) NOT NULL UNIQUE,
-            metadata_schema JSONB NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
         """
+        Creates the tables if they don't exist.
+        - document_types: Stores schemas for different types of documents.
+        - documents: Stores a record for each processed file.
+        - document_metadata_values: Stores the extracted key-value pairs for each document.
+        """
+        sql_statements = [
+            """
+            CREATE TABLE IF NOT EXISTS document_types (
+                id SERIAL PRIMARY KEY,
+                type_name VARCHAR(256) NOT NULL UNIQUE,
+                metadata_schema JSONB NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS documents (
+                id SERIAL PRIMARY KEY,
+                filename VARCHAR(512) NOT NULL UNIQUE,
+                document_type_id INTEGER REFERENCES document_types(id) ON DELETE SET NULL,
+                processed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS document_metadata_values (
+                id SERIAL PRIMARY KEY,
+                document_id INTEGER NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
+                meta_key VARCHAR(128) NOT NULL,
+                meta_value TEXT NOT NULL,
+                UNIQUE (document_id, meta_key)
+            );
+            """
+        ]
         with self._conn.cursor() as cur:
-            cur.execute(create_types_table_sql)
+            for statement in sql_statements:
+                cur.execute(statement)
         self._conn.commit()
-        print("Database tables verified.")
+        print("Database tables verified and set up.")
 
     def get_known_doc_types(self) -> List[Dict]:
         """Fetches all known document types and their schemas from the database."""
@@ -154,6 +189,7 @@ class PostgresDBConnector:
         sql = """
         INSERT INTO document_types (type_name, metadata_schema)
         VALUES (%s, %s)
+        ON CONFLICT (type_name) DO NOTHING
         RETURNING id, type_name, metadata_schema;
         """
         with self._conn.cursor() as cur:
@@ -163,6 +199,43 @@ class PostgresDBConnector:
             if new_row:
                 return {"id": new_row[0], "type_name": new_row[1], "metadata_schema": new_row[2]}
         return {}
+
+    def get_or_create_document_by_filename(self, filename: str) -> Optional[int]:
+        """
+        Retrieves the ID of a document by its filename. If it doesn't exist,
+        it creates a new record and returns the new ID.
+        """
+        print(f"DB -> Getting or creating document record for: '{filename}'")
+        with self._conn.cursor() as cur:
+            cur.execute("SELECT id FROM documents WHERE filename = %s;", (filename,))
+            result = cur.fetchone()
+            if result:
+                print(f"DB -> Found existing document with ID: {result[0]}")
+                return result[0]
+            else:
+                print(f"DB -> No record found. Creating new document record for '{filename}'.")
+                insert_sql = "INSERT INTO documents (filename) VALUES (%s) RETURNING id;"
+                cur.execute(insert_sql, (filename,))
+                new_id = cur.fetchone()[0]
+                self._conn.commit()
+                print(f"DB -> Created new document with ID: {new_id}")
+                return new_id
+        return None
+
+    def insert_metadata_value(self, document_id: int, meta_key: str, meta_value: str):
+        """
+        Inserts or updates a single metadata key-value pair for a given document.
+        If the key already exists for the document, its value is updated.
+        """
+        sql = """
+        INSERT INTO document_metadata_values (document_id, meta_key, meta_value)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (document_id, meta_key)
+        DO UPDATE SET meta_value = EXCLUDED.meta_value;
+        """
+        with self._conn.cursor() as cur:
+            cur.execute(sql, (document_id, meta_key, meta_value))
+        self._conn.commit()
 
     def close(self):
         """Closes the database connection."""

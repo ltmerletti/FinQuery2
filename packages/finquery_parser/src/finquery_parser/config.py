@@ -74,7 +74,8 @@ METADATA_EXTRACTION_PROMPT = """You are a meticulous data extraction specialist 
 1.  Carefully review the DOCUMENT SNIPPET.
 2.  Fill in the values for every field listed in the METADATA SCHEMA.
 3.  **Crucially: If you cannot confidently find a value for a specific field, you MUST use `null` as its value. Do not guess or infer information.**
-4.  Your entire response MUST be a single, valid JSON object that exactly matches the METADATA SCHEMA.
+4.  When identifying the key figure (key company, lender, leaser, etc.) look carefully and find it. It is an important statistic.
+5.  Your entire response MUST be a single, valid JSON object that exactly matches the METADATA SCHEMA.
 ---
 **METADATA SCHEMA:**
 {schema}

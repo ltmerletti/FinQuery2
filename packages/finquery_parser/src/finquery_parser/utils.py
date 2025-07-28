@@ -30,7 +30,7 @@ from finquery_parser.config import VISION_MODEL_ID, MARKDOWN_CLEANING_PATTERNS, 
     COVER_PAGE_TOKEN_COUNT, TIER_1_SNIPPET_TOKEN_LIMIT, MAX_CHUNK_TOKENS, MIN_CHUNK_TOKENS, STOP_WORDS, \
     TABLE_SUMMARY_PROMPT, DOCUMENT_SUMMARY_PROMPT, METADATA_EXTRACTION_PROMPT, DOCUMENT_TYPE_AND_SCHEMA_PROMPT
 from finquery_parser.types import Context, TableSummary, DatabaseInterface, PDFConversionError, TableElement, \
-    ProseElement, Header, MetadataExtractionError, TableSummarizationError, IntermediateChunk
+    ProseElement, Header, MetadataExtractionError, TableSummarizationError, IntermediateChunk, DocumentList
 
 
 # ==============================================================================
@@ -88,7 +88,7 @@ def load_pdf(pdf_file_path: pathlib.Path, llm: ChatOpenAI, nlp: Language, tokeni
         final_chunks = [doc for doc in final_chunks if len(doc.page_content.split("[CONTENT]\n", 1)[1]) >= 200]
         print(f"Filtered {original_count - len(final_chunks)} small chunks. Returning {len(final_chunks)} final chunks.")
 
-    return final_chunks
+    return DocumentList(final_chunks, metadata=extracted_metadata)
 
 
 # ==============================================================================
