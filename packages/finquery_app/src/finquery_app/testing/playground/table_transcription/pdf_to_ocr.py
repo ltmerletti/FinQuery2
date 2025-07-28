@@ -2,9 +2,6 @@ import os
 import fitz  # PyMuPDF
 import pymupdf4llm
 
-# --- Tesseract Configuration ---
-# Set the path to your Tesseract data directory.
-# This path was confirmed in our previous conversation.
 os.environ['TESSDATA_PREFIX'] = '/opt/homebrew/opt/tesseract/share/tessdata'
 
 
