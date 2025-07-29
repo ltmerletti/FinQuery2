@@ -242,3 +242,45 @@ class PostgresDBConnector:
         if self._conn:
             self._conn.close()
             print("Database connection closed.")
+
+    def get_dynamic_filter_context(self) -> Dict[str, List[str]]:
+        """
+        Fetches a dynamic summary of all unique, filterable metadata keys and
+        a sample of their corresponding values from the database. This provides
+        rich, real-time context to the LLM about what filters are possible.
+
+        Returns:
+            A dictionary where keys are the dynamically discovered metadata fields
+            (e.g., 'company_name', 'document_type') and values are lists of
+            unique values for that field.
+        """
+        print("DB -> Fetching DYNAMIC metadata summary for context...")
+        context_summary = {}
+
+        get_keys_sql = "SELECT DISTINCT meta_key FROM document_metadata_values;"
+
+        with self._conn.cursor() as cur:
+            cur.execute(get_keys_sql)
+            keys = [row[0] for row in cur.fetchall()]
+
+            for key in keys:
+                get_values_sql = """
+                SELECT DISTINCT meta_value
+                FROM document_metadata_values
+                WHERE meta_key = %s
+                ORDER BY meta_value
+                LIMIT 20;
+                """
+                cur.execute(get_values_sql, (key,))
+                values = [row[0] for row in cur.fetchall()]
+                context_summary[key] = values
+
+        if 'fiscal_year' in context_summary:
+            context_summary['fiscal_year'] = sorted(
+                [y for y in context_summary['fiscal_year'] if y.isdigit()],
+                key=int,
+                reverse=True
+            )
+
+        print(f"DB -> Found dynamic context: {len(context_summary.keys())} unique filterable fields.")
+        return context_summary
