@@ -1,4 +1,5 @@
 import json
+import re
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableWithMessageHistory, RunnableLambda
@@ -9,27 +10,38 @@ from finquery_app.config import CONVERSATIONAL_QUERY_REFINER_PROMPT
 from finquery_parser.types import PostgresDBConnector
 
 
+def strip_thinking_tags(text: str) -> str:
+    """Removes <think>...</think> tags from an LLM response string."""
+    return re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+
+
+def _get_combined_context(db_connector: PostgresDBConnector) -> dict:
+    """
+    Private helper function to fetch and combine different pieces of
+    database context into a single dictionary for the prompt.
+    """
+    # Fetch the two separate pieces of context
+    doc_types = db_connector.get_known_doc_types()
+    recent_docs = db_connector.get_recent_documents_summary()  # We will add this simple method next
+
+    # Combine them into the format the prompt expects
+    return {
+        "document_types": doc_types,
+        "recent_documents": recent_docs
+    }
+
+
 def create_conversational_refiner_chain(llm: ChatOpenAI, db_connector: PostgresDBConnector):
     """
-    Creates a stateful, conversational chain that refines a user's query.
-
-    This chain fetches available metadata filters from the database ON EVERY TURN
-    to provide real-time context to the LLM. This enables it to ask intelligent,
-    context-aware clarifying questions before generating a final query filter.
-
-    Args:
-        llm: An initialized ChatOpenAI model instance.
-        db_connector: An initialized PostgresDBConnector to fetch context.
-
-    Returns:
-        A LangChain runnable that manages the conversational refinement process.
+    Creates a stateful, conversational chain that refines a user's query
+    using a rich, two-part, real-time database context.
     """
     prompt = ChatPromptTemplate.from_template(CONVERSATIONAL_QUERY_REFINER_PROMPT)
     parser = JsonOutputParser()
 
-    base_chain = prompt | llm | parser
+    base_chain = prompt | llm | RunnableLambda(lambda x: strip_thinking_tags(x.content)) | parser
 
-    store = {}
+    store = {}  # Replace with persistent storage in production
 
     def get_session_history(session_id: str) -> ChatMessageHistory:
         if session_id not in store:
@@ -37,12 +49,14 @@ def create_conversational_refiner_chain(llm: ChatOpenAI, db_connector: PostgresD
         return store[session_id]
 
     def run_chain_with_dynamic_context(inputs: dict):
-        db_summary = db_connector.get_dynamic_filter_context()
-        db_summary_str = json.dumps(db_summary, indent=2)
+        """Wrapper to inject the two-part database context."""
+        # Use our new helper to get the combined context
+        query_context = _get_combined_context(db_connector)
 
         inputs_with_context = {
             **inputs,
-            "database_filters_summary": db_summary_str
+            "document_types": json.dumps(query_context.get("document_types", []), indent=2),
+            "recent_documents": json.dumps(query_context.get("recent_documents", []), indent=2),
         }
 
         return base_chain.invoke(inputs_with_context)

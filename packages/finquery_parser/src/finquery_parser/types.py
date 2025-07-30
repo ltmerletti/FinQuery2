@@ -284,3 +284,34 @@ class PostgresDBConnector:
 
         print(f"DB -> Found dynamic context: {len(context_summary.keys())} unique filterable fields.")
         return context_summary
+
+    def get_recent_documents_summary(self) -> List[Dict[str, Any]]:
+        """
+        Fetches a list of the 50 most recently processed documents and their
+        associated metadata.
+        """
+        print("DB -> Fetching summary of recent documents...")
+        document_summary = []
+        sql = """
+              SELECT d.id, d.filename, v.meta_key, v.meta_value
+              FROM documents d
+                       LEFT JOIN document_metadata_values v ON d.id = v.document_id
+              WHERE d.id IN (SELECT id FROM documents ORDER BY processed_at DESC LIMIT 50)
+              ORDER BY d.id, v.meta_key; \
+              """
+        with self._conn.cursor() as cur:
+            cur.execute(sql)
+            rows = cur.fetchall()
+
+            docs_by_id = {}
+            for doc_id, filename, meta_key, meta_value in rows:
+                if doc_id not in docs_by_id:
+                    docs_by_id[doc_id] = {"filename": filename, "metadata": {}}
+                if meta_key:
+                    docs_by_id[doc_id]["metadata"][meta_key] = meta_value
+
+            document_summary = list(docs_by_id.values())
+
+        print(f"DB -> Found {len(document_summary)} recent docs.")
+        return document_summary
+
