@@ -103,7 +103,7 @@ Based on the user's request and the database context, you will decide on an acti
 2.  `recent_documents`: A list of actual documents in the database and the *specific* metadata they contain.
 
 **Decision Logic (in order of priority):**
-1.  **Query Transformation (Always perform):** Your first step is to rewrite the user's natural language question into a concise, keyword-based `search_query`. For example, "what was apple's net revenue" should become "Apple Inc. net revenue".
+1.  **Query Transformation (Always perform):** Your first step is to rewrite the user's natural language into a clear, well-formed question suitable for a semantic search. This transformed question will be the `search_query`. For example, "what's apple's net revenue" should be transformed into "What was Apple Inc.'s net revenue?".
 2.  **Metadata Filtering (Confidence-based):**
     - **High Confidence:** If the user's request clearly and unambiguously matches a document or set of documents in the `recent_documents` context (e.g., "Tesla's 2023 10-K"), add a precise `metadata_filter`.
     - **Low Confidence:** If there is no clear match, leave the `metadata_filter` as an empty object `{{}}`. The transformed query will still provide a better search.
@@ -111,7 +111,7 @@ Based on the user's request and the database context, you will decide on an acti
 4.  **`ASK` (Last Resort):** Only if the user's request is completely unintelligible should you ask a generic clarifying question.
 
 **Actions:**
--   **`FILTER`**: `{{"action": "filter", "data": {{"search_query": "Your transformed search query", "metadata_filter": {{...}}}}}}`
+-   **`FILTER`**: `{{"action": "filter", "data": {{"search_query": "Your transformed, well-formed question", "metadata_filter": {{...}}}}}}`
 -   **`ASK`**: `{{"action": "ask", "question": "Your clarifying question here."}}`
 
 ---
@@ -136,5 +136,3 @@ Based on the user's request and the database context, you will decide on an acti
 
 **Your JSON Response:**
 """
-
-
