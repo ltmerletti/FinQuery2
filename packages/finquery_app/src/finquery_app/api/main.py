@@ -1,6 +1,7 @@
 import json
 import threading
 import pathlib
+from typing import List, Dict, Any
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
@@ -34,6 +35,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# --- Initialize Components on Startup ---
 print("--- Initializing FinQuery API Components ---")
 embeddings = get_embeddings()
 vector_store = get_vector_store(COLLECTION_NAME, embeddings, CHROMA_DB_PATH)
@@ -58,10 +60,6 @@ def health_check():
 
 @app.route("/api/chat", methods=['POST'])
 def chat_handler():
-    """
-    Handles the entire stateful, conversational interaction for question-answering.
-    This single endpoint manages both query refinement and final answer retrieval.
-    """
     data = request.get_json()
     if not data or 'message' not in data or 'session_id' not in data:
         return jsonify({"error": "Request must include 'message' and 'session_id'"}), 400
@@ -86,13 +84,8 @@ def chat_handler():
 
             rag_chain = create_rag_chain(vector_store, smart_llm, metadata_filter)
 
-            def stream_answer():
-                yield json.dumps({"type": "answer_start"}) + "\n"
-                for chunk in rag_chain.stream(search_query):
-                    yield json.dumps({"type": "answer_chunk", "content": chunk}) + "\n"
-                yield json.dumps({"type": "end_of_stream"}) + "\n"
-
-            return Response(stream_answer(), mimetype='application/json')
+            final_answer = rag_chain.invoke(search_query)
+            return jsonify({"type": "answer", "answer": final_answer}), 200
 
         else:
             return jsonify({"error": "Unknown action from refinement chain."}), 500
@@ -118,7 +111,6 @@ def upload_file():
 
 @app.route("/api/ingest", methods=['POST'])
 def trigger_ingestion():
-    """Triggers the data ingestion process in a background thread."""
     try:
         ingestion_thread = threading.Thread(
             target=run_ingestion_process,

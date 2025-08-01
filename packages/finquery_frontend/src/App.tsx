@@ -1,647 +1,288 @@
 /* App.tsx */
-import React, { useState, useEffect } from 'react';
-import {
-  FileText,
-  Upload,
-  Search,
-  Database,
-  TestTube,
-  Trash2,
-  Activity,
-  AlertCircle,
-  CheckCircle,
-} from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Upload, RefreshCw, Database, Bot, User, Loader2, Server, AlertTriangle } from 'lucide-react';
 
+// --- Configuration & Types ---
 const API_BASE_URL = 'http://localhost:5001/api';
 
-// ---------- types ----------
+interface ChatMessage {
+  id: string;
+  sender: 'user' | 'assistant';
+  content: string;
+  type: 'ask' | 'answer' | 'error' | 'loading';
+}
+
 interface DbStatus {
   collection_name: string;
   total_chunks: number;
-  status?: string;
 }
-interface DocumentsResponse {
-  processed_documents: string[];
-  pending_ingestion: string[];
-}
-interface TestQuestion {
-  question: string;
-  category?: string;
-}
-interface QueryResult {
-  content: string;
-  metadata: Record<string, unknown>;
-}
-interface ApiResponse {
-  message?: string;
-  error?: string;
-  status?: string;
-  query?: string;
-  answer?: string;
-  results?: QueryResult[];
-  count?: number;
-  questions?: TestQuestion[];
-  collection_name?: string;
-  total_chunks?: number;
-  processed_documents?: string[];
-  pending_ingestion?: string[];
-}
-type ResultValue =
-  | string
-  | QueryResult[]
-  | TestQuestion[]
-  | DocumentsResponse
-  | DbStatus
-  | null;
 
-// ---------- Presentational Components (Moved outside App) ----------
-const ActionCard: React.FC<{
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}> = ({ title, icon, children }) => (
-  <div
-    style={{
-      backgroundColor: 'white',
-      borderRadius: 8,
-      boxShadow: '0 2px 4px rgba(0,0,0,.1)',
-      padding: 24,
-      border: '1px solid #e2e8f0',
-      minWidth: 280,
-    }}
-  >
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
-      {icon}
-      <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginLeft: 12 }}>
-        {title}
-      </h2>
+// --- Child Components for Better Structure ---
+
+const MessageBubble: React.FC<{ msg: ChatMessage }> = ({ msg }) => (
+  <div key={msg.id} className={`flex items-start gap-3 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+    {msg.sender === 'assistant' && (
+      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white flex-shrink-0">
+        <Bot size={20} />
+      </div>
+    )}
+    <div className={`max-w-lg p-3 rounded-xl shadow-sm ${msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800'}`}>
+      {msg.type === 'loading' ? (
+        <div className="flex items-center justify-center p-2">
+          <Loader2 className="animate-spin" size={20} />
+        </div>
+      ) : msg.type === 'error' ? (
+        <div className="flex items-center gap-2 text-red-700 bg-red-100 p-2 rounded-md">
+          <AlertTriangle size={16} />
+          <p className="text-sm">{msg.content}</p>
+        </div>
+      ) : (
+        <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+      )}
     </div>
-    {children}
+    {msg.sender === 'user' && (
+      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 flex-shrink-0">
+        <User size={20} />
+      </div>
+    )}
   </div>
 );
 
-const ResultDisplay: React.FC<{ result: ResultValue; error?: string }> = ({
-  result,
-  error,
-}) => {
-  if (error)
-    return (
-      <div
-        style={{
-          marginTop: 16,
-          padding: 12,
-          backgroundColor: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: 6,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <AlertCircle
-            style={{ height: 20, width: 20, color: '#ef4444', marginRight: 8 }}
-          />
-          <span style={{ color: '#b91c1c' }}>{error}</span>
-        </div>
-      </div>
-    );
+const ChatPanel: React.FC<{
+  messages: ChatMessage[];
+  userInput: string;
+  setUserInput: (value: string) => void;
+  isLoading: boolean;
+  handleSendMessage: (e: React.FormEvent) => void;
+}> = ({ messages, userInput, setUserInput, isLoading, handleSendMessage }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  if (result)
-    return (
-      <div
-        style={{
-          marginTop: 16,
-          padding: 12,
-          backgroundColor: '#f0fdf4',
-          border: '1px solid #dcfce7',
-          borderRadius: 6,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
-          <CheckCircle
-            style={{ height: 20, width: 20, color: '#22c55e', marginRight: 8 }}
-          />
-          <span style={{ color: '#15803d', fontWeight: 500 }}>Success</span>
-        </div>
-        <pre
-          style={{
-            fontSize: '.875rem',
-            color: '#374151',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-all', // Ensure long text wraps
-            maxHeight: '16rem',
-            overflowY: 'auto',
-          }}
-        >
-          {typeof result === 'string'
-            ? result
-            : JSON.stringify(result, null, 2)}
-        </pre>
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  return (
+    <main className="flex-1 flex flex-col bg-white">
+      <header className="p-4 border-b border-gray-200 flex-shrink-0">
+        <h1 className="text-xl font-semibold text-gray-900">FinQuery Assistant</h1>
+      </header>
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {messages.map((msg) => <MessageBubble key={msg.id} msg={msg} />)}
+        <div ref={messagesEndRef} />
       </div>
-    );
-  return null;
+      <footer className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+          <input
+            type="text"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            placeholder="Ask a question..."
+            className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !userInput.trim()}
+            className="p-2 bg-blue-500 text-white rounded-lg disabled:bg-blue-300 disabled:cursor-not-allowed hover:bg-blue-600 transition flex items-center justify-center w-10 h-10"
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : <Send size={20} />}
+          </button>
+        </form>
+      </footer>
+    </main>
+  );
 };
 
-// ---------- component ----------
+const ControlPanel: React.FC<{
+  dbStatus: DbStatus | null;
+  fetchDbStatus: () => void;
+  selectedFile: File | null;
+  setSelectedFile: (file: File | null) => void;
+  handleFileUpload: () => void;
+  triggerIngestion: () => void;
+  controlPanelMessage: { type: 'info' | 'error', text: string } | null;
+}> = ({ dbStatus, fetchDbStatus, selectedFile, setSelectedFile, handleFileUpload, triggerIngestion, controlPanelMessage }) => (
+  <aside className="hidden md:flex w-96 bg-gray-100 p-6 border-l border-gray-200 flex-col gap-8 overflow-y-auto">
+    <div className="space-y-2">
+      <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2"><Server size={20} /> Control Panel</h2>
+      <p className="text-sm text-gray-500">Manage your documents and data ingestion.</p>
+    </div>
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <h3 className="font-semibold flex items-center gap-2 mb-2"><Database size={16} /> Database Status</h3>
+      {dbStatus ? (
+        <div className="text-sm space-y-1">
+          <p>Collection: <span className="font-medium text-gray-600">{dbStatus.collection_name}</span></p>
+          <p>Total Chunks: <span className="font-medium text-gray-600">{dbStatus.total_chunks}</span></p>
+        </div>
+      ) : <p className="text-sm text-gray-500">Loading status...</p>}
+      <button onClick={fetchDbStatus} className="text-xs text-blue-500 hover:underline mt-2">Refresh</button>
+    </div>
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-3">
+      <h3 className="font-semibold flex items-center gap-2"><Upload size={16} /> Upload Document</h3>
+      <input
+        id="file-upload" type="file" accept=".pdf"
+        onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 w-full"
+      />
+      <button onClick={handleFileUpload} disabled={!selectedFile} className="w-full bg-blue-500 text-white text-sm font-medium py-2 rounded-lg hover:bg-blue-600 transition disabled:bg-blue-300 disabled:cursor-not-allowed">
+        Upload File
+      </button>
+    </div>
+    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-3">
+      <h3 className="font-semibold flex items-center gap-2"><RefreshCw size={16} /> Ingest Data</h3>
+      <p className="text-sm text-gray-500">Process uploaded documents and add them to the database.</p>
+      <button onClick={triggerIngestion} className="w-full bg-green-500 text-white text-sm font-medium py-2 rounded-lg hover:bg-green-600 transition">
+        Start Ingestion
+      </button>
+    </div>
+    {controlPanelMessage && (
+      <div className={`p-3 rounded-lg text-sm transition-opacity duration-300 ${controlPanelMessage.type === 'error' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>
+        {controlPanelMessage.text}
+      </div>
+    )}
+  </aside>
+);
+
+// --- Main App Component (Logic) ---
 const App: React.FC = () => {
-  // ----- state -----
+  const [sessionId, setSessionId] = useState<string>('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [userInput, setUserInput] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [queryText, setQueryText] = useState('');
-  const [questionText, setQuestionText] = useState('');
-  const [documents, setDocuments] = useState<DocumentsResponse | null>(null);
   const [dbStatus, setDbStatus] = useState<DbStatus | null>(null);
-  const [testQuestions, setTestQuestions] = useState<TestQuestion[]>([]);
-  const [loading, setLoading] = useState<Record<string, boolean>>({});
-  const [results, setResults] = useState<Record<string, ResultValue>>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [controlPanelMessage, setControlPanelMessage] = useState<{type: 'info' | 'error', text: string} | null>(null);
 
-  // ----- helpers -----
-  const setLoadingState = (k: string, v: boolean) =>
-    setLoading((p) => ({ ...p, [k]: v }));
+  useEffect(() => {
+    setSessionId(`session_${crypto.randomUUID()}`);
+    setMessages([{
+      id: crypto.randomUUID(),
+      sender: 'assistant',
+      content: "Hello! I'm FinQuery. Ask me a question about your financial documents.",
+      type: 'ask'
+    }]);
+    fetchDbStatus();
+  }, []);
 
-  const setResult = (k: string, v: ResultValue) =>
-    setResults((p) => ({ ...p, [k]: v }));
-
-  const setError = (k: string, v: string) =>
-    setErrors((p) => ({ ...p, [k]: v }));
-
-  const clearError = (k: string) =>
-    setErrors((p) => {
-      const clone = { ...p };
-      delete clone[k];
-      return clone;
-    });
-
-  const apiCall = async (
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<ApiResponse> => {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json', ...options.headers },
-      ...options,
-    });
-    if (!res.ok) {
-      const err = (await res.json()) as ApiResponse;
-      throw new Error(err.error || `HTTP ${res.status}`);
+  useEffect(() => {
+    if (controlPanelMessage) {
+      const timer = setTimeout(() => setControlPanelMessage(null), 5000);
+      return () => clearTimeout(timer);
     }
-    return (await res.json()) as ApiResponse;
+  }, [controlPanelMessage]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userInput.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = { id: crypto.randomUUID(), sender: 'user', content: userInput, type: 'answer' };
+    setMessages(prev => [...prev, userMessage]);
+    setUserInput('');
+    setIsLoading(true);
+
+    const loadingMessageId = crypto.randomUUID();
+    const loadingMessage: ChatMessage = { id: loadingMessageId, sender: 'assistant', content: '', type: 'loading' };
+    setMessages(prev => [...prev, loadingMessage]);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, message: userInput }),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || 'API request failed');
+      }
+
+      const data = await response.json();
+
+      if (data.type === 'ask') {
+          setMessages(prev => prev.map(msg => msg.id === loadingMessageId ? { ...msg, content: data.message, type: 'ask' } : msg));
+      } else if (data.type === 'answer') {
+          setMessages(prev => prev.map(msg => msg.id === loadingMessageId ? { ...msg, content: data.answer, type: 'answer' } : msg));
+      } else {
+          throw new Error("Received an unknown response type from the API.");
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+      setMessages(prev => prev.map(msg => msg.id === loadingMessageId ? { ...msg, content: `Error: ${errorMessage}`, type: 'error' } : msg));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // ----- actions -----
   const handleFileUpload = async () => {
     if (!selectedFile) return;
-    setLoadingState('upload', true);
-    clearError('upload');
-
+    setControlPanelMessage({ type: 'info', text: 'Uploading file...' });
     try {
       const fd = new FormData();
       fd.append('file', selectedFile);
-      const res = await fetch(`${API_BASE_URL}/upload`, {
-        method: 'POST',
-        body: fd,
-      });
-
-      if (!res.ok) {
-        const err = (await res.json()) as ApiResponse;
-        throw new Error(err.error || 'Upload failed');
-      }
-      const data = (await res.json()) as ApiResponse;
-      setResult('upload', data.message || 'Upload successful');
+      const res = await fetch(`${API_BASE_URL}/upload`, { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      setControlPanelMessage({ type: 'info', text: data.message });
       setSelectedFile(null);
-      // Clear the file input visually after upload
-      const fileInput = document.getElementById('file-upload-input') as HTMLInputElement;
+      const fileInput = document.getElementById('file-upload') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-
-      await loadDocuments();
     } catch (e) {
-      setError('upload', e instanceof Error ? e.message : 'Upload failed');
-    } finally {
-      setLoadingState('upload', false);
+      setControlPanelMessage({ type: 'error', text: e instanceof Error ? e.message : 'Upload failed' });
     }
   };
 
   const triggerIngestion = async () => {
-    setLoadingState('ingest', true);
-    clearError('ingest');
+    setControlPanelMessage({ type: 'info', text: 'Starting ingestion process...' });
     try {
-      const data = await apiCall('/ingest', { method: 'POST' });
-      setResult('ingest', data.message || 'Ingestion started');
+      const res = await fetch(`${API_BASE_URL}/ingest`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Ingestion failed');
+      setControlPanelMessage({ type: 'info', text: data.message });
     } catch (e) {
-      setError('ingest', e instanceof Error ? e.message : 'Ingestion failed');
-    } finally {
-      setLoadingState('ingest', false);
+      setControlPanelMessage({ type: 'error', text: e instanceof Error ? e.message : 'Ingestion failed' });
     }
   };
 
-  const executeQuery = async () => {
-    if (!queryText.trim()) return;
-    setLoadingState('query', true);
-    clearError('query');
+  const fetchDbStatus = async () => {
     try {
-      const data = await apiCall('/query', {
-        method: 'POST',
-        body: JSON.stringify({ query_text: queryText, num_to_fetch: 10 }),
-      });
-      setResult('query', data.results || []);
+      const res = await fetch(`${API_BASE_URL}/db/status`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch DB status');
+      setDbStatus(data);
     } catch (e) {
-      setError('query', e instanceof Error ? e.message : 'Query failed');
-    } finally {
-      setLoadingState('query', false);
+       setControlPanelMessage({ type: 'error', text: e instanceof Error ? e.message : 'Failed to fetch DB status' });
     }
   };
 
-  const askQuestion = async () => {
-    if (!questionText.trim()) return;
-    setLoadingState('question', true);
-    clearError('question');
-    try {
-      const data = await apiCall('/question', {
-        method: 'POST',
-        body: JSON.stringify({ query_text: questionText }),
-      });
-      setResult('question', data.answer || 'No answer returned');
-    } catch (e) {
-      setError('question', e instanceof Error ? e.message : 'Question failed');
-    } finally {
-      setLoadingState('question', false);
-    }
-  };
-
-  const loadDocuments = async () => {
-    setLoadingState('documents', true);
-    try {
-      const data = await apiCall('/documents');
-      setDocuments({
-        processed_documents: data.processed_documents || [],
-        pending_ingestion: data.pending_ingestion || [],
-      });
-    } catch (e) {
-      setError(
-        'documents',
-        e instanceof Error ? e.message : 'Failed to load documents'
-      );
-    } finally {
-      setLoadingState('documents', false);
-    }
-  };
-
-  const loadDbStatus = async () => {
-    setLoadingState('dbStatus', true);
-    try {
-      const data = await apiCall('/status/db');
-      setDbStatus({
-        collection_name: data.collection_name || 'unknown',
-        total_chunks: data.total_chunks || 0,
-        status: data.status,
-      });
-    } catch (e) {
-      setError(
-        'dbStatus',
-        e instanceof Error ? e.message : 'Failed to load DB status'
-      );
-    } finally {
-      setLoadingState('dbStatus', false);
-    }
-  };
-
-  const loadTestQuestions = async () => {
-    setLoadingState('testQuestions', true);
-    try {
-      const data = await apiCall('/testing/questions');
-      setTestQuestions(data.questions || []);
-    } catch (e) {
-      setError(
-        'testQuestions',
-        e instanceof Error ? e.message : 'Failed to load test questions'
-      );
-    } finally {
-      setLoadingState('testQuestions', false);
-    }
-  };
-
-  const deleteCollection = async () => {
-    if (
-      !window.confirm(
-        'Are you sure you want to delete the entire collection? This cannot be undone.'
-      )
-    )
-      return;
-    setLoadingState('delete', true);
-    clearError('delete');
-    try {
-      const data = await apiCall('/admin/collection', { method: 'DELETE' });
-      setResult('delete', data.message || 'Collection deleted');
-      setDbStatus(null);
-      setDocuments(null);
-    } catch (e) {
-      setError('delete', e instanceof Error ? e.message : 'Delete failed');
-    } finally {
-      setLoadingState('delete', false);
-    }
-  };
-
-  const checkHealth = async () => {
-    setLoadingState('health', true);
-    try {
-      const data = await apiCall('/health');
-      setResult('health', data.message || 'API is healthy');
-    } catch (e) {
-      setError('health', e instanceof Error ? e.message : 'Health check failed');
-    } finally {
-      setLoadingState('health', false);
-    }
-  };
-
-  // ----- init -----
-  useEffect(() => {
-    (async () => {
-      await Promise.all([loadDocuments(), loadDbStatus(), checkHealth()]);
-    })().catch(console.error);
-  }, []);
-
-  // ----- render -----
   return (
-    // FIX: This new page shell creates a robust 3-column grid to center the content.
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'minmax(32px, 1fr) minmax(0, 1800px) minmax(32px, 1fr)',
-      backgroundColor: '#f9fafb',
-      minHeight: '100vh',
-    }}>
-      {/* FIX: This wrapper lives inside the stable middle column of the grid. */}
-      <div style={{
-        gridColumn: 2,
-        paddingTop: 32,
-        paddingBottom: 32,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 32,
-      }}>
-        {/* ---------- HEADER ---------- */}
-        <header style={{ textAlign: 'center' }}>
-          <h1
-            style={{
-              fontSize: '2.25rem',
-              fontWeight: 700,
-              color: '#1f2937',
-              marginBottom: 8,
-            }}
-          >
-            FinQuery Demo
-          </h1>
-          <p style={{ color: '#4b5563' }}>Financial Document Query System</p>
-        </header>
-
-        {/* ---------- HEALTH ---------- */}
-        <section style={{ textAlign: 'center' }}>
-          <button
-            type="button"
-            onClick={checkHealth}
-            disabled={loading.health}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '8px 16px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              borderRadius: 6,
-              cursor: loading.health ? 'not-allowed' : 'pointer',
-              opacity: loading.health ? 0.5 : 1,
-              border: 'none',
-              marginBottom: 8,
-            }}
-          >
-            <Activity style={{ height: 16, width: 16, marginRight: 8 }} />
-            {loading.health ? 'Checking...' : 'Check API Health'}
-          </button>
-          <ResultDisplay result={results.health} error={errors.health} />
-        </section>
-
-        {/* ---------- GRID ---------- */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))',
-            gap: 24,
-            width: '100%',
-          }}
-        >
-          {/* ---------- UPLOAD ---------- */}
-          <ActionCard title="Upload File" icon={<Upload size={20} />}>
-            <input
-              id="file-upload-input"
-              type="file"
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              style={{ display: 'block', width: '100%', marginBottom: 12 }}
-            />
-            <button
-              type="button"
-              onClick={handleFileUpload}
-              disabled={!selectedFile || loading.upload}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#10b981',
-                color: 'white',
-                padding: '6px 12px',
-                border: 'none',
-                borderRadius: 4,
-                cursor:
-                  !selectedFile || loading.upload ? 'not-allowed' : 'pointer',
-                opacity: !selectedFile || loading.upload ? 0.6 : 1,
-              }}
-            >
-              <FileText size={16} style={{ marginRight: 6 }} />
-              {loading.upload ? 'Uploading…' : 'Upload'}
-            </button>
-            <ResultDisplay result={results.upload} error={errors.upload} />
-          </ActionCard>
-
-          {/* ---------- DOCUMENTS ---------- */}
-          <ActionCard title="Documents" icon={<Database size={20} />}>
-            <button
-              type="button"
-              onClick={loadDocuments}
-              disabled={loading.documents}
-              style={{
-                backgroundColor: '#4b5563',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: loading.documents ? 'not-allowed' : 'pointer',
-                opacity: loading.documents ? 0.6 : 1,
-                marginBottom: 8,
-              }}
-            >
-              {loading.documents ? 'Refreshing…' : 'Refresh'}
-            </button>
-            <ResultDisplay result={documents} error={errors.documents} />
-          </ActionCard>
-
-          {/* ---------- INGESTION ---------- */}
-          <ActionCard title="Start Ingestion" icon={<Upload size={20} />}>
-            <button
-              type="button"
-              onClick={triggerIngestion}
-              disabled={loading.ingest}
-              style={{
-                backgroundColor: '#2563eb',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: loading.ingest ? 'not-allowed' : 'pointer',
-                opacity: loading.ingest ? 0.6 : 1,
-              }}
-            >
-              {loading.ingest ? 'Starting…' : 'Start'}
-            </button>
-            <ResultDisplay result={results.ingest} error={errors.ingest} />
-          </ActionCard>
-
-          {/* ---------- QUERY (no <form>) ---------- */}
-          <ActionCard title="Run Query" icon={<Search size={20} />}>
-            <input
-              type="text"
-              value={queryText}
-              placeholder="Enter query…"
-              onChange={(e) => setQueryText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && executeQuery()}
-              style={{
-                display: 'block',
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: 8,
-                border: '1px solid #d1d5db',
-                borderRadius: 4,
-                marginBottom: 12,
-              }}
-            />
-            <button
-              type="button"
-              onClick={executeQuery}
-              disabled={!queryText.trim() || loading.query}
-              style={{
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: !queryText.trim() || loading.query ? 'not-allowed' : 'pointer',
-                opacity: !queryText.trim() || loading.query ? 0.6 : 1,
-              }}
-            >
-              {loading.query ? 'Running…' : 'Run'}
-            </button>
-            <ResultDisplay result={results.query} error={errors.query} />
-          </ActionCard>
-
-          {/* ---------- ASK QUESTION (no <form>) ---------- */}
-          <ActionCard title="Ask Question" icon={<TestTube size={20} />}>
-            <input
-              type="text"
-              value={questionText}
-              placeholder="Ask your question…"
-              onChange={(e) => setQuestionText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && askQuestion()}
-              style={{
-                display: 'block',
-                width: '100%',
-                boxSizing: 'border-box',
-                padding: 8,
-                border: '1px solid #d1d5db',
-                borderRadius: 4,
-                marginBottom: 12,
-              }}
-            />
-            <button
-              type="button"
-              onClick={askQuestion}
-              disabled={!questionText.trim() || loading.question}
-              style={{
-                backgroundColor: '#10b981',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: !questionText.trim() || loading.question ? 'not-allowed' : 'pointer',
-                opacity: !questionText.trim() || loading.question ? 0.6 : 1,
-              }}
-            >
-              {loading.question ? 'Asking…' : 'Ask'}
-            </button>
-            <ResultDisplay result={results.question} error={errors.question} />
-          </ActionCard>
-
-          {/* ---------- TEST QUESTIONS ---------- */}
-          <ActionCard title="Get Test Questions" icon={<TestTube size={20} />}>
-            <button
-              type="button"
-              onClick={loadTestQuestions}
-              disabled={loading.testQuestions}
-              style={{
-                backgroundColor: '#0ea5e9',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: loading.testQuestions ? 'not-allowed' : 'pointer',
-                opacity: loading.testQuestions ? 0.6 : 1,
-                marginBottom: 8,
-              }}
-            >
-              {loading.testQuestions ? 'Loading…' : 'Load'}
-            </button>
-            <ResultDisplay
-              result={testQuestions}
-              error={errors.testQuestions}
-            />
-          </ActionCard>
-
-          {/* ---------- DB STATUS ---------- */}
-          <ActionCard title="DB Status" icon={<Database size={20} />}>
-            <button
-              type="button"
-              onClick={loadDbStatus}
-              disabled={loading.dbStatus}
-              style={{
-                backgroundColor: '#6b7280',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: loading.dbStatus ? 'not-allowed' : 'pointer',
-                opacity: loading.dbStatus ? 0.6 : 1,
-                marginBottom: 8,
-              }}
-            >
-              {loading.dbStatus ? 'Refreshing…' : 'Refresh'}
-            </button>
-            <ResultDisplay result={dbStatus} error={errors.dbStatus} />
-          </ActionCard>
-
-          {/* ---------- DELETE COLLECTION ---------- */}
-          <ActionCard title="Delete Collection" icon={<Trash2 size={20} />}>
-            <button
-              type="button"
-              onClick={deleteCollection}
-              disabled={loading.delete}
-              style={{
-                backgroundColor: '#ef4444',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                padding: '6px 12px',
-                cursor: loading.delete ? 'not-allowed' : 'pointer',
-                opacity: loading.delete ? 0.6 : 1,
-              }}
-            >
-              {loading.delete ? 'Deleting…' : 'Delete'}
-            </button>
-            <ResultDisplay result={results.delete} error={errors.delete} />
-          </ActionCard>
-        </section>
+    <>
+      <style>{`
+        html, body, #root {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow: hidden; /* Prevents scrolling on the body */
+        }
+      `}</style>
+      <div className="font-sans bg-gray-50 h-full flex text-gray-800" style={{ width: '1515px' }}>
+        <ChatPanel
+          messages={messages}
+          userInput={userInput}
+          setUserInput={setUserInput}
+          isLoading={isLoading}
+          handleSendMessage={handleSendMessage}
+        />
+        <ControlPanel
+          dbStatus={dbStatus}
+          fetchDbStatus={fetchDbStatus}
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
+          handleFileUpload={handleFileUpload}
+          triggerIngestion={triggerIngestion}
+          controlPanelMessage={controlPanelMessage}
+        />
       </div>
-    </div>
+    </>
   );
 };
 

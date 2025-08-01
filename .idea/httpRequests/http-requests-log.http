@@ -1,3 +1,37 @@
+POST http://127.0.0.1:5001/api/chat
+Host: 127.0.0.1:5001
+Content-Type: application/json
+User-Agent: ExampleClient/1.0
+Accept: */*
+Content-Length: 61
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "session_id": "user123_sessionABC",
+  "message": "2024"
+}
+
+<> 2025-08-01T095018.200.json
+
+###
+
+POST http://127.0.0.1:5001/api/chat
+Host: 127.0.0.1:5001
+Content-Type: application/json
+User-Agent: ExampleClient/1.0
+Accept: */*
+Content-Length: 86
+Accept-Encoding: br, deflate, gzip, x-gzip
+
+{
+  "session_id": "user123_sessionABC",
+  "message": "What was Tesla's net revenue?"
+}
+
+<> 2025-08-01T094618.200.json
+
+###
+
 POST http://localhost:5001/api/questions/batch
 Host: localhost:5001
 Content-Type: application/json
